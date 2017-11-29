@@ -105,7 +105,7 @@
             "Default": ""
         },
         "EnableLogging": {
-            "Description": "Enable (Yes) or disable (No) logging with AWS CloudTrail and AWS Config",
+            "Description": "Enable (Yes) or disable (No) logging with AWS CloudTrail and AWS Config.",
             "Default": "No",
             "Type": "String",
             "AllowedValues": [
@@ -114,19 +114,20 @@
             ]
         },
         "CloudTrailS3Bucket": {
-            "Description": "Name of Amazon S3 bucket where AWS CloudTrail Trail and AWS Config logs can be stored (e.g. mycloudtrail).",
+            "Description": "Name of S3 bucket where AWS CloudTrail trails and AWS Config log files can be stored (e.g., mycloudtrail).",
             "Default": "",
             "Type": "String"
         },
         "MyOS": {
             "Type": "String",
             "Description": "Operating system (SLES or RHEL) and version for master/worker nodes.",
-            "Default": "SuSELinux12SP1",
+            "Default": "SuSELinux12SP2ForSAP",
             "AllowedValues": [
                 "SuSELinux11SP4",
                 "SuSELinux12",
                 "SuSELinux12SP1",
                 "SuSELinux12SP1ForSAP",
+                "SuSELinux12SP2ForSAP",
                 "RedHatLinux66",
                 "RedHatLinux67",
                 "RedHatLinux72"
@@ -146,6 +147,7 @@
                 "r4.2xlarge",
                 "x1.16xlarge",
                 "x1.32xlarge",
+                "x1e.4xlarge",
                 "x1e.32xlarge"
             ]
         },
@@ -344,7 +346,7 @@
                     "default": "Enter Amazon S3 URL for SAP HANA software"
                 },
                 "CloudTrailS3Bucket": {
-                    "default": "Enter Amazon S3 Bucket name to store AWS CloudTrail Trail and AWS Config Logs"
+                    "default": "Enter S3 bucket name to store AWS CloudTrail trails and AWS Config logs"
                 },
                 "PlacementGroupName": {
                     "default": "Enter optional placement group name"
@@ -395,7 +397,7 @@
                     "default": "Enter SAP HANA password"
                 },
                 "EnableLogging": {
-                    "default": "Would you like to enable AWS CloudTrail Trail and AWS Config?"
+                    "default": "Would you like to enable AWS CloudTrail trails and AWS Config?"
                 }
             }
         }
@@ -420,10 +422,16 @@
             "ap-southeast-2": {
                 "AWSNAT": "ami-3348a351"
             },
+            "ca-central-1": {
+                "AWSNAT": "ami-2d912554"
+            },
             "eu-central-1": {
                 "AWSNAT": "ami-7d2ba812"
             },
             "eu-west-1": {
+                "AWSNAT": "ami-2d912554"
+            },
+            "eu-west-2": {
                 "AWSNAT": "ami-2d912554"
             },
             "sa-east-1": {

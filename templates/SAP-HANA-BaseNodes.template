@@ -82,7 +82,7 @@
             "Type": "String"
         },
         "EnableLogging": {
-            "Description": "Enable (Yes) or disable (No) logging with AWS CloudTrail and AWS Config",
+            "Description": "Enable (Yes) or disable (No) logging with AWS CloudTrail and AWS Config.",
             "Default": "No",
             "Type": "String",
             "AllowedValues": [
@@ -91,7 +91,7 @@
             ]
         },
         "CloudTrailS3Bucket": {
-            "Description": "Name of Amazon S3 bucket where AWS CloudTrail Trail and AWS Config logs can be stored (e.g. mycloudtrail).",
+            "Description": "Name of S3 bucket where AWS CloudTrail trails and AWS Config log files can be stored (e.g., mycloudtrail).",
             "Default": "",
             "Type": "String"
         },
@@ -125,12 +125,13 @@
         "MyOS": {
             "Type": "String",
             "Description": "Operating system (SLES or RHEL) and version for master and worker nodes.",
-            "Default": "SuSELinux12SP1",
+            "Default": "SuSELinux12SP2ForSAP",
             "AllowedValues": [
                 "SuSELinux11SP4",
                 "SuSELinux12",
                 "SuSELinux12SP1",
                 "SuSELinux12SP1ForSAP",
+                "SuSELinux12SP2ForSAP",
                 "RedHatLinux66",
                 "RedHatLinux67",
                 "RedHatLinux72"
@@ -179,6 +180,7 @@
                 "r4.2xlarge",
                 "x1.16xlarge",
                 "x1.32xlarge",
+                "x1e.4xlarge",
                 "x1e.32xlarge"
             ]
         },
@@ -329,7 +331,7 @@
                     "default": "Enter Amazon S3 URL for SAP HANA software"
                 },
                 "CloudTrailS3Bucket": {
-                    "default": "Enter Amazon S3 Bucket name to store AWS CloudTrail Trail and AWS Config Logs"
+                    "default": "Enter S3 bucket name to store AWS CloudTrail trails and AWS Config logs"
                 },
                 "PlacementGroupName": {
                     "default": "Enter optional placement group name"
@@ -380,7 +382,7 @@
                     "default": "Choose instance type for RDP host"
                 },
                 "EnableLogging": {
-                    "default": "Would you like to enable AWS CloudTrail Trail and AWS Config?"
+                    "default": "Would you like to enable AWS CloudTrail trails and AWS Config?"
                 }
             }
         }
@@ -714,6 +716,7 @@
                 "SLES12SP2HVM": "suse-sles-12-sp2-v20170620-hvm-ssd-x86_64",
                 "SLES12SP1SAPHVM": "suse-sles-sap-12-sp1-v20171121-hvm-ssd-x86_64-f0188081-b780-4ee4-aef6-cbcb063fd11e-ami-8bac24f1.4",
                 "SLES12SP2SAPHVM": "suse-sles-sap-12-sp2-v20171121-hvm-ssd-x86_64-e3458d64-5c36-4577-bd98-0ee19e3eaeec-ami-cbad25b1.4",
+                "SLES12SP3SAPHVM": "suse-sles-sap-12-sp3-v20171121-hvm-ssd-x86_64-da7aa9c3-97db-4573-89a6-7fe7348d90b0-ami-c9ad25b3.4",
                 "SLES12SP1SAPBYOSHVM": "suse-sles-sap-12-sp1-byos-v20170123-hvm-ssd-x86_64",
                 "SLES12SP2SAPBYOSHVM": "suse-sles-sap-12-sp2-byos-v20161104-hvm-ssd-x86_64",
                 "SLES12SP3SAPBYOSHVM": "suse-sles-sap-12-sp3-byos-v20171121-hvm-ssd-x86_64",
@@ -732,6 +735,7 @@
                 "SLES12SP2SAPBYOSHVM": "ami-c01eb2a1",
                 "SLES12SP2SAPHVM": "ami-c1de63a7",
                 "SLES12SP3SAPBYOSHVM": "ami-b09d20d6",
+                "SLES12SP3SAPHVM": "ami-c2fd7fad",
                 "WS2012R2": "ami-bc43f2da"
             },
             "ap-northeast-2": {
@@ -746,6 +750,7 @@
                 "SLES12SP2SAPBYOSHVM": "ami-8d5d89e3",
                 "SLES12SP2SAPHVM": "ami-0d983f63",
                 "SLES12SP3SAPBYOSHVM": "ami-cc62c5a2",
+                "SLES12SP3SAPHVM": "ami-c2fd7fad",
                 "WS2012R2": "ami-e9df7887"
             },
             "ap-south-1": {
@@ -758,6 +763,7 @@
                 "SLES12SP2SAPBYOSHVM": "ami-b390e4dc",
                 "SLES12SP2SAPHVM": "ami-b0e6a9df",
                 "SLES12SP3SAPBYOSHVM": "ami-47f5ba28",
+                "SLES12SP3SAPHVM": "ami-c2fd7fad",
                 "WS2012R2": "ami-8f7b34e0"
             },
             "ap-southeast-1": {
@@ -773,6 +779,7 @@
                 "SLES12SP2SAPBYOSHVM": "ami-50963633",
                 "SLES12SP2SAPHVM": "ami-08a6f16b",
                 "SLES12SP3SAPBYOSHVM": "ami-1cedba7f",
+                "SLES12SP3SAPHVM": "ami-c2fd7fad",
                 "WS2012R2": "ami-34b1e457"
             },
             "ap-southeast-2": {
@@ -788,6 +795,23 @@
                 "SLES12SP2SAPBYOSHVM": "ami-d1bf83b2",
                 "SLES12SP2SAPHVM": "ami-f8bc569a",
                 "SLES12SP3SAPBYOSHVM": "ami-1c9e747e",
+                "SLES12SP3SAPHVM": "ami-c2fd7fad",
+                "WS2012R2": "ami-c4fa11a6"
+            },
+            "ca-central-1": {
+                "RHEL66SAPHVM": "ami-a74c349d",
+                "RHEL67SAPHVM": "ami-8a6051e9",
+                "RHEL72SAPHVM": "ami-65330806",
+                "SLES11SP4HVM": "ami-63041400",
+                "SLES12HVM": "ami-96ecb2f5",
+                "SLES12SP1HVM": "ami-e32b1680",
+                "SLES12SP1SAPBYOSHVM": "ami-460d0a25",
+                "SLES12SP1SAPHVM": "ami-368a3152",
+                "SLES12SP2HVM": "ami-197a6a7a",
+                "SLES12SP2SAPBYOSHVM": "ami-d1bf83b2",
+                "SLES12SP2SAPHVM": "ami-95962df1",
+                "SLES12SP3SAPBYOSHVM": "ami-1c9e747e",
+                "SLES12SP3SAPHVM": "ami-4f952e2b",
                 "WS2012R2": "ami-c4fa11a6"
             },
             "eu-central-1": {
@@ -803,6 +827,7 @@
                 "SLES12SP2SAPBYOSHVM": "ami-5a01fa35",
                 "SLES12SP2SAPHVM": "ami-c2fd7fad",
                 "SLES12SP3SAPBYOSHVM": "ami-59b53736",
+                "SLES12SP3SAPHVM": "ami-eefc7e81",
                 "WS2012R2": "ami-0c1d9d63"
             },
             "eu-west-1": {
@@ -818,6 +843,23 @@
                 "SLES12SP2SAPBYOSHVM": "ami-e4461297",
                 "SLES12SP2SAPHVM": "ami-06ef587f",
                 "SLES12SP3SAPBYOSHVM": "ami-8e74c3f7",
+                "SLES12SP3SAPHVM": "ami-d7e453ae",
+                "WS2012R2": "ami-47d47e3e"
+            },
+            "eu-west-2": {
+                "RHEL66SAPHVM": "ami-99126fee",
+                "RHEL67SAPHVM": "ami-a9d7aada",
+                "RHEL72SAPHVM": "ami-33bb9d40",
+                "SLES11SP4HVM": "ami-7afbe31c",
+                "SLES12HVM": "ami-c1f328b2",
+                "SLES12SP1HVM": "ami-b197d9c2",
+                "SLES12SP1SAPBYOSHVM": "ami-81025de7",
+                "SLES12SP1SAPHVM": "ami-03ef587a",
+                "SLES12SP2HVM": "ami-f5776f93",
+                "SLES12SP2SAPBYOSHVM": "ami-e4461297",
+                "SLES12SP2SAPHVM": "ami-06ef587f",
+                "SLES12SP3SAPBYOSHVM": "ami-8e74c3f7",
+                "SLES12SP3SAPHVM": "ami-15c5da71",
                 "WS2012R2": "ami-47d47e3e"
             },
             "sa-east-1": {
@@ -833,6 +875,7 @@
                 "SLES12SP2SAPBYOSHVM": "ami-9f33aff3",
                 "SLES12SP2SAPHVM": "ami-a48fcac8",
                 "SLES12SP3SAPBYOSHVM": "ami-f1a4e19d",
+                "SLES12SP3SAPHVM": "ami-f08ecb9c",
                 "WS2012R2": "ami-a60247ca"
             },
             "us-east-1": {
@@ -848,6 +891,7 @@
                 "SLES12SP2SAPBYOSHVM": "ami-0ee0c619",
                 "SLES12SP2SAPHVM": "ami-64028a1e",
                 "SLES12SP3SAPBYOSHVM": "ami-0ac44f70",
+                "SLES12SP3SAPHVM": "ami-5700882d",
                 "WS2012R2": "ami-586fec22"
             },
             "us-east-2": {
@@ -863,6 +907,7 @@
                 "SLES12SP2SAPBYOSHVM": "ami-68570d0d",
                 "SLES12SP2SAPHVM": "ami-36f7d953",
                 "SLES12SP3SAPBYOSHVM": "ami-37cae452",
+                "SLES12SP3SAPHVM": "ami-4af6d82f",
                 "WS2012R2": "ami-bd3618d8"
             },
             "us-west-1": {
@@ -878,6 +923,7 @@
                 "SLES12SP2SAPBYOSHVM": "ami-d098d2b0",
                 "SLES12SP2SAPHVM": "ami-5fe8d03f",
                 "SLES12SP3SAPBYOSHVM": "ami-84d4ece4",
+                "SLES12SP3SAPHVM": "ami-78e9d118",
                 "WS2012R2": "ami-58a69f38"
             },
             "us-west-2": {
@@ -893,6 +939,7 @@
                 "SLES12SP2SAPBYOSHVM": "ami-da1cbdba",
                 "SLES12SP2SAPHVM": "ami-95fb26ed",
                 "SLES12SP3SAPBYOSHVM": "ami-b623fece",
+                "SLES12SP3SAPHVM": "ami-e1fa2799",
                 "WS2012R2": "ami-8ad003f2"
             }
         }

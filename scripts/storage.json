@@ -4,6 +4,28 @@
             "hostcount": 1,
             "storage": {
                 "master": {
+                  "x1e.4xlarge": {
+                      "gp2": {
+                          "drives": [
+                              {
+                                  "device": "/dev/sdf",
+                                  "size": "512G"
+                              },
+                              {
+                                  "device": "/dev/sdg",
+                                  "size": "512G"
+                              }
+                          ]
+                      },
+                      "st1": {
+                          "drives": [
+                              {
+                                  "device": "/dev/sdf",
+                                  "size": "1024G"
+                              }
+                          ]
+                      }
+                  },
                   "x1e.32xlarge": {
                       "gp2": {
                           "drives": [
@@ -1050,6 +1072,66 @@
     ],
     "hana_data_log": {
         "master": {
+          "x1e.4xlarge": {
+              "gp2": {
+                  "drives": [
+                      {
+                          "device": "/dev/sdb",
+                          "size": "400G"
+                      },
+                      {
+                          "device": "/dev/sdc",
+                          "size": "400G"
+                      },
+                      {
+                          "device": "/dev/sdd",
+                          "size": "400G"
+                      }
+                  ],
+                  "stride": 256,
+                  "stripe": [
+                      {
+                          "drive": "/hana/log",
+                          "logical_volume": "lvhanalog",
+                          "size": "256G"
+                      },
+                      {
+                          "drive": "/hana/data",
+                          "logical_volume": "lvhanadata",
+                          "size": "600G"
+                      }
+                  ],
+                  "volume_group": "vghana"
+              },
+              "io1": {
+                  "drives": [
+                      {
+                          "device": "/dev/sdb",
+                          "piops": 4500,
+                          "size": "600G"
+                      },
+                      {
+                          "device": "/dev/sdc",
+                          "piops": 4500,
+                          "size": "600G"
+                      }
+                  ],
+                  "stride": 256,
+                  "stripe": [
+                      {
+                          "drive": "/hana/log",
+                          "logical_volume": "lvhanalog",
+                          "size": "256G"
+                      },
+                      {
+                          "drive": "/hana/data",
+                          "logical_volume": "lvhanadata",
+                          "size": "600G"
+                      }
+                  ],
+                  "volume_group": "vghana"
+              }
+          },
           "x1e.32xlarge": {
               "gp2": {
                   "drives": [
@@ -2211,6 +2293,16 @@
     },
     "shared": {
         "master": {
+          "x1e.4xlarge": {
+              "gp2": {
+                  "drives": [
+                      {
+                          "device": "/dev/sde",
+                          "size": "512G"
+                      }
+                  ]
+              }
+          },
           "x1e.32xlarge": {
               "gp2": {
                   "drives": [
@@ -2315,6 +2407,16 @@
     },
     "usr_sap": {
         "master": {
+          "x1e.4xlarge": {
+              "gp2": {
+                  "drives": [
+                      {
+                          "device": "/dev/sds",
+                          "size": "50G"
+                      }
+                  ]
+              }
+          },
           "x1e.32xlarge": {
               "gp2": {
                   "drives": [

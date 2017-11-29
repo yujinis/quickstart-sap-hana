@@ -78,10 +78,16 @@
             "ap-southeast-2": {
                 "AMZNLINUX": "ami-ff4ea59d"
             },
+            "ca-central-1": {
+                "AMZNLINUX": "ami-1a962263"
+            },            
             "eu-central-1": {
                 "AMZNLINUX": "ami-bf2ba8d0"
             },
             "eu-west-1": {
+                "AMZNLINUX": "ami-1a962263"
+            },
+            "eu-west-2": {
                 "AMZNLINUX": "ami-1a962263"
             },
             "sa-east-1": {
