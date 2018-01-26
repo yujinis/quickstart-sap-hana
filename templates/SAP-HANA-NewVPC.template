@@ -130,7 +130,6 @@
             "AllowedValues": [
               "RedHatLinux73ForSAP",
               "SuSELinux11SP4",
-              "SuSELinux12",
               "SuSELinux12SP1",
               "SuSELinux12SP1ForSAP",
               "SuSELinux12SP2ForSAP",
