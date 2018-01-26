@@ -707,9 +707,6 @@
             "SuSELinux11SP4": {
                 "Code": "SLES11SP4HVM"
             },
-            "SuSELinux12": {
-                "Code": "SLES12HVM"
-            },
             "SuSELinux12SP1": {
                 "Code": "SLES12SP1HVM"
             },
