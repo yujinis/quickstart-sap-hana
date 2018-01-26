@@ -9,10 +9,13 @@ EOF
   exit 1
 }
 
-while getopts ":b:" o; do
+while getopts ":b:c:" o; do
     case "${o}" in
         b)
             BUILD_BUCKET=${OPTARG}
+            ;;
+        c)
+            STORAGE_BUCKET=${OPTARG}
             ;;
         *)
             usage
@@ -24,6 +27,7 @@ shift $((OPTIND-1))
 [[ $# -gt 0 ]] && usage;
 
 DOWNLOADLINK=https://s3.amazonaws.com/${BUILD_BUCKET}
+DOWNLOADSTORAGE=https://s3.amazonaws.com/${STORAGE_BUCKET}
 
 # ------------------------------------------------------------------
 #          Download all the scripts needed for HANA install
@@ -56,11 +60,9 @@ wget ${DOWNLOADLINK}/scripts/writeconfig.sh --output-document=/root/install/writ
 wget ${DOWNLOADLINK}/scripts/create-attach-volume.sh --output-document=/root/install/create-attach-volume.sh
 wget ${DOWNLOADLINK}/scripts/configureVol.sh --output-document=/root/install/configureVol.sh
 wget ${DOWNLOADLINK}/scripts/create-attach-single-volume.sh --output-document=/root/install/create-attach-single-volume.sh
+wget ${DOWNLOADSTORAGE}/storage.json --output-document=/root/install/storage.json
 
-for f in download_media.py extract.sh get_advancedoptions.py postprocess.py signal-precheck-failure.sh signal-precheck-status.sh signal-precheck-success.sh build_storage.py storage.json
+for f in download_media.py extract.sh get_advancedoptions.py postprocess.py signal-precheck-failure.sh signal-precheck-status.sh signal-precheck-success.sh build_storage.py
 do
     wget ${DOWNLOADLINK}/scripts/${f} --output-document=/root/install/${f}
 done
-
-
-

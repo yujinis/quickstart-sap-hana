@@ -62,6 +62,14 @@ isSLES12SP1() {
     fi
 }
 
+isSLES12SP2() {
+    if [ "$MyOS" == "SLES12SP2HVM" ]; then
+      echo 1
+    else
+      echo 0
+    fi
+}
+
 isSLES12SP1SAP() {
     if [ "$MyOS" == "SLES12SP1SAPHVM" ]; then
       echo 1
@@ -72,6 +80,14 @@ isSLES12SP1SAP() {
 
 isSLES12SP2SAP() {
     if [ "$MyOS" == "SLES12SP2SAPHVM" ]; then
+      echo 1
+    else
+      echo 0
+    fi
+}
+
+isSLES12SP3SAP() {
+    if [ "$MyOS" == "SLES12SP3SAPHVM" ]; then
       echo 1
     else
       echo 0
@@ -94,6 +110,21 @@ isSLES12SP2SAPBYOS() {
     fi
 }
 
+isSLES12SP3SAPBYOS() {
+    if [ "$MyOS" == "SLES12SP3SAPBYOSHVM" ]; then
+      echo 1
+    else
+      echo 0
+    fi
+}
+
+isSLESBYOS() {
+  if [[ ("$MyOS" =~ SLES) && ("$MyOS" =~ BYOS) ]]; then
+    echo 1
+  else
+    echo 0
+  fi
+}
 
 issignal_check() {
     if [ -e "$SIG_FLAG_FILE" ]; then

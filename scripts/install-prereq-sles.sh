@@ -357,6 +357,29 @@ install_prereq_sles12sp2sapbyos() {
   #          Install all the pre-requisites for SAP HANA
   # ------------------------------------------------------------------
   log "`date` - Install / Update OS Packages## "
+  zypper -n install systemd 2>&1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install tuned  | tee -a ${HANA_LOG_FILE}
+  zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
+  zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
+  #Install unrar for media extraction
+  zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+  # Apply all Recommended HANA settings with SAPTUNE
+  log "`date` - Start saptune daemon"
+  saptune daemon start | tee -a ${HANA_LOG_FILE}
+  log "`date` - Apply saptune HANA profile"
+  mkdir /etc/tuned/saptune # OSS Note 2205917
+  cp /usr/lib/tuned/saptune/tuned.conf /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  sed -i "/\[cpu\]/ a force_latency=70" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  sed -i "s/script.sh/\/usr\/lib\/tuned\/saptune\/script.sh/" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  saptune solution apply HANA | tee -a ${HANA_LOG_FILE}
+
+}
+
+install_prereq_sles12sp3sapbyos() {
+  # ------------------------------------------------------------------
+  #          Install all the pre-requisites for SAP HANA
+  # ------------------------------------------------------------------
+  log "`date` - Install / Update OS Packages## "
 
   zypper -n install tuned  | tee -a ${HANA_LOG_FILE}
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
@@ -505,19 +528,41 @@ KV=$(uname -r)
 #Check to see if instance type is X1 and Kernel version is supported
 if [ $(check_kernel) == 0 -a $(check_instancetype) == 1 ]
 then
-    log "Calling signal-failure.sh from $0 @ `date` with INCOMPATIBLE parameter"
-    log "Instance Type = X1: $X1 and O.S. is not supported with X1: $KV"
+    log "`date` Calling signal-failure.sh from $0 @ `date` with INCOMPATIBLE parameter"
+    log "`date` Instance Type $X1 and O.S. is not supported with Kernel $KV"
     /root/install/signal-failure.sh "INCOMPATIBLE"
     touch "$SIG_FLAG_FILE"
     sleep 300
     exit 1
 fi
 
-#Check to see if zypper repository is registered
+#Check to see if BYOS SLES registration is successful
+
+if [[ ("$MyOS" =~ SLES) && ("$MyOS" =~ BYOS) ]];
+then
+    log "`date` Registering SUSE BYOS"
+    SUSEConnect -r $SLESBYOSRegCode | tee -a ${HANA_LOG_FILE}
+    CheckSLESRegistration=$(SUSEConnect -s | grep ACTIVE)
+    if [ "$CheckSLESRegistration" ]
+    then
+      log "`date` SUSE BYOS registration was successful"
+      log "`date` Adding Public Cloud Module 12 x86_64 extension"
+      SUSEConnect -p sle-module-public-cloud/12/x86_64 | tee -a ${HANA_LOG_FILE}
+    else
+      log "`date` SUSE BYOS registration did not succeed"
+      log "`date` Exiting QuickStart, check SUSE registration code"
+      /root/install/signal-failure.sh "SUSECONNECTFAIL"
+      touch "$SIG_FLAG_FILE"
+      sleep 300
+      exit 1
+    fi
+fi
+
+#Check to see if zypper repository is accessible
 if [ $(check_zypper) == 0 ]
 then
-    log "Calling signal-failure.sh from $0 @ `date` with ZYPPER parameter"
-    log "Instance Type = X1: $X1 and zypper repository is not correct."
+    log "`date` Calling signal-failure.sh from $0 @ `date` with ZYPPER parameter"
+    log "`date` Instance Type = X1: $X1 and zypper repository is not correct."
     /root/install/signal-failure.sh "ZYPPER"
     touch "$SIG_FLAG_FILE"
     sleep 300
@@ -572,7 +617,7 @@ case "$MyOS" in
     install_prereq_sles12sp2sap
     disable_hostname
     log "`date` End - Executing SLES 12 SP2 for SAP related pre-requisites" ;;
-  SLES12SP1SAPHVMBYOS )
+  SLES12SP1SAPBYOSHVM )
     log "`date` Start - Executing SLES 12 SP1 for SAP BYOS related pre-requisites"
     install_prereq_sles12sp1sapbyos
     disable_dhcp
@@ -581,7 +626,7 @@ case "$MyOS" in
     start_fs
     start_oss_configs
     log "`date` End - Executing SLES 12 SP1 for SAP BYOS related pre-requisites" ;;
-  SLES12SP2SAPHVMBYOS )
+  SLES12SP2SAPBYOSHVM )
     log "`date` Start - Executing SLES 12 SP2 for SAP BYOS related pre-requisites"
     install_prereq_sles12sp2sapbyos
     disable_dhcp
@@ -590,6 +635,15 @@ case "$MyOS" in
     start_fs
     start_oss_configs
     log "`date` End - Executing SLES 12 SP2 for SAP BYOS related pre-requisites" ;;
+  SLES12SP3SAPBYOSHVM )
+    log "`date` Start - Executing SLES 12 SP3 for SAP BYOS related pre-requisites"
+    install_prereq_sles12sp3sapbyos
+    disable_dhcp
+    disable_hostname
+    start_ntp
+    start_fs
+    start_oss_configs
+    log "`date` End - Executing SLES 12 SP3 for SAP BYOS related pre-requisites" ;;
 esac
 
 #install_prereq

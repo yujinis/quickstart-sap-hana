@@ -88,6 +88,19 @@ MyVolumeType=$(/usr/local/bin/aws cloudformation describe-stacks --stack-name ${
 				| /root/install/jq '.Stacks[0].Parameters[] | select(.ParameterKey=="VolumeType") | .ParameterValue' \
 				| sed 's/"//g')
 
+if [ -f /root/install/storage.json ] && [ -s /root/install/storage.json ] ; then
+	log `date` "storage.json file is available, proceeding with volume creation"
+else
+	#Exiting since storage.json file size is 0. Probably due to custom storage.json
+	log `date` "Exiting script since storage.json file is either empty or not available"
+	log `date` "Check if custom storage.json file has correct permission and retry again"
+	log `date` "Calling signal-failure.sh with EMPTY_STORAGE_JSON parameter"
+	/root/install/signal-failure.sh "EMPTY_STORAGE_JSON"
+	touch "$SIG_FLAG_FILE"
+	sleep 300
+	exit 1
+fi
+
 
 STORAGE_SCRIPT=/root/install/storage_builder_generated_worker.sh
 python /root/install/build_storage.py  -config /root/install/storage.json  \
@@ -115,7 +128,7 @@ fi
 if (( ${USE_NEW_STORAGE} == 1 ));
 then
 	log `date` "Using New Storage from storage.json"
-	sh -x ${STORAGE_SCRIPT} >> ${HANA_LOG_FILE} 
+	sh -x ${STORAGE_SCRIPT} >> ${HANA_LOG_FILE}
 	log `date` "END Storage from storage.json"
 fi
 
@@ -279,7 +292,7 @@ then
 else
 	echo "/dev/xvds			   /usr/sap       xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghana-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
-	echo "/dev/mapper/vghana-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab	
+	echo "/dev/mapper/vghana-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
 fi
 
 
@@ -360,5 +373,3 @@ cd /root/install/
 /usr/local/bin/aws s3 cp s3://aws-data-provider/bin/aws-agent_install.sh /root/install/aws-agent_install.sh
 chmod +x aws-agent_install.sh
 ./aws-agent_install.sh
-
-

@@ -75,7 +75,7 @@ if (( $(isSLES12) == 1 )); then
 	fi
 else
 	export ENABLE_FAST_DEBUG=0
-fi	
+fi
 
 
 # ------------------------------------------------------------------
@@ -92,7 +92,20 @@ MyVolumeType=$(/usr/local/bin/aws cloudformation describe-stacks --stack-name ${
 				| /root/install/jq '.Stacks[0].Parameters[] | select(.ParameterKey=="VolumeType") | .ParameterValue' \
 				| sed 's/"//g')
 
- 
+if [ -f /root/install/storage.json ] && [ -s /root/install/storage.json ] ; then
+	 	log `date` "storage.json file is available, proceeding with volume creation"
+else
+	 	#Exiting since storage.json file size is 0. Probably due to custom storage.json
+	 	log `date` "Exiting script since storage.json file is either empty or not available"
+	 	log `date` "Check if custom storage.json file has correct permission and retry again"
+	 	log `date` "Calling signal-failure.sh with EMPTY_STORAGE_JSON parameter"
+	 	/root/install/signal-failure.sh "EMPTY_STORAGE_JSON"
+	 	touch "$SIG_FLAG_FILE"
+	 	sleep 300
+	 	exit 1
+fi
+
+
 
 STORAGE_SCRIPT=/root/install/storage_builder_generated_master.sh
 python /root/install/build_storage.py  -config /root/install/storage.json  \
@@ -197,7 +210,7 @@ fi
 if (( ${USE_NEW_STORAGE} == 1 ));
 then
 	log `date` "Using New Storage from storage.json"
-	sh -x ${STORAGE_SCRIPT} >> ${HANA_LOG_FILE} 
+	sh -x ${STORAGE_SCRIPT} >> ${HANA_LOG_FILE}
 	log `date` "END Storage from storage.json"
 fi
 
@@ -254,7 +267,6 @@ then
 	mkdir -p /media/
 	mount /dev/xvdz /media/
 
-
 else
 	log `date` "Creating volume group vghana"
 	#vgcreate vghana /dev/xvd{b..m}
@@ -290,7 +302,7 @@ fi
 
 # TODO: REMOVE THIS BEFORE LAUNCH
 # ------------------------------------------------------------------
-if (( ${ENABLE_FAST_DEBUG} == 1 ));	
+if (( ${ENABLE_FAST_DEBUG} == 1 ));
 then
 	log `date` "WARNING !!!!!! FAST DEBUG ENABLED. NEED TO DISABLE THIS!"
 	log `date` "BYPASSING S3 MEDIA DOWNLOAD"
@@ -346,7 +358,7 @@ log `date` "Creating mount points in fstab"
 if  ( [ "$MyOS" = "SLES11SP4HVM" ] || [ "$MyOS" = "RHEL66SAPHVM" ] || [ "$MyOS" = "RHEL67SAPHVM" ] );
 then
 	echo "/dev/xvds /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
-	echo "/dev/xvdz /media   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0"  >> /etc/fstab	
+	echo "/dev/xvdz /media   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0"  >> /etc/fstab
 	echo "/dev/xvde /hana/shared   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghana-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghana-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
@@ -354,11 +366,11 @@ then
 else
 	echo "/dev/xvds /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
 	echo "/dev/xvdz /media   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0"  >> /etc/fstab
-	echo "/dev/xvde /hana/shared   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab	
+	echo "/dev/xvde /hana/shared   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghana-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghana-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghanaback-lvhanaback     /backup        xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
-fi		
+fi
 
 
 ##10. Updated the fstab entry for /backup (Master only)
@@ -384,7 +396,7 @@ if (( $(isSLES) == 1 )); then
 fi
 
 # ------------------------------------------------------------------
-#         Configure NFS exports 
+#         Configure NFS exports
 # ------------------------------------------------------------------
 ##ensure nfs service starts on boot
 if (( $(isSLES) == 1 )); then

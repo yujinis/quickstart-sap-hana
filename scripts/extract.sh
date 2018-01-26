@@ -38,7 +38,7 @@ if command_exists unrar ; then
 else
 
 # ------------------------------------------------------------------
-#   At the time of writing, marketplace RHEL and marketplace SLES 
+#   At the time of writing, marketplace RHEL and marketplace SLES
 #	did not have unrar package. As a workaround, we download as below
 #   TODO: This is a temporary workaround and needs to be fixed in AMI
 # ------------------------------------------------------------------
@@ -46,7 +46,7 @@ else
 
 
 	mkdir -p /root/install/misc
-	wget http://www.rarlab.com/rar/unrar-5.0-RHEL5x64.tar.gz -O /root/install/misc/unrar-5.0-RHEL5x64.tar.gz 
+	wget http://www.rarlab.com/rar/unrar-5.0-RHEL5x64.tar.gz -O /root/install/misc/unrar-5.0-RHEL5x64.tar.gz
 	(cd /root/install/misc && tar xvf /root/install/misc/unrar-5.0-RHEL5x64.tar.gz && chmod 755 /root/install/misc/unrar)
 	/root/install/misc/unrar x ${EXE} ${EXTRACT_DIR}
 

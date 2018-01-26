@@ -99,6 +99,11 @@
             "Type": "String",
             "Default": "quickstart-reference/sap/hana/latest"
         },
+        "CustomStorageConfig": {
+            "Description": "S3 location where custom storage configuration file is localted.",
+            "Type": "String",
+            "Default": "quickstart-reference/sap/hana/latest/scripts"
+        },
         "Proxy": {
             "Description": "Proxy address for http access (e.g., http://xyz.abc.com:8080 or http://10.x.x.x:8080).",
             "Type": "String",
@@ -123,14 +128,14 @@
             "Description": "Operating system (SLES or RHEL) and version for master/worker nodes.",
             "Default": "SuSELinux12SP2ForSAP",
             "AllowedValues": [
-                "SuSELinux11SP4",
-                "SuSELinux12",
-                "SuSELinux12SP1",
-                "SuSELinux12SP1ForSAP",
-                "SuSELinux12SP2ForSAP",
-                "RedHatLinux66",
-                "RedHatLinux67",
-                "RedHatLinux72"
+              "RedHatLinux73ForSAP",
+              "SuSELinux11SP4",
+              "SuSELinux12",
+              "SuSELinux12SP1",
+              "SuSELinux12SP1ForSAP",
+              "SuSELinux12SP2ForSAP",
+              "SuSELinux12SP1ForSAP-BYOS",
+              "SuSELinux12SP2ForSAP-BYOS"
             ]
         },
         "MyInstanceType": {
@@ -217,6 +222,23 @@
                 "gp2",
                 "io1"
             ]
+        },
+        "SAPTZ": {
+            "AllowedValues": [
+                "PT",
+                "CT",
+                "ET",
+                "UC"
+            ],
+            "ConstraintDescription": "This value must consist of 2 characters.",
+            "Default": "UC",
+            "Description": "The TimeZone of your SAP HANA Server (PT, CT, ET, or UTC)",
+            "Type": "String"
+        },
+        "SLESBYOSRegCode": {
+            "Type": "String",
+            "Default": "",
+            "Description": "Registration code for SUSE BYOS (Applicable only if you use BYOS Option)."
         }
     },
     "Conditions": {
@@ -257,6 +279,7 @@
                     },
                     "Parameters": [
                         "MyOS",
+                        "SLESBYOSRegCode",
                         "MyInstanceType",
                         "HostCount",
                         "AutoRecovery",
@@ -279,6 +302,7 @@
                         "SID",
                         "SAPInstanceNum",
                         "HANAMasterPass",
+                        "SAPTZ",
                         "HANAInstallMedia",
                         "InstallHANA"
                     ]
@@ -307,7 +331,8 @@
                         "default": ""
                     },
                     "Parameters": [
-                        "PrivateBucket"
+                        "PrivateBucket",
+                        "CustomStorageConfig"
                     ]
                 }
             ],
@@ -354,6 +379,9 @@
                 "PrivateBucket": {
                     "default": "Enter private bucket"
                 },
+                "CustomStorageConfig": {
+                    "default": "Enter custom storage configuration location"
+                },
                 "Proxy": {
                     "default": "Enter proxy server address"
                 },
@@ -362,6 +390,9 @@
                 },
                 "MyOS": {
                     "default": "Choose operating system and version for SAP HANA"
+                },
+                "SLESBYOSRegCode": {
+                    "default": "Enter SUSE BYOS Registration Code"
                 },
                 "AutoRecovery": {
                     "default": "Would you like to turn on automatic recovery?"
@@ -398,6 +429,9 @@
                 },
                 "EnableLogging": {
                     "default": "Would you like to enable AWS CloudTrail trails and AWS Config?"
+                },
+                "SAPTZ": {
+                    "default": "Enter SAP HANA Server timezone"
                 }
             }
         }
@@ -593,6 +627,15 @@
                     },
                     "EnableLogging": {
                         "Ref": "EnableLogging"
+                    },
+                    "SAPTZ": {
+                      "Ref": "SAPTZ"
+                    },
+                    "CustomStorageConfig": {
+                      "Ref": "CustomStorageConfig"
+                    },
+                    "SLESBYOSRegCode": {
+                      "Ref": "SLESBYOSRegCode"
                     }
                 }
             }
