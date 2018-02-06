@@ -49,6 +49,9 @@ set_tz() {
         ET)
                 TZ_ZONE_FILE="/usr/share/zoneinfo/US/Eastern"
                 ;;
+        JT)
+                TZ_ZONE_FILE="/usr/share/zoneinfo/Asia/Tokyo"
+                ;;
         *)
                 TZ_ZONE_FILE="/usr/share/zoneinfo/UTC"
                 ;;

@@ -224,9 +224,10 @@
         },
         "SAPTZ": {
             "AllowedValues": [
-                "PT",
                 "CT",
                 "ET",
+                "JT",
+                "PT",
                 "UC"
             ],
             "ConstraintDescription": "This value must consist of 2 characters.",
