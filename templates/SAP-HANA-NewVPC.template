@@ -439,49 +439,49 @@
     "Mappings": {
         "AWSAMIRegionMap": {
             "AMI": {
-                "AWSNAT": "amzn-ami-vpc-nat-hvm-2017.09.1.20180115-x86_64-ebs"
+                "AWSNAT": "amzn-ami-vpc-nat-hvm-2017.09.1.20180307-x86_64-ebs"
             },
             "ap-northeast-1": {
-                "AWSNAT": "ami-2c593d4a"
+                "AWSNAT": "ami-6d7b370b"
             },
             "ap-northeast-2": {
-                "AWSNAT": "ami-c52f8fab"
+                "AWSNAT": "ami-ec1ab782"
             },
             "ap-south-1": {
-                "AWSNAT": "ami-c2e9bead"
+                "AWSNAT": "ami-1d89d772"
             },
             "ap-southeast-1": {
-                "AWSNAT": "ami-270f735b"
+                "AWSNAT": "ami-76aafe0a"
             },
             "ap-southeast-2": {
-                "AWSNAT": "ami-3d28d45f"
+                "AWSNAT": "ami-20874742"
             },
             "ca-central-1": {
-                "AWSNAT": "ami-2b4acf4f"
+                "AWSNAT": "ami-d456d1b0"
             },
             "eu-central-1": {
-                "AWSNAT": "ami-5756ca38"
+                "AWSNAT": "ami-4a432d25"
             },
             "eu-west-1": {
-                "AWSNAT": "ami-a136a9d8"
+                "AWSNAT": "ami-59054720"
             },
             "eu-west-2": {
-                "AWSNAT": "ami-87312ae3"
+                "AWSNAT": "ami-cbf116ac"
             },
             "sa-east-1": {
-                "AWSNAT": "ami-be1f52d2"
+                "AWSNAT": "ami-ce3c76a2"
             },
             "us-east-1": {
-                "AWSNAT": "ami-8d7655f7"
+                "AWSNAT": "ami-68a75915"
             },
             "us-east-2": {
-                "AWSNAT": "ami-fc3b1199"
+                "AWSNAT": "ami-bd6f59d8"
             },
             "us-west-1": {
-                "AWSNAT": "ami-394e4c59"
+                "AWSNAT": "ami-da5441ba"
             },
             "us-west-2": {
-                "AWSNAT": "ami-35d6664d"
+                "AWSNAT": "ami-a878ecd0"
             }
         }
     },
