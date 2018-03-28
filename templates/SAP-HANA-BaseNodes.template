@@ -64,12 +64,12 @@
         "PrivateBucket": {
             "Description": "Main build bucket where templates and scripts are located.",
             "Type": "String",
-            "Default": "quickstart-reference/sap/hana/latest"
+            "Default": "aws-quickstart/quickstart-sap-hana"
         },
         "CustomStorageConfig": {
             "Description": "S3 location where custom storage configuration file is localted.",
             "Type": "String",
-            "Default": "quickstart-reference/sap/hana/latest/scripts"
+            "Default": "aws-quickstart/quickstart-sap-hana/scripts"
         },
         "Proxy": {
             "Description": "Proxy address for http access (e.g., http://xyz.abc.com:8080 or http://10.x.x.x:8080).",

@@ -26,7 +26,7 @@ export JQ_COMMAND=./jq
 [ ! -f ${JQ_COMMAND} ] && export JQ_COMMAND=/home/ec2-user/jq
 if [ ! -f ${JQ_COMMAND} ]; then
 	export JQ_COMMAND=./jq
-  wget -O ${JQ_COMMAND} https://s3.amazonaws.com/quickstart-reference/sap/hana/latest/media/jq
+  wget -O ${JQ_COMMAND} https://s3.amazonaws.com/aws-quickstart/quickstart-sap-hana/media/jq
   chmod 755 ${JQ_COMMAND}
 fi
 export PATH=${PATH}:/sbin:/usr/sbin:/usr/local/sbin:/root/bin:/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/X11R6/bin:/usr/games:/usr/lib/AmazonEC2/ec2-api-tools/bin:/usr/lib/AmazonEC2/ec2-ami-tools/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin

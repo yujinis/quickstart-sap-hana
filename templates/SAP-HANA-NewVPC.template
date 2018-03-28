@@ -97,12 +97,12 @@
         "PrivateBucket": {
             "Description": "Main build bucket where templates and scripts are located.",
             "Type": "String",
-            "Default": "quickstart-reference/sap/hana/latest"
+            "Default": "aws-quickstart/quickstart-sap-hana"
         },
         "CustomStorageConfig": {
             "Description": "S3 location where custom storage configuration file is localted.",
             "Type": "String",
-            "Default": "quickstart-reference/sap/hana/latest/scripts"
+            "Default": "aws-quickstart/quickstart-sap-hana/scripts"
         },
         "Proxy": {
             "Description": "Proxy address for http access (e.g., http://xyz.abc.com:8080 or http://10.x.x.x:8080).",
@@ -520,7 +520,7 @@
         "BaseNodes": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
-                "TemplateURL": "https://s3.amazonaws.com/quickstart-reference/sap/hana/latest/templates/SAP-HANA-BaseNodes.template",
+                "TemplateURL": "https://s3.amazonaws.com/aws-quickstart/quickstart-sap-hana/templates/SAP-HANA-BaseNodes.template",
                 "Parameters": {
                     "PrivSubCIDR": {
                         "Ref": "PrivSubCIDR"
@@ -643,7 +643,7 @@
         "BaseNetwork": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
-                "TemplateURL": "https://s3.amazonaws.com/quickstart-reference/sap/hana/latest/templates/SAP-HANA-BaseNetwork.template",
+                "TemplateURL": "https://s3.amazonaws.com/aws-quickstart/quickstart-sap-hana/templates/SAP-HANA-BaseNetwork.template",
                 "Parameters": {
                     "VPC": {
                         "Ref": "VPC"

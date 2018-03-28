@@ -46,7 +46,7 @@ done
 [ -z ${JQ_COMMAND} ] && export JQ_COMMAND=/home/ec2-user/jq
 
 if [ ! -f ${JQ_COMMAND} ]; then
-	wget -O ${JQ_COMMAND} https://s3.amazonaws.com/quickstart-reference/sap/hana/latest/media/jq
+	wget -O ${JQ_COMMAND} https://s3.amazonaws.com/aws-quickstart/quickstart-sap-hana/media/jq
 	chmod 755 ${JQ_COMMAND}
 fi
 
