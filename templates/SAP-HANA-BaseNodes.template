@@ -31,13 +31,13 @@
             "Type": "AWS::EC2::Subnet::Id",
             "Description": "The existing private subnet in your VPC where you want to deploy SAP HANA.",
             "Default": "subnet-xxxxxxxx",
-            "AllowedPattern": "subnet-[0-9a-z]{8}"
+            "AllowedPattern": "subnet-[0-9a-z]{20}"
         },
         "DMZSubnet": {
             "Type": "AWS::EC2::Subnet::Id",
             "Description": "The existing public subnet in your VPC where you want to deploy the optional RDP instance.",
             "Default": "subnet-xxxxxxxx",
-            "AllowedPattern": "subnet-[0-9a-z]{8}"
+            "AllowedPattern": "subnet-[0-9a-z]{20}"
         },
         "DomainName": {
             "Type": "String",
