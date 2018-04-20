@@ -10,8 +10,8 @@
         },
         "HANAInstallMedia": {
             "Description": "Full path to Amazon S3 location of SAP HANA software files (e.g., s3://myhanabucket/sap-hana-sps11/).",
-            "Default": "",
-            "Type": "String"
+            "Type": "String",
+            "Default": ""
         },
         "AvailabilityZone": {
             "Description": "The Availability Zone where SAP HANA subnets will be created.",
