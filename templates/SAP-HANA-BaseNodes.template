@@ -769,7 +769,7 @@
                 "SLES11SP4HVM": "suse-sles-11-sp4-v20180104-hvm-ssd-x86_64",
                 "SLES12SP1HVM": "suse-sles-12-sp1-v20161021-hvm-ssd-x86_64",
                 "SLES12SP2HVM": "suse-sles-12-sp2-v20170620-hvm-ssd-x86_64",
-                "SLES12SP3HVM": "suse-sles-12-sp3-v20180215-hvm-ssd-x86_64",
+                "SLES12SP3HVM": "update-suse-sles-12-sp3-v20180215-hvm-ssd-x86_64",
                 "SLES12SP1SAPHVM": "suse-sles-sap-12-sp1-v20171121-hvm-ssd-x86_64-f0188081-b780-4ee4-aef6-cbcb063fd11e-ami-8bac24f1.4",
                 "SLES12SP2SAPHVM": "suse-sles-sap-12-sp2-v20180215-hvm-ssd-x86_64-e3458d64-5c36-4577-bd98-0ee19e3eaeec-ami-4cd6c836.4",
                 "SLES12SP3SAPHVM": "suse-sles-sap-12-sp3-v20180215-hvm-ssd-x86_64-da7aa9c3-97db-4573-89a6-7fe7348d90b0-ami-92d5cbe8.4",
