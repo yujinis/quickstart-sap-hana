@@ -61,7 +61,7 @@
     },
     {
         "ParameterKey": "MyOS",
-        "ParameterValue": "SuSELinux12SP3"
+        "ParameterValue": "SuSELinux12SP1"
     },
     {
         "ParameterKey": "PlacementGroupName",
