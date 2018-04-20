@@ -3,33 +3,38 @@
     "Description": "(0008) Deploy SAP HANA on AWS",
     "Parameters": {
         "VPCID": {
-            "Description": "The existing Amazon VPC where you want to deploy SAP App Server Cluster.",
+            "Description": "The existing Amazon VPC where you want to deploy SAP HANA.",
             "Type": "AWS::EC2::VPC::Id"
         },
         "PrivSubCIDR": {
             "Description": "CIDR block of the private subnet where SAP HANA will be deployed.",
             "Type": "String",
             "Default": "10.0.1.0/24",
-            "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
         },
         "DMZCIDR": {
             "Description": "CIDR block of the public DMZ subnet where BASTION Host / NAT Gateway exist.",
             "Type": "String",
             "Default": "10.0.2.0/24",
-            "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
         },
         "RemoteAccessCIDR": {
             "Description": "CIDR block from where you want to access your RDP instance.",
             "Type": "String",
-            "MinLength": "9",
-            "MaxLength": "18",
             "Default": "0.0.0.0/0",
-            "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
             "ConstraintDescription": "This must be a valid CIDR range in the format x.x.x.x/x."
         },
         "HANASubnet": {
             "Type": "AWS::EC2::Subnet::Id",
             "Description": "The existing private subnet in your VPC where you want to deploy SAP HANA."
+        },
+        "ApplicationCIDR": {
+            "Description": "CIDR block of subnet where SAP Application servers are deployed.",
+            "Type": "String",
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
+            "Default": "0.0.0.0/0",
+            "ConstraintDescription": "This must be a valid CIDR range in the format x.x.x.x/x."
         },
         "DMZSubnet": {
             "Type": "AWS::EC2::Subnet::Id",
@@ -112,9 +117,18 @@
                 "No"
             ]
         },
-        "VolumeType": {
+        "VolumeTypeHanaData": {
             "Type": "String",
-            "Description": "EBS volume type: General Purpose SSD (gp2) or Provisioned IOPS SSD (io1).",
+            "Description": "EBS volume type for SAP HANA Data: General Purpose SSD (gp2) or Provisioned IOPS SSD (io1).",
+            "Default": "gp2",
+            "AllowedValues": [
+                "gp2",
+                "io1"
+            ]
+        },
+        "VolumeTypeHanaLog": {
+            "Type": "String",
+            "Description": "EBS volume type for SAP HANA Log: General Purpose SSD (gp2) or Provisioned IOPS SSD (io1).",
             "Default": "gp2",
             "AllowedValues": [
                 "gp2",
@@ -124,15 +138,17 @@
         "MyOS": {
             "Type": "String",
             "Description": "Operating system (SLES or RHEL) and version for master and worker nodes.",
-            "Default": "SuSELinux12SP2ForSAP",
+            "Default": "SuSELinux12SP3ForSAP",
             "AllowedValues": [
                 "RedHatLinux73ForSAP",
-                "SuSELinux11SP4",
                 "SuSELinux12SP1",
+                "SuSELinux12SP3",
                 "SuSELinux12SP1ForSAP",
                 "SuSELinux12SP2ForSAP",
+                "SuSELinux12SP3ForSAP",
                 "SuSELinux12SP1ForSAP-BYOS",
-                "SuSELinux12SP2ForSAP-BYOS"
+                "SuSELinux12SP2ForSAP-BYOS",
+                "SuSELinux12SP3ForSAP-BYOS"
             ]
         },
         "SLESBYOSRegCode": {
@@ -262,7 +278,8 @@
                         "HostCount",
                         "AutoRecovery",
                         "KeyName",
-                        "VolumeType",
+                        "VolumeTypeHanaData",
+                        "VolumeTypeHanaLog",
                         "Encryption"
                     ]
                 },
@@ -297,6 +314,7 @@
                         "InstallRDPInstance",
                         "RDPInstanceType",
                         "RemoteAccessCIDR",
+                        "ApplicationCIDR",
                         "EnableLogging",
                         "CloudTrailS3Bucket",
                         "Proxy"
@@ -333,9 +351,6 @@
                 },
                 "RemoteAccessCIDR": {
                     "default": "Enter CIDR block for RDP access"
-                },
-                "SnapShotID": {
-                    "default": "Enter snapshot ID"
                 },
                 "DomainName": {
                     "default": "Enter domain name"
@@ -379,8 +394,11 @@
                 "Encryption": {
                     "default": "Would you like to turn on encryption?"
                 },
-                "VolumeType": {
-                    "default": "Choose storage volume type"
+                "VolumeTypeHanaData": {
+                    "default": "Choose storage volume type for SAP HANA Data"
+                },
+                "VolumeTypeHanaLog": {
+                    "default": "Choose storage volume type for SAP HANA Log"
                 },
                 "MyOS": {
                     "default": "Choose operating system for SAP HANA"
@@ -411,6 +429,9 @@
                 },
                 "SAPTZ": {
                     "default": "Enter SAP HANA Server timezone"
+                },
+                "ApplicationCIDR": {
+                    "default": "Enter CIDR block of your SAP Application Servers"
                 }
             }
         }
@@ -679,6 +700,18 @@
                 "Yes"
             ]
         },
+        "IfAppSubnet": {
+            "Fn::Not": [
+            {
+              "Fn::Equals": [
+                {
+                    "Ref": "ApplicationCIDR"
+                },
+                "0.0.0.0/0"
+            ]
+          }
+          ]
+        },
         "IfUseSLES": {
             "Fn::Equals": [
                 {
@@ -708,6 +741,9 @@
             "SuSELinux12SP2": {
                 "Code": "SLES12SP2HVM"
             },
+            "SuSELinux12SP3": {
+                "Code": "SLES12SP3HVM"
+            },
             "SuSELinux12SP1ForSAP": {
                 "Code": "SLES12SP1SAPHVM"
             },
@@ -733,6 +769,7 @@
                 "SLES11SP4HVM": "suse-sles-11-sp4-v20180104-hvm-ssd-x86_64",
                 "SLES12SP1HVM": "suse-sles-12-sp1-v20161021-hvm-ssd-x86_64",
                 "SLES12SP2HVM": "suse-sles-12-sp2-v20170620-hvm-ssd-x86_64",
+                "SLES12SP3HVM": "suse-sles-12-sp3-v20180215-hvm-ssd-x86_64",
                 "SLES12SP1SAPHVM": "suse-sles-sap-12-sp1-v20171121-hvm-ssd-x86_64-f0188081-b780-4ee4-aef6-cbcb063fd11e-ami-8bac24f1.4",
                 "SLES12SP2SAPHVM": "suse-sles-sap-12-sp2-v20180215-hvm-ssd-x86_64-e3458d64-5c36-4577-bd98-0ee19e3eaeec-ami-4cd6c836.4",
                 "SLES12SP3SAPHVM": "suse-sles-sap-12-sp3-v20180215-hvm-ssd-x86_64-da7aa9c3-97db-4573-89a6-7fe7348d90b0-ami-92d5cbe8.4",
@@ -750,6 +787,7 @@
                 "SLES12SP2HVM": "ami-a07560c7",
                 "SLES12SP2SAPBYOSHVM": "ami-47cab621",
                 "SLES12SP2SAPHVM": "ami-8cb5caea",
+                "SLES12SP3HVM": "ami-a07560c7",
                 "SLES12SP3SAPBYOSHVM": "ami-7dd1ad1b",
                 "SLES12SP3SAPHVM": "ami-44b5ca22",
                 "WS2012R2": "ami-3badff5d"
@@ -763,6 +801,7 @@
                 "SLES12SP2HVM": "ami-86d00fe8",
                 "SLES12SP2SAPBYOSHVM": "ami-9e2d8ff0",
                 "SLES12SP2SAPHVM": "ami-003f9d6e",
+                "SLES12SP3HVM": "ami-a07560c7",
                 "SLES12SP3SAPBYOSHVM": "ami-1433917a",
                 "SLES12SP3SAPHVM": "ami-6202a00c",
                 "WS2012R2": "ami-dde34cb3"
@@ -776,6 +815,7 @@
                 "SLES12SP2HVM": "ami-62e39c0d",
                 "SLES12SP2SAPBYOSHVM": "ami-3c491453",
                 "SLES12SP2SAPHVM": "ami-48613c27",
+                "SLES12SP3HVM": "ami-a07560c7",
                 "SLES12SP3SAPBYOSHVM": "ami-56451839",
                 "SLES12SP3SAPHVM": "ami-76643919",
                 "WS2012R2": "ami-d8b9e2b7"
@@ -789,6 +829,7 @@
                 "SLES12SP2HVM": "ami-f1078a92",
                 "SLES12SP2SAPBYOSHVM": "ami-6691dc1a",
                 "SLES12SP2SAPHVM": "ami-7e0c4002",
+                "SLES12SP3HVM": "ami-a07560c7",
                 "SLES12SP3SAPBYOSHVM": "ami-e99ad795",
                 "SLES12SP3SAPHVM": "ami-01f3be7d",
                 "WS2012R2": "ami-169fc06a"
@@ -802,6 +843,7 @@
                 "SLES12SP2HVM": "ami-197a6a7a",
                 "SLES12SP2SAPBYOSHVM": "ami-272aef45",
                 "SLES12SP2SAPHVM": "ami-d56faab7",
+                "SLES12SP3HVM": "ami-a07560c7",
                 "SLES12SP3SAPBYOSHVM": "ami-572aef35",
                 "SLES12SP3SAPHVM": "ami-4d6eab2f",
                 "WS2012R2": "ami-e68f4384"
@@ -814,6 +856,7 @@
                 "SLES12SP2HVM": "ami-d5d56ab1",
                 "SLES12SP2SAPBYOSHVM": "ami-b21490d6",
                 "SLES12SP2SAPHVM": "ami-76199d12",
+                "SLES12SP3HVM": "ami-a07560c7",
                 "SLES12SP3SAPBYOSHVM": "ami-40088c24",
                 "SLES12SP3SAPHVM": "ami-f7139793",
                 "WS2012R2": "ami-56fd7b32"
@@ -827,6 +870,7 @@
                 "SLES12SP2HVM": "ami-984ee9f7",
                 "SLES12SP2SAPBYOSHVM": "ami-12b8d97d",
                 "SLES12SP2SAPHVM": "ami-adc8a9c2",
+                "SLES12SP3HVM": "ami-a07560c7",
                 "SLES12SP3SAPBYOSHVM": "ami-5bb9d834",
                 "SLES12SP3SAPHVM": "ami-9cc6a7f3",
                 "WS2012R2": "ami-0bdc8fe0"
@@ -840,6 +884,7 @@
                 "SLES12SP2HVM": "ami-f5776f93",
                 "SLES12SP2SAPBYOSHVM": "ami-17f0836e",
                 "SLES12SP2SAPHVM": "ami-3dbac844",
+                "SLES12SP3HVM": "ami-a07560c7",
                 "SLES12SP3SAPBYOSHVM": "ami-978efdee",
                 "SLES12SP3SAPHVM": "ami-53b9cb2a",
                 "WS2012R2": "ami-e9104190"
@@ -852,6 +897,7 @@
                 "SLES12SP2HVM": "ami-d97066bd",
                 "SLES12SP2SAPBYOSHVM": "ami-1f6b8e78",
                 "SLES12SP2SAPHVM": "ami-4545a022",
+                "SLES12SP3HVM": "ami-a07560c7",
                 "SLES12SP3SAPBYOSHVM": "ami-c46b8ea3",
                 "SLES12SP3SAPHVM": "ami-bc7b9edb",
                 "WS2012R2": "ami-19688e7e"
@@ -863,6 +909,7 @@
                 "SLES12SP1SAPHVM": "ami-41893e3c",
                 "SLES12SP2SAPBYOSHVM": "ami-1286306f",
                 "SLES12SP2SAPHVM": "ami-aa8533d7",
+                "SLES12SP3HVM": "ami-a07560c7",
                 "SLES12SP3SAPBYOSHVM": "ami-7387310e",
                 "SLES12SP3SAPHVM": "ami-2284325f",
                 "WS2012R2": "ami-802492fd"
@@ -876,6 +923,7 @@
                 "SLES12SP2HVM": "ami-52a4cf3e",
                 "SLES12SP2SAPBYOSHVM": "ami-d76920bb",
                 "SLES12SP2SAPHVM": "ami-2bcca747",
+                "SLES12SP3HVM": "ami-a07560c7",
                 "SLES12SP3SAPBYOSHVM": "ami-46561f2a",
                 "SLES12SP3SAPHVM": "ami-4e017322",
                 "WS2012R2": "ami-6ed38702"
@@ -889,6 +937,7 @@
                 "SLES12SP2HVM": "ami-8fac8399",
                 "SLES12SP2SAPBYOSHVM": "ami-601e001a",
                 "SLES12SP2SAPHVM": "ami-678a931d",
+                "SLES12SP3HVM": "ami-a07560c7",
                 "SLES12SP3SAPBYOSHVM": "ami-3d716f47",
                 "SLES12SP3SAPHVM": "ami-388f9642",
                 "WS2012R2": "ami-eb1ecd96"
@@ -902,6 +951,7 @@
                 "SLES12SP2HVM": "ami-f990b69c",
                 "SLES12SP2SAPBYOSHVM": "ami-cfdeeaaa",
                 "SLES12SP2SAPHVM": "ami-f9c9fd9c",
+                "SLES12SP3HVM": "ami-a07560c7",
                 "SLES12SP3SAPBYOSHVM": "ami-edd8ec88",
                 "SLES12SP3SAPHVM": "ami-7fc9fd1a",
                 "WS2012R2": "ami-2f16274a"
@@ -915,6 +965,7 @@
                 "SLES12SP2HVM": "ami-32c8e552",
                 "SLES12SP2SAPBYOSHVM": "ami-d7d3dab7",
                 "SLES12SP2SAPHVM": "ami-ecf6ff8c",
+                "SLES12SP3HVM": "ami-a07560c7",
                 "SLES12SP3SAPBYOSHVM": "ami-02d0d962",
                 "SLES12SP3SAPHVM": "ami-1af4fd7a",
                 "WS2012R2": "ami-4e07112e"
@@ -923,11 +974,13 @@
                 "RHEL73SAPHVM": "ami-edfa4895",
                 "SLES11SP4HVM": "ami-7eb31906",
                 "SLES12SP1HVM": "ami-7fa2061f",
+                "SLES12SP3HVM": "ami-811794f9",
                 "SLES12SP1SAPBYOSHVM": "ami-68922c08",
                 "SLES12SP1SAPHVM": "ami-94fb26ec",
                 "SLES12SP2HVM": "ami-da786da3",
                 "SLES12SP2SAPBYOSHVM": "ami-0d38bb75",
                 "SLES12SP2SAPHVM": "ami-b7bd3fcf",
+                "SLES12SP3HVM": "ami-a07560c7",
                 "SLES12SP3SAPBYOSHVM": "ami-8432b1fc",
                 "SLES12SP3SAPHVM": "ami-84be3cfc",
                 "WS2012R2": "ami-651f811d"
@@ -952,7 +1005,19 @@
                     "GroupId"
                 ]
             }
-        }
+        },
+        "HANAMasterInstanceRole": {
+            "Description": "Instance Role Name for HANA Instance",
+            "Value": {
+                "Ref": "HANAIAMRole"
+                    }
+                },
+        "HANAMasterInstanceId": {
+            "Description": "Instance Id for HANA Instance",
+            "Value": {
+                "Ref": "HANAMasterInstance"
+                    }
+                }
     },
     "Resources": {
         "Trail": {
@@ -1651,6 +1716,44 @@
                 ]
             }
         },
+        "HANASecurityGroupUpdate": {
+          "Type": "AWS::EC2::SecurityGroupIngress",
+          "Condition": "IfAppSubnet",
+          "Properties": {
+              "CidrIp" : {
+                  "Ref": "ApplicationCIDR"
+              },
+              "Description": "SAP Client Traffic",
+              "IpProtocol": "tcp",
+              "FromPort": {
+                  "Fn::Join": [
+                      "",
+                      [
+                          "3",
+                          {
+                              "Ref": "SAPInstanceNum"
+                          },
+                          "13"
+                      ]
+                  ]
+              },
+                "ToPort": {
+                  "Fn::Join": [
+                      "",
+                      [
+                          "3",
+                          {
+                              "Ref": "SAPInstanceNum"
+                          },
+                          "17"
+                      ]
+                  ]
+              },
+              "GroupId": {
+                "Ref": "HANASecurityGroup"
+              }
+          }
+        },
         "HANASlaveSG": {
             "Type": "AWS::EC2::SecurityGroup",
             "Condition": "TwoOrMoreNodes",
@@ -1810,7 +1913,8 @@
                             "Effect": "Allow",
                             "Principal": {
                                 "Service": [
-                                    "ec2.amazonaws.com"
+                                    "ec2.amazonaws.com",
+                                    "ssm.amazonaws.com"
                                 ]
                             },
                             "Action": [
@@ -1820,6 +1924,9 @@
                     ]
                 },
                 "Path": "/",
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+                ],
                 "Policies": [
                     {
                         "PolicyName": "HANA-QuickStart",

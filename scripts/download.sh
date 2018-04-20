@@ -32,7 +32,6 @@ DOWNLOADSTORAGE=https://s3.amazonaws.com/${STORAGE_BUCKET}
 # ------------------------------------------------------------------
 #          Download all the scripts needed for HANA install
 # ------------------------------------------------------------------
-# TODO: Make these into a single zip bundle!
 
 wget ${DOWNLOADLINK}/scripts/cluster-watch-engine.sh --output-document=/root/install/cluster-watch-engine.sh
 wget ${DOWNLOADLINK}/scripts/install-prereq.sh --output-document=/root/install/install-prereq.sh

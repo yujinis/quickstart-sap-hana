@@ -30,8 +30,17 @@ myInstance=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/doc
 
 export USE_NEW_STORAGE=1
 
+# ------------------------------------------------------------------
+#          Choose default log file
+# ------------------------------------------------------------------
 
+if [ -z "${HANA_LOG_FILE}" ] ; then
+    HANA_LOG_FILE=${SCRIPT_DIR}/install.log
+fi
 
+log() {
+	echo $* 2>&1 | tee -a ${HANA_LOG_FILE}
+}
 
 # ------------------------------------------------------------------
 #          Read all inputs
@@ -88,8 +97,12 @@ MyInstanceType=$(/usr/local/bin/aws cloudformation describe-stacks --stack-name 
 				| /root/install/jq '.Stacks[0].Parameters[] | select(.ParameterKey=="MyInstanceType") | .ParameterValue' \
 				| sed 's/"//g')
 
-MyVolumeType=$(/usr/local/bin/aws cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
-				| /root/install/jq '.Stacks[0].Parameters[] | select(.ParameterKey=="VolumeType") | .ParameterValue' \
+MyHanaDataVolumeType=$(/usr/local/bin/aws cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
+				| /root/install/jq '.Stacks[0].Parameters[] | select(.ParameterKey=="VolumeTypeHanaData") | .ParameterValue' \
+				| sed 's/"//g')
+
+MyHanaLogVolumeType=$(/usr/local/bin/aws cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
+				| /root/install/jq '.Stacks[0].Parameters[] | select(.ParameterKey=="VolumeTypeHanaLog") | .ParameterValue' \
 				| sed 's/"//g')
 
 if [ -f /root/install/storage.json ] && [ -s /root/install/storage.json ] ; then
@@ -106,7 +119,7 @@ else
 fi
 
 
-
+log `date` "Building storage script to provision and configure EBS volumes for SAP HANA"
 STORAGE_SCRIPT=/root/install/storage_builder_generated_master.sh
 python /root/install/build_storage.py  -config /root/install/storage.json  \
 					     -ismaster ${IsMasterNode} \
@@ -114,10 +127,15 @@ python /root/install/build_storage.py  -config /root/install/storage.json  \
 					     -instance_type ${MyInstanceType} -storage_type ${BACKUP_VOL} \
 					     > ${STORAGE_SCRIPT}
 python /root/install/build_storage.py  -config /root/install/storage.json  \
-					     -ismaster ${IsMasterNode} \
-					     -hostcount ${HostCount} -which hana_data_log \
-					     -instance_type ${MyInstanceType} -storage_type ${MyVolumeType} \
-					     >> ${STORAGE_SCRIPT}
+							 -ismaster ${IsMasterNode} \
+							 -hostcount ${HostCount} -which hana_data \
+							 -instance_type ${MyInstanceType} -storage_type ${MyHanaDataVolumeType} \
+							 >> ${STORAGE_SCRIPT}
+python /root/install/build_storage.py  -config /root/install/storage.json  \
+							 -ismaster ${IsMasterNode} \
+							 -hostcount ${HostCount} -which hana_log \
+							 -instance_type ${MyInstanceType} -storage_type ${MyHanaLogVolumeType} \
+							 >> ${STORAGE_SCRIPT}
 python /root/install/build_storage.py  -config /root/install/storage.json  \
 					     -ismaster ${IsMasterNode} \
 					     -hostcount ${HostCount} -which shared \
@@ -139,10 +157,6 @@ python /root/install/build_storage.py  -config /root/install/storage.json  \
 #          set_noop_scheduler()
 # ------------------------------------------------------------------
 
-log() {
-	echo $* 2>&1 | tee -a ${HANA_LOG_FILE}
-}
-
 #Check if SIG_FLAG_FILE is present
 
 if [ $(issignal_check) == 1 ]; then
@@ -162,9 +176,13 @@ update_status () {
 
 create_volume () {
 	if (( ${USE_NEW_STORAGE} == 1 )); then
-		log `date` "Creating Physical Volumes for saphana volume group"
+		log `date` "Creating Physical Volumes for SAP HANA Data and Log volume groups"
 		#for i in {b..m}
 		for i in {b..f}
+		do
+		  pvcreate /dev/xvd$i
+		done
+		for i in {h..i}
 		do
 		  pvcreate /dev/xvd$i
 		done
@@ -199,13 +217,6 @@ shift $((OPTIND-1))
 
 [[ $# -gt 0 ]] && usage;
 
-# ------------------------------------------------------------------
-#          Choose default log file
-# ------------------------------------------------------------------
-
-if [ -z "${HANA_LOG_FILE}" ] ; then
-	HANA_LOG_FILE=/root/install/install.log
-fi
 
 if (( ${USE_NEW_STORAGE} == 1 ));
 then
@@ -360,15 +371,15 @@ then
 	echo "/dev/xvds /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
 	echo "/dev/xvdz /media   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0"  >> /etc/fstab
 	echo "/dev/xvde /hana/shared   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
-	echo "/dev/mapper/vghana-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
-	echo "/dev/mapper/vghana-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
+	echo "/dev/mapper/vghanadata-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
+	echo "/dev/mapper/vghanalog-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghanaback-lvhanaback     /backup        xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
 else
 	echo "/dev/xvds /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
 	echo "/dev/xvdz /media   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0"  >> /etc/fstab
 	echo "/dev/xvde /hana/shared   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
-	echo "/dev/mapper/vghana-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
-	echo "/dev/mapper/vghana-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
+	echo "/dev/mapper/vghanadata-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
+	echo "/dev/mapper/vghanalog-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghanaback-lvhanaback     /backup        xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
 fi
 

@@ -289,6 +289,46 @@ install_prereq_sles12sp2() {
     #error check and return
 }
 
+install_prereq_sles12sp3() {
+    # ------------------------------------------------------------------
+    #          Install all the pre-requisites for SAP HANA
+    # ------------------------------------------------------------------
+
+    log "## Installing required OS Packages## "
+    zypper -n install systemd 2>&1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install gtk2 2>&1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install java-1_6_0-ibm 2>&1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libicu  | tee -a ${HANA_LOG_FILE}
+    zypper -n install mozilla-xulrunner*  | tee -a ${HANA_LOG_FILE}
+    zypper -n install ntp  | tee -a ${HANA_LOG_FILE}
+    zypper -n install sudo  | tee -a ${HANA_LOG_FILE}
+    zypper -n install syslog-ng  | tee -a ${HANA_LOG_FILE}
+    zypper -n install tcsh libssh2-1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install autoyast2-installation | tee -a ${HANA_LOG_FILE}
+    zypper -n install yast2-ncurses  | tee -a ${HANA_LOG_FILE}
+    zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
+	  zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
+    #Install unrar for media extraction
+    zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+    #SLES 12 installation fails with libnuma
+    zypper -n install libnuma-devel | tee -a ${HANA_LOG_FILE}
+    #Remove ulimit package
+    zypper remove ulimit > /dev/null
+
+    chkconfig boot.kdump  | tee -a ${HANA_LOG_FILE}
+    chkconfig kdump off
+    echo "net.ipv4.tcp_slow_start_after_idle=0" >> /etc/sysctl.conf
+    sysctl -p /etc/sysctl.conf  | tee -a ${HANA_LOG_FILE}
+
+    #ipcs -l  | tee -a ${HANA_LOG_FILE}
+    echo "kernel.shmmni=65536" >> /etc/sysctl.conf
+    sysctl -p /etc/sysctl.conf  | tee -a ${HANA_LOG_FILE}
+
+    #error check and return
+}
+
 install_prereq_sles12sp1sap() {
     # ------------------------------------------------------------------
     #          Install all the pre-requisites for SAP HANA
@@ -299,6 +339,8 @@ install_prereq_sles12sp1sap() {
     zypper -n install tuned  | tee -a ${HANA_LOG_FILE}
     zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
     zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
+    zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+    systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
     #Install unrar for media extraction
     zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
     # Apply all Recommended HANA settings with SAPTUNE
@@ -318,6 +360,34 @@ install_prereq_sles12sp2sap() {
   zypper -n install tuned  | tee -a ${HANA_LOG_FILE}
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
+  zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  #Install unrar for media extraction
+  zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+  # Apply all Recommended HANA settings with SAPTUNE
+  log "`date` - Start saptune daemon"
+  saptune daemon start | tee -a ${HANA_LOG_FILE}
+  log "`date` - Apply saptune HANA profile"
+  mkdir /etc/tuned/saptune # OSS Note 2205917
+  cp /usr/lib/tuned/saptune/tuned.conf /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  sed -i "/\[cpu\]/ a force_latency=70" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  sed -i "s/script.sh/\/usr\/lib\/tuned\/saptune\/script.sh/" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  saptune solution apply HANA | tee -a ${HANA_LOG_FILE}
+
+}
+
+install_prereq_sles12sp3sap() {
+  # ------------------------------------------------------------------
+  #          Install all the pre-requisites for SAP HANA
+  # ------------------------------------------------------------------
+
+  log "`date` - Install / Update OS Packages## "
+  zypper -n install systemd 2>&1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install tuned  | tee -a ${HANA_LOG_FILE}
+  zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
+  zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
+  zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
   # Apply all Recommended HANA settings with SAPTUNE
@@ -342,6 +412,8 @@ install_prereq_sles12sp1sapbyos() {
   zypper -n install tuned  | tee -a ${HANA_LOG_FILE}
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
+  zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
   # Apply all Recommended HANA settings with SAPTUNE
@@ -361,6 +433,8 @@ install_prereq_sles12sp2sapbyos() {
   zypper -n install tuned  | tee -a ${HANA_LOG_FILE}
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
+  zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
   # Apply all Recommended HANA settings with SAPTUNE
@@ -380,16 +454,22 @@ install_prereq_sles12sp3sapbyos() {
   #          Install all the pre-requisites for SAP HANA
   # ------------------------------------------------------------------
   log "`date` - Install / Update OS Packages## "
-
+  zypper -n install systemd 2>&1 | tee -a ${HANA_LOG_FILE}
   zypper -n install tuned  | tee -a ${HANA_LOG_FILE}
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
+  zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
   # Apply all Recommended HANA settings with SAPTUNE
   log "`date` - Start saptune daemon"
   saptune daemon start | tee -a ${HANA_LOG_FILE}
   log "`date` - Apply saptune HANA profile"
+  mkdir /etc/tuned/saptune # OSS Note 2205917
+  cp /usr/lib/tuned/saptune/tuned.conf /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  sed -i "/\[cpu\]/ a force_latency=70" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  sed -i "s/script.sh/\/usr\/lib\/tuned\/saptune\/script.sh/" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
   saptune solution apply HANA | tee -a ${HANA_LOG_FILE}
 
 }
@@ -453,6 +533,13 @@ start_fs() {
      chkconfig autofs on
 
     #error check and return
+}
+
+set_clocksource () {
+  log "`date` Setting clocksource to TSC"
+  echo "tsc" > /sys/devices/system/clocksource/*/current_clocksource
+  log "`date` Configuring boot.local to set clocksource to TSC upon reboot"
+  echo "echo "tsc" > /sys/devices/system/clocksource/*/current_clocksource" >> /etc/init.d/after.local
 }
 
 start_oss_configs() {
@@ -597,6 +684,7 @@ case "$MyOS" in
     start_ntp
     start_fs
     start_oss_configs
+    set_clocksource
     log "`date` End - Executing SLES 12 SP1 related pre-requisites" ;;
   SLES12SP2HVM )
     log "`date` Start - Executing SLES 12 SP2 related pre-requisites"
@@ -606,6 +694,17 @@ case "$MyOS" in
     start_ntp
     start_fs
     start_oss_configs
+    set_clocksource
+    log "`date` End - Executing SLES 12 SP2 related pre-requisites" ;;
+  SLES12SP3HVM )
+    log "`date` Start - Executing SLES 12 SP2 related pre-requisites"
+    install_prereq_sles12sp3
+    disable_dhcp
+    disable_hostname
+    start_ntp
+    start_fs
+    start_oss_configs
+    set_clocksource
     log "`date` End - Executing SLES 12 SP2 related pre-requisites" ;;
   SLES12SP1SAPHVM )
     log "`date` Start - Executing SLES 12 SP1 for SAP related pre-requisites"
@@ -615,8 +714,15 @@ case "$MyOS" in
   SLES12SP2SAPHVM )
     log "`date` Start - Executing SLES 12 SP2 for SAP related pre-requisites"
     install_prereq_sles12sp2sap
+    set_clocksource
     disable_hostname
     log "`date` End - Executing SLES 12 SP2 for SAP related pre-requisites" ;;
+  SLES12SP3SAPHVM )
+    log "`date` Start - Executing SLES 12 SP3 for SAP related pre-requisites"
+    install_prereq_sles12sp3sap
+    set_clocksource
+    disable_hostname
+    log "`date` End - Executing SLES 12 SP3 for SAP related pre-requisites" ;;
   SLES12SP1SAPBYOSHVM )
     log "`date` Start - Executing SLES 12 SP1 for SAP BYOS related pre-requisites"
     install_prereq_sles12sp1sapbyos
@@ -624,7 +730,7 @@ case "$MyOS" in
     disable_hostname
     start_ntp
     start_fs
-    start_oss_configs
+    set_clocksource
     log "`date` End - Executing SLES 12 SP1 for SAP BYOS related pre-requisites" ;;
   SLES12SP2SAPBYOSHVM )
     log "`date` Start - Executing SLES 12 SP2 for SAP BYOS related pre-requisites"
@@ -633,7 +739,7 @@ case "$MyOS" in
     disable_hostname
     start_ntp
     start_fs
-    start_oss_configs
+    set_clocksource
     log "`date` End - Executing SLES 12 SP2 for SAP BYOS related pre-requisites" ;;
   SLES12SP3SAPBYOSHVM )
     log "`date` Start - Executing SLES 12 SP3 for SAP BYOS related pre-requisites"
@@ -642,7 +748,7 @@ case "$MyOS" in
     disable_hostname
     start_ntp
     start_fs
-    start_oss_configs
+    set_clocksource
     log "`date` End - Executing SLES 12 SP3 for SAP BYOS related pre-requisites" ;;
 esac
 

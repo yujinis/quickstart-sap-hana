@@ -111,8 +111,8 @@ def stripe_backup_vol(drives):
 #log "Creating hana log logical volume"
 #lvcreate -n lvhanalog  -i 3 -I 256 -L ${mylogSize} vghana
 
-def stripe_hanadatalog_vol(stripe,count):
-    print 'Creating HANA data log logical volumes '
+def stripe_hanadata_vol(stripe,count):
+    print 'Creating HANA data logical volumes '
     size = 0
     for d in stripe:
         # d['size'] = 488G etc
@@ -120,10 +120,22 @@ def stripe_hanadatalog_vol(stripe,count):
         sizeG = str(size) + 'G'
         cmd = 'lvcreate -n  ' + d['logical_volume']
         cmd = cmd + ' -i ' + str(count)
-        cmd = cmd + ' -I 256 ' + ' -L ' + sizeG + ' vghana'
+        cmd = cmd + ' -I 256 ' + ' -L ' + sizeG + ' vghanadata'
         exe_cmd(cmd)
         print cmd
 
+def stripe_hanalog_vol(stripe,count):
+    print 'Creating HANA log logical volumes '
+    size = 0
+    for d in stripe:
+        # d['size'] = 488G etc
+        size = int(d['size'].replace('G',''))
+        sizeG = str(size) + 'G'
+        cmd = 'lvcreate -n  ' + d['logical_volume']
+        cmd = cmd + ' -i ' + str(count)
+        cmd = cmd + ' -I 256 ' + ' -L ' + sizeG + ' vghanalog'
+        exe_cmd(cmd)
+        print cmd
 
 def short2long_drive(d):
 	return d.replace('/dev/s','/dev/xv')
@@ -131,7 +143,7 @@ def short2long_drive(d):
 def create_backup_volgrp(drives):
     cmd = 'vgcreate vghanaback '
     for d in drives:
-    	dev = d['device']
+        dev = d['device']
         cmd = cmd + ' ' + short2long_drive(d['device'])
     exe_cmd(cmd)
     print cmd
@@ -145,15 +157,23 @@ def create_hanashared_volgrp(drives):
     print cmd
 
 
-def create_hanadatalog_volgrp(drives):
-    cmd = 'vgcreate vghana '
+def create_hanadata_volgrp(drives):
+    cmd = 'vgcreate vghanadata '
     for d in drives:
     	dev = d['device']
         cmd = cmd + ' ' + short2long_drive(d['device'])
     exe_cmd(cmd)
     print cmd
 
-def init_drive(device):    
+def create_hanalog_volgrp(drives):
+    cmd = 'vgcreate vghanalog '
+    for d in drives:
+    	dev = d['device']
+        cmd = cmd + ' ' + short2long_drive(d['device'])
+    exe_cmd(cmd)
+    print cmd
+
+def init_drive(device):
     cmd = 'pvcreate ' + device
     cmd = cmd.replace('/dev/sd','/dev/xvd')
     exe_cmd(cmd)
@@ -205,7 +225,7 @@ def main():
     parser.add_argument('-hostcount', dest="hostcount",metavar="INT",required = True,
                               help='Total Hostcount?')
     parser.add_argument('-which', dest="which",metavar="STRING",required = True,
-                              help='Which Storage? [backup,hana_data_log,shared,usr_sap,]')
+                              help='Which Storage? [backup,hana_data,hana_log,shared,usr_sap,]')
     parser.add_argument('-instance_type', dest="instance_type",metavar="STRING",required = True,
                               help='Which instance_type?')
     parser.add_argument('-storage_type', dest="storage_type",metavar="STRING",required = True,
@@ -251,13 +271,9 @@ def main():
         stripe_backup_vol(drives)
         return
 
-    if which == 'hana_data_log':
-        if ismaster == 1:
-            drives = config_json['hana_data_log']['master'][instance_type][storage_type]['drives']
-            stripe = config_json['hana_data_log']['master'][instance_type][storage_type]['stripe']
-        else:
-            drives = config_json['hana_data_log']['worker'][instance_type][storage_type]['drives']
-            stripe = config_json['hana_data_log']['worker'][instance_type][storage_type]['stripe']
+    if which == 'hana_data':
+        drives = config_json['hana_data']['master_worker'][instance_type][storage_type]['drives']
+        stripe = config_json['hana_data']['master_worker'][instance_type][storage_type]['stripe']
         for d in drives:
             device = d['device']
             io_type = storage_type
@@ -265,11 +281,28 @@ def main():
             if 'piops' in d:
                 piops = d['piops']
             size = d['size'].replace("G","")
-            tag = 'HANA-Data-Log'
+            tag = 'HANA-Data'
             create_attach_ebs(device,io_type,size,tag,piops)
-        create_hanadatalog_volgrp(drives)
+        create_hanadata_volgrp(drives)
         count = len(drives)
-        stripe_hanadatalog_vol(stripe,count)
+        stripe_hanadata_vol(stripe,count)
+        return
+
+    if which == 'hana_log':
+        drives = config_json['hana_log']['master_worker'][instance_type][storage_type]['drives']
+        stripe = config_json['hana_log']['master_worker'][instance_type][storage_type]['stripe']
+        for d in drives:
+            device = d['device']
+            io_type = storage_type
+            piops = None
+            if 'piops' in d:
+                piops = d['piops']
+            size = d['size'].replace("G","")
+            tag = 'HANA-Log'
+            create_attach_ebs(device,io_type,size,tag,piops)
+        create_hanalog_volgrp(drives)
+        count = len(drives)
+        stripe_hanalog_vol(stripe,count)
         return
 
     if which == 'shared':

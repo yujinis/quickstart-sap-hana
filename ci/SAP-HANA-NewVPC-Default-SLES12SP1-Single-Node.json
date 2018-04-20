@@ -61,7 +61,7 @@
     },
     {
         "ParameterKey": "MyOS",
-        "ParameterValue": "SuSELinux12SP1"
+        "ParameterValue": "SuSELinux12SP3ForSAP"
     },
     {
         "ParameterKey": "PlacementGroupName",
@@ -92,7 +92,11 @@
         "ParameterValue": "10.0.0.0/16"
     },
     {
-        "ParameterKey": "VolumeType",
+        "ParameterKey": "VolumeTypeHanaData",
+        "ParameterValue": "gp2"
+    },
+    {
+        "ParameterKey": "VolumeTypeHanaLog",
         "ParameterValue": "gp2"
     },
     {
