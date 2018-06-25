@@ -776,7 +776,7 @@
                 "SLES12SP1SAPBYOSHVM": "suse-sles-sap-12-sp1-byos-v20170123-hvm-ssd-x86_64",
                 "SLES12SP2SAPBYOSHVM": "suse-sles-sap-12-sp2-byos-v20180524-hvm-ssd-x86_64",
                 "SLES12SP3SAPBYOSHVM": "suse-sles-sap-12-sp3-byos-v20180523-hvm-ssd-x86_64",
-                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2018.05.09"
+                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2018.06.13"
             },
             "ap-northeast-1": {
                 "RHEL73SAPHVM": "ami-e5036283",
@@ -790,7 +790,7 @@
                 "SLES12SP3HVM": "ami-37cd3148",
                 "SLES12SP3SAPBYOSHVM": "ami-7700fc08",
                 "SLES12SP3SAPHVM": "ami-44b5ca22",
-                "WS2012R2": "ami-9be803e4"
+                "WS2012R2": "ami-4e0cc331"
             },
             "ap-northeast-2": {
                 "RHEL73SAPHVM": "ami-e0e5468e",
@@ -804,7 +804,7 @@
                 "SLES12SP3HVM": "ami-6207af0c",
                 "SLES12SP3SAPBYOSHVM": "ami-6f11b901",
                 "SLES12SP3SAPHVM": "ami-6202a00c",
-                "WS2012R2": "ami-4a1eb724"
+                "WS2012R2": "ami-2968c247"
             },
             "ap-south-1": {
                 "RHEL73SAPHVM": "ami-f383d59c",
@@ -818,7 +818,7 @@
                 "SLES12SP3HVM": "ami-e9d6fa86",
                 "SLES12SP3SAPBYOSHVM": "ami-41b19d2e",
                 "SLES12SP3SAPHVM": "ami-76643919",
-                "WS2012R2": "ami-2289aa4d"
+                "WS2012R2": "ami-e795bd88"
             },
             "ap-southeast-1": {
                 "RHEL73SAPHVM": "ami-92ef90ee",
@@ -832,7 +832,7 @@
                 "SLES12SP3HVM": "ami-543d0028",
                 "SLES12SP3SAPBYOSHVM": "ami-5defd221",
                 "SLES12SP3SAPHVM": "ami-01f3be7d",
-                "WS2012R2": "ami-14a89d68"
+                "WS2012R2": "ami-de2a2da2"
             },
             "ap-southeast-2": {
                 "RHEL73SAPHVM": "ami-f6d62994",
@@ -846,7 +846,7 @@
                 "SLES12SP3HVM": "ami-ef79a98d",
                 "SLES12SP3SAPBYOSHVM": "ami-4d2afa2f",
                 "SLES12SP3SAPHVM": "ami-4d6eab2f",
-                "WS2012R2": "ami-c971a6ab"
+                "WS2012R2": "ami-75f32c17"
             },
             "ca-central-1": {
                 "RHEL73SAPHVM": "ami-2a63e64e",
@@ -859,7 +859,7 @@
                 "SLES12SP3HVM": "ami-de2eaeba",
                 "SLES12SP3SAPBYOSHVM": "ami-8537b7e1",
                 "SLES12SP3SAPHVM": "ami-f7139793",
-                "WS2012R2": "ami-4a97172e"
+                "WS2012R2": "ami-800685e4"
             },
             "eu-central-1": {
                 "RHEL73SAPHVM": "ami-d866f9b7",
@@ -873,7 +873,7 @@
                 "SLES12SP3HVM": "ami-6d9fb786",
                 "SLES12SP3SAPBYOSHVM": "ami-fe2a0115",
                 "SLES12SP3SAPHVM": "ami-9cc6a7f3",
-                "WS2012R2": "ami-3c0f22d7"
+                "WS2012R2": "ami-e8093a03"
             },
             "eu-west-1": {
                 "RHEL73SAPHVM": "ami-e365fd9a",
@@ -887,7 +887,7 @@
                 "SLES12SP3HVM": "ami-52251b2b",
                 "SLES12SP3SAPBYOSHVM": "ami-89a59bf0",
                 "SLES12SP3SAPHVM": "ami-53b9cb2a",
-                "WS2012R2": "ami-4390a43a"
+                "WS2012R2": "ami-3e7a7647"
             },
             "eu-west-2": {
                 "RHEL73SAPHVM": "ami-03fee567",
@@ -900,7 +900,7 @@
                 "SLES12SP3HVM": "ami-f08a6697",
                 "SLES12SP3SAPBYOSHVM": "ami-ab9874cc",
                 "SLES12SP3SAPHVM": "ami-bc7b9edb",
-                "WS2012R2": "ami-e940a28e"
+                "WS2012R2": "ami-629a7405"
             },
             "eu-west-3": {
                 "RHEL73SAPHVM": "ami-7ae85e07",
@@ -912,7 +912,7 @@
                 "SLES12SP3HVM": "ami-9e53e2e3",
                 "SLES12SP3SAPBYOSHVM": "ami-cb68d9b6",
                 "SLES12SP3SAPHVM": "ami-2284325f",
-                "WS2012R2": "ami-0c803171"
+                "WS2012R2": "ami-c911a0b4"
             },
             "sa-east-1": {
                 "RHEL73SAPHVM": "ami-0b8ac767",
@@ -926,7 +926,7 @@
                 "SLES12SP3HVM": "ami-911b45fd",
                 "SLES12SP3SAPBYOSHVM": "ami-38005e54",
                 "SLES12SP3SAPHVM": "ami-4e017322",
-                "WS2012R2": "ami-b9df82d5"
+                "WS2012R2": "ami-5c6e3530"
             },
             "us-east-1": {
                 "RHEL73SAPHVM": "ami-39f0de43",
@@ -940,7 +940,7 @@
                 "SLES12SP3HVM": "ami-4224403d",
                 "SLES12SP3SAPBYOSHVM": "ami-316d094e",
                 "SLES12SP3SAPHVM": "ami-388f9642",
-                "WS2012R2": "ami-2a9a1655"
+                "WS2012R2": "ami-b8f3b5c7"
             },
             "us-east-2": {
                 "RHEL73SAPHVM": "ami-bbe4cede",
@@ -954,7 +954,7 @@
                 "SLES12SP3HVM": "ami-f4e6da91",
                 "SLES12SP3SAPBYOSHVM": "ami-21d1ed44",
                 "SLES12SP3SAPHVM": "ami-7fc9fd1a",
-                "WS2012R2": "ami-ee112c8b"
+                "WS2012R2": "ami-da003ebf"
             },
             "us-west-1": {
                 "RHEL73SAPHVM": "ami-0be4e66b",
@@ -968,7 +968,7 @@
                 "SLES12SP3HVM": "ami-bf5f44df",
                 "SLES12SP3SAPBYOSHVM": "ami-01796261",
                 "SLES12SP3SAPHVM": "ami-1af4fd7a",
-                "WS2012R2": "ami-63253b03"
+                "WS2012R2": "ami-832acee0"
             },
             "us-west-2": {
                 "RHEL73SAPHVM": "ami-edfa4895",
@@ -982,7 +982,7 @@
                 "SLES12SP3HVM": "ami-81e29cf9",
                 "SLES12SP3SAPBYOSHVM": "ami-2c057c54",
                 "SLES12SP3SAPHVM": "ami-84be3cfc",
-                "WS2012R2": "ami-bbd6a7c3"
+                "WS2012R2": "ami-aeffbcd6"
             }
         }
     },
