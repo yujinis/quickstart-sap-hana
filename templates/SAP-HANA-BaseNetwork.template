@@ -54,7 +54,9 @@
                 "t2.medium",
                 "t2.large",
                 "m4.large",
-                "c4.large"
+                "m5.large",
+                "c4.large",
+                "c5.large"
             ]
         }
     },

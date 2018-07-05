@@ -78,7 +78,9 @@
                 "t2.medium",
                 "t2.large",
                 "m4.large",
-                "c4.large"
+                "m5.large",
+                "c4.large",
+                "c5.large"
             ]
         },
         "DomainName": {
@@ -172,8 +174,12 @@
             "AllowedValues": [
                 "c4.large",
                 "c4.xlarge",
+                "c5.large",
+                "c5.xlarge",
                 "m4.large",
-                "m4.xlarge"
+                "m4.xlarge",
+                "m5.large",
+                "m5.xlarge"
             ]
         },
         "InstallRDPInstance": {
