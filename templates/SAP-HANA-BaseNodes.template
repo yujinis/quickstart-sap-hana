@@ -775,8 +775,8 @@
                 "SLES12SP2HVM": "suse-sles-12-sp2-v20170620-hvm-ssd-x86_64",
                 "SLES12SP3HVM": "suse-sles-12-sp3-v20180706-hvm-ssd-x86_64",
                 "SLES12SP1SAPHVM": "suse-sles-sap-12-sp1-v20171121-hvm-ssd-x86_64-f0188081-b780-4ee4-aef6-cbcb063fd11e-ami-8bac24f1.4",
-                "SLES12SP2SAPHVM": "suse-sles-sap-12-sp2-v20180215-hvm-ssd-x86_64-e3458d64-5c36-4577-bd98-0ee19e3eaeec-ami-4cd6c836.4",
-                "SLES12SP3SAPHVM": "suse-sles-sap-12-sp3-v20180215-hvm-ssd-x86_64-da7aa9c3-97db-4573-89a6-7fe7348d90b0-ami-92d5cbe8.4",
+                "SLES12SP2SAPHVM": "suse-sles-sap-12-sp2-v20180706-hvm-ssd-x86_64-e3458d64-5c36-4577-bd98-0ee19e3eaeec-ami-3ac5ea45.4",
+                "SLES12SP3SAPHVM": "suse-sles-sap-12-sp3-v20180706-hvm-ssd-x86_64-da7aa9c3-97db-4573-89a6-7fe7348d90b0-ami-11f7d86e.4",
                 "SLES12SP1SAPBYOSHVM": "suse-sles-sap-12-sp1-byos-v20170123-hvm-ssd-x86_64",
                 "SLES12SP2SAPBYOSHVM": "suse-sles-sap-12-sp2-byos-v20180706-hvm-ssd-x86_64",
                 "SLES12SP3SAPBYOSHVM": "suse-sles-sap-12-sp3-byos-v20180706-hvm-ssd-x86_64",
@@ -790,10 +790,10 @@
                 "SLES12SP1SAPHVM": "ami-a6da67c0",
                 "SLES12SP2HVM": "ami-a07560c7",
                 "SLES12SP2SAPBYOSHVM": "ami-d1c1a63c",
-                "SLES12SP2SAPHVM": "ami-8cb5caea",
+                "SLES12SP2SAPHVM": "ami-322e43df",
                 "SLES12SP3HVM": "ami-6bb7d086",
                 "SLES12SP3SAPBYOSHVM": "ami-9274127f",
-                "SLES12SP3SAPHVM": "ami-44b5ca22",
+                "SLES12SP3SAPHVM": "ami-19dcbef4",
                 "WS2012R2": "ami-4e0cc331"
             },
             "ap-northeast-2": {
@@ -804,10 +804,10 @@
                 "SLES12SP1SAPHVM": "ami-5f993e31",
                 "SLES12SP2HVM": "ami-86d00fe8",
                 "SLES12SP2SAPBYOSHVM": "ami-d59d29bb",
-                "SLES12SP2SAPHVM": "ami-003f9d6e",
+                "SLES12SP2SAPHVM": "ami-241fab4a",
                 "SLES12SP3HVM": "ami-9f9d29f1",
                 "SLES12SP3SAPBYOSHVM": "ami-bd8a3ed3",
-                "SLES12SP3SAPHVM": "ami-6202a00c",
+                "SLES12SP3SAPHVM": "ami-d91ca8b7",
                 "WS2012R2": "ami-2968c247"
             },
             "ap-south-1": {
@@ -818,10 +818,10 @@
                 "SLES12SP1SAPHVM": "ami-b3e6a9dc",
                 "SLES12SP2HVM": "ami-62e39c0d",
                 "SLES12SP2SAPBYOSHVM": "ami-a15167ce",
-                "SLES12SP2SAPHVM": "ami-48613c27",
+                "SLES12SP2SAPHVM": "ami-c9d0e1a6",
                 "SLES12SP3HVM": "ami-216d5b4e",
                 "SLES12SP3SAPBYOSHVM": "ami-273c0a48",
-                "SLES12SP3SAPHVM": "ami-76643919",
+                "SLES12SP3SAPHVM": "ami-4bd4e524",
                 "WS2012R2": "ami-e795bd88"
             },
             "ap-southeast-1": {
@@ -832,10 +832,10 @@
                 "SLES12SP1SAPHVM": "ami-65a7f006",
                 "SLES12SP2HVM": "ami-f1078a92",
                 "SLES12SP2SAPBYOSHVM": "ami-296619c3",
-                "SLES12SP2SAPHVM": "ami-7e0c4002",
+                "SLES12SP2SAPHVM": "ami-d558203f",
                 "SLES12SP3HVM": "ami-f77d021d",
                 "SLES12SP3SAPBYOSHVM": "ami-f998e713",
-                "SLES12SP3SAPHVM": "ami-01f3be7d",
+                "SLES12SP3SAPHVM": "ami-aa106840",
                 "WS2012R2": "ami-de2a2da2"
             },
             "ap-southeast-2": {
@@ -846,10 +846,10 @@
                 "SLES12SP1SAPHVM": "ami-9abe54f8",
                 "SLES12SP2HVM": "ami-197a6a7a",
                 "SLES12SP2SAPBYOSHVM": "ami-7ed40e1c",
-                "SLES12SP2SAPHVM": "ami-d56faab7",
+                "SLES12SP2SAPHVM": "ami-ad41e4cf",
                 "SLES12SP3HVM": "ami-bad00ad8",
                 "SLES12SP3SAPBYOSHVM": "ami-c9f228ab",
-                "SLES12SP3SAPHVM": "ami-4d6eab2f",
+                "SLES12SP3SAPHVM": "ami-af41e4cd",
                 "WS2012R2": "ami-75f32c17"
             },
             "ca-central-1": {
@@ -859,10 +859,10 @@
                 "SLES12SP1SAPHVM": "ami-368a3152",
                 "SLES12SP2HVM": "ami-d5d56ab1",
                 "SLES12SP2SAPBYOSHVM": "ami-e4078580",
-                "SLES12SP2SAPHVM": "ami-76199d12",
+                "SLES12SP2SAPHVM": "ami-23ca4747",
                 "SLES12SP3HVM": "ami-0b0a886f",
                 "SLES12SP3SAPBYOSHVM": "ami-890f8ded",
-                "SLES12SP3SAPHVM": "ami-f7139793",
+                "SLES12SP3SAPHVM": "ami-3cc54858",
                 "WS2012R2": "ami-800685e4"
             },
             "eu-central-1": {
@@ -873,10 +873,10 @@
                 "SLES12SP1SAPHVM": "ami-7efc7e11",
                 "SLES12SP2HVM": "ami-984ee9f7",
                 "SLES12SP2SAPBYOSHVM": "ami-ceecd625",
-                "SLES12SP2SAPHVM": "ami-adc8a9c2",
+                "SLES12SP2SAPHVM": "ami-2a6463c1",
                 "SLES12SP3HVM": "ami-2cffc5c7",
                 "SLES12SP3SAPBYOSHVM": "ami-6da59f86",
-                "SLES12SP3SAPHVM": "ami-9cc6a7f3",
+                "SLES12SP3SAPHVM": "ami-73646398",
                 "WS2012R2": "ami-e8093a03"
             },
             "eu-west-1": {
@@ -887,10 +887,10 @@
                 "SLES12SP1SAPHVM": "ami-03ef587a",
                 "SLES12SP2HVM": "ami-f5776f93",
                 "SLES12SP2SAPBYOSHVM": "ami-8d061067",
-                "SLES12SP2SAPHVM": "ami-3dbac844",
+                "SLES12SP2SAPHVM": "ami-fa0c1e10",
                 "SLES12SP3HVM": "ami-da697f30",
                 "SLES12SP3SAPBYOSHVM": "ami-a07b6d4a",
-                "SLES12SP3SAPHVM": "ami-53b9cb2a",
+                "SLES12SP3SAPHVM": "ami-a3332149",
                 "WS2012R2": "ami-3e7a7647"
             },
             "eu-west-2": {
@@ -900,10 +900,10 @@
                 "SLES12SP1SAPHVM": "ami-ebc3dc8f",
                 "SLES12SP2HVM": "ami-d97066bd",
                 "SLES12SP2SAPBYOSHVM": "ami-aa23cbcd",
-                "SLES12SP2SAPHVM": "ami-4545a022",
+                "SLES12SP2SAPHVM": "ami-2992794e",
                 "SLES12SP3HVM": "ami-dd23cbba",
                 "SLES12SP3SAPBYOSHVM": "ami-f40ae293",
-                "SLES12SP3SAPHVM": "ami-bc7b9edb",
+                "SLES12SP3SAPHVM": "ami-11937876",
                 "WS2012R2": "ami-629a7405"
             },
             "eu-west-3": {
@@ -912,10 +912,10 @@
                 "SLES12SP1SAPBYOSHVM": "ami-cf992eb2",
                 "SLES12SP1SAPHVM": "ami-41893e3c",
                 "SLES12SP2SAPBYOSHVM": "ami-8dc979f0",
-                "SLES12SP2SAPHVM": "ami-aa8533d7",
+                "SLES12SP2SAPHVM": "ami-bfbf0fc2",
                 "SLES12SP3HVM": "ami-60cc7c1d",
                 "SLES12SP3SAPBYOSHVM": "ami-b8cb7bc5",
-                "SLES12SP3SAPHVM": "ami-2284325f",
+                "SLES12SP3SAPHVM": "ami-69bd0d14",
                 "WS2012R2": "ami-c911a0b4"
             },
             "sa-east-1": {
@@ -926,10 +926,10 @@
                 "SLES12SP1SAPHVM": "ami-798cc915",
                 "SLES12SP2HVM": "ami-52a4cf3e",
                 "SLES12SP2SAPBYOSHVM": "ami-4197b32d",
-                "SLES12SP2SAPHVM": "ami-2bcca747",
+                "SLES12SP2SAPHVM": "ami-5cd5f230",
                 "SLES12SP3HVM": "ami-9c8fabf0",
                 "SLES12SP3SAPBYOSHVM": "ami-e7694e8b",
-                "SLES12SP3SAPHVM": "ami-4e017322",
+                "SLES12SP3SAPHVM": "ami-07a6816b",
                 "WS2012R2": "ami-5c6e3530"
             },
             "us-east-1": {
@@ -940,10 +940,10 @@
                 "SLES12SP1SAPHVM": "ami-f20f8788",
                 "SLES12SP2HVM": "ami-8fac8399",
                 "SLES12SP2SAPBYOSHVM": "ami-91d7f8ee",
-                "SLES12SP2SAPHVM": "ami-678a931d",
+                "SLES12SP2SAPHVM": "ami-1c477763",
                 "SLES12SP3HVM": "ami-3c062943",
                 "SLES12SP3SAPBYOSHVM": "ami-b1daf5ce",
-                "SLES12SP3SAPHVM": "ami-388f9642",
+                "SLES12SP3SAPHVM": "ami-2a497955",
                 "WS2012R2": "ami-b8f3b5c7"
             },
             "us-east-2": {
@@ -954,10 +954,10 @@
                 "SLES12SP1SAPHVM": "ami-3df7d958",
                 "SLES12SP2HVM": "ami-f990b69c",
                 "SLES12SP2SAPBYOSHVM": "ami-349ca451",
-                "SLES12SP2SAPHVM": "ami-f9c9fd9c",
+                "SLES12SP2SAPHVM": "ami-e10c3784",
                 "SLES12SP3HVM": "ami-cd98a0a8",
                 "SLES12SP3SAPBYOSHVM": "ami-bf8db5da",
-                "SLES12SP3SAPHVM": "ami-7fc9fd1a",
+                "SLES12SP3SAPHVM": "ami-8d0d36e8",
                 "WS2012R2": "ami-da003ebf"
             },
             "us-west-1": {
@@ -968,10 +968,10 @@
                 "SLES12SP1SAPHVM": "ami-5ce8d03c",
                 "SLES12SP2HVM": "ami-32c8e552",
                 "SLES12SP2SAPBYOSHVM": "ami-c229c9a1",
-                "SLES12SP2SAPHVM": "ami-ecf6ff8c",
+                "SLES12SP2SAPHVM": "ami-5f64873c",
                 "SLES12SP3HVM": "ami-4829c92b",
                 "SLES12SP3SAPBYOSHVM": "ami-9f08e8fc",
-                "SLES12SP3SAPHVM": "ami-1af4fd7a",
+                "SLES12SP3SAPHVM": "ami-f3658690",
                 "WS2012R2": "ami-832acee0"
             },
             "us-west-2": {
@@ -982,10 +982,10 @@
                 "SLES12SP1SAPHVM": "ami-94fb26ec",
                 "SLES12SP2HVM": "ami-da786da3",
                 "SLES12SP2SAPBYOSHVM": "ami-040c5a7c",
-                "SLES12SP2SAPHVM": "ami-b7bd3fcf",
+                "SLES12SP2SAPHVM": "ami-7bb5e603",
                 "SLES12SP3HVM": "ami-933167eb",
                 "SLES12SP3SAPBYOSHVM": "ami-2c693f54",
-                "SLES12SP3SAPHVM": "ami-84be3cfc",
+                "SLES12SP3SAPHVM": "ami-94b0e3ec",
                 "WS2012R2": "ami-aeffbcd6"
             }
         }
