@@ -203,9 +203,15 @@
                 "r4.2xlarge",
                 "x1.16xlarge",
                 "x1.32xlarge",
+                "x1e.xlarge",
+                "x1e.2xlarge",
                 "x1e.4xlarge",
                 "x1e.32xlarge"
             ]
+        },
+        "DedicatedHostId": {
+          "Type": "CommaDelimitedList",
+          "Description": "Existing dedicated host(s) where you want to launch your EC2 instance(s). Use comma to provide multiple hosts."
         },
         "HostCount": {
             "Type": "Number",
@@ -230,7 +236,7 @@
         },
         "HANAMasterPass": {
             "Type": "String",
-            "Description": "SAP HANA password to use during installation.",
+            "Description": "SAP HANA password to use during installation. Must be at least 8 characters with uppercase, lowercase, and numeric values.",
             "NoEcho": "true",
             "MinLength": "8",
             "AllowedPattern": "^(?=.*?[a-z])(?=.*?[A-Z])(?=.*[0-9]).*",
@@ -314,6 +320,7 @@
                         "default": ""
                     },
                     "Parameters": [
+                        "DedicatedHostId",
                         "PlacementGroupName",
                         "InstallRDPInstance",
                         "RDPInstanceType",
@@ -373,6 +380,9 @@
                 },
                 "PlacementGroupName": {
                     "default": "Enter optional placement group name"
+                },
+                "DedicatedHostId": {
+                    "default": "Enter Dedicated Host ID"
                 },
                 "PrivateBucket": {
                     "default": "Enter private bucket"
@@ -695,6 +705,18 @@
                 },
                 "Yes"
             ]
+        },
+        "IfDedicatedHost": {
+          "Fn::Not" : [
+            {
+            "Fn::Equals": [
+                {
+                    "Fn::Select":["0",{"Ref": "DedicatedHostId"}]
+                },
+                ""
+            ]
+          }
+        ]
         },
         "IfLogging": {
             "Fn::Equals": [
@@ -2312,6 +2334,13 @@
                 "HostRole": "Master"
             },
             "Properties": {
+              "HostId": {
+                "Fn::If" : [
+                  "IfDedicatedHost",
+                    {"Fn::Select": ["0",{"Ref": "DedicatedHostId"}]},
+                    {"Ref": "AWS::NoValue"}
+                ]
+              },
                 "NetworkInterfaces": [
                     {
                         "NetworkInterfaceId": {
@@ -2658,11 +2687,11 @@
                                 {
                                     "Ref": "SAPInstanceNum"
                                 },
-                                " -p ",
+                                " -p '",
                                 {
                                     "Ref": "HANAMasterPass"
                                 },
-                                " -n ",
+                                "' -n ",
                                 {
                                     "Ref": "HANAMasterHostname"
                                 },
@@ -2713,6 +2742,13 @@
                 "HostRole": "Worker"
             },
             "Properties": {
+              "HostId": {
+                "Fn::If" : [
+                  "IfDedicatedHost",
+                    {"Fn::Select": ["1",{"Ref": "DedicatedHostId"}]},
+                    {"Ref": "AWS::NoValue"}
+                ]
+              },
                 "NetworkInterfaces": [
                     {
                         "NetworkInterfaceId": {
@@ -3036,11 +3072,11 @@
                                 {
                                     "Ref": "SID"
                                 },
-                                " -p ",
+                                " -p '",
                                 {
                                     "Ref": "HANAMasterPass"
                                 },
-                                " -n ",
+                                "' -n ",
                                 {
                                     "Ref": "HANAMasterHostname"
                                 },
@@ -3076,6 +3112,13 @@
                 "HostRole": "Worker"
             },
             "Properties": {
+              "HostId": {
+                "Fn::If" : [
+                  "IfDedicatedHost",
+                    {"Fn::Select": ["2",{"Ref": "DedicatedHostId"}]},
+                    {"Ref": "AWS::NoValue"}
+                ]
+              },
                 "NetworkInterfaces": [
                     {
                         "NetworkInterfaceId": {
@@ -3399,11 +3442,11 @@
                                 {
                                     "Ref": "SID"
                                 },
-                                " -p ",
+                                " -p '",
                                 {
                                     "Ref": "HANAMasterPass"
                                 },
-                                " -n ",
+                                "' -n ",
                                 {
                                     "Ref": "HANAMasterHostname"
                                 },
@@ -3439,6 +3482,13 @@
                 "HostRole": "Worker"
             },
             "Properties": {
+              "HostId": {
+                "Fn::If" : [
+                  "IfDedicatedHost",
+                    {"Fn::Select": ["3",{"Ref": "DedicatedHostId"}]},
+                    {"Ref": "AWS::NoValue"}
+                ]
+              },
                 "NetworkInterfaces": [
                     {
                         "NetworkInterfaceId": {
@@ -3762,11 +3812,11 @@
                                 {
                                     "Ref": "SID"
                                 },
-                                " -p ",
+                                " -p '",
                                 {
                                     "Ref": "HANAMasterPass"
                                 },
-                                " -n ",
+                                "' -n ",
                                 {
                                     "Ref": "HANAMasterHostname"
                                 },
@@ -3802,6 +3852,13 @@
                 "HostRole": "Worker"
             },
             "Properties": {
+              "HostId": {
+                "Fn::If" : [
+                  "IfDedicatedHost",
+                    {"Fn::Select": ["4",{"Ref": "DedicatedHostId"}]},
+                    {"Ref": "AWS::NoValue"}
+                ]
+              },
                 "NetworkInterfaces": [
                     {
                         "NetworkInterfaceId": {
@@ -4125,11 +4182,11 @@
                                 {
                                     "Ref": "SID"
                                 },
-                                " -p ",
+                                " -p '",
                                 {
                                     "Ref": "HANAMasterPass"
                                 },
-                                " -n ",
+                                "' -n ",
                                 {
                                     "Ref": "HANAMasterHostname"
                                 },
@@ -4165,6 +4222,13 @@
                 "HostRole": "Worker"
             },
             "Properties": {
+              "HostId": {
+                "Fn::If" : [
+                  "IfDedicatedHost",
+                    {"Fn::Select": ["5",{"Ref": "DedicatedHostId"}]},
+                    {"Ref": "AWS::NoValue"}
+                ]
+              },
                 "NetworkInterfaces": [
                     {
                         "NetworkInterfaceId": {
@@ -4488,11 +4552,11 @@
                                 {
                                     "Ref": "SID"
                                 },
-                                " -p ",
+                                " -p '",
                                 {
                                     "Ref": "HANAMasterPass"
                                 },
-                                " -n ",
+                                "' -n ",
                                 {
                                     "Ref": "HANAMasterHostname"
                                 },

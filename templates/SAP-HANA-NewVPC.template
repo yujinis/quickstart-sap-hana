@@ -163,9 +163,15 @@
                 "r4.2xlarge",
                 "x1.16xlarge",
                 "x1.32xlarge",
+                "x1e.xlarge",
+                "x1e.2xlarge",
                 "x1e.4xlarge",
                 "x1e.32xlarge"
             ]
+        },
+        "DedicatedHostId": {
+          "Type": "CommaDelimitedList",
+          "Description": "Existing dedicated host(s) where you want to launch your EC2 instance(s). Use comma to provide multiple hosts."
         },
         "RDPInstanceType": {
             "Type": "String",
@@ -223,7 +229,7 @@
         },
         "HANAMasterPass": {
             "Type": "String",
-            "Description": "SAP HANA password to use during installation.",
+            "Description": "SAP HANA password to use during installation. Must be at least 8 characters with uppercase, lowercase, and numeric values",
             "NoEcho": "true",
             "MinLength": "8",
             "AllowedPattern": "^(?=.*?[a-z])(?=.*?[A-Z])(?=.*[0-9]).*",
@@ -341,6 +347,7 @@
                         "default": ""
                     },
                     "Parameters": [
+                        "DedicatedHostId",
                         "PlacementGroupName",
                         "InstallRDPInstance",
                         "RDPInstanceType",
@@ -400,6 +407,9 @@
                 },
                 "PlacementGroupName": {
                     "default": "Enter optional placement group name"
+                },
+                "DedicatedHostId": {
+                    "default": "Enter Dedicated Host ID"
                 },
                 "PrivateBucket": {
                     "default": "Enter private bucket"
@@ -625,6 +635,9 @@
                     },
                     "MyInstanceType": {
                         "Ref": "MyInstanceType"
+                    },
+                    "DedicatedHostId": {
+                        "Ref": "DedicatedHostId"
                     },
                     "RDPInstanceType": {
                         "Ref": "RDPInstanceType"
