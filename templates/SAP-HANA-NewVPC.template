@@ -171,7 +171,8 @@
         },
         "DedicatedHostId": {
           "Type": "CommaDelimitedList",
-          "Description": "Existing dedicated host(s) where you want to launch your EC2 instance(s). Use comma to provide multiple hosts."
+          "Description": "Existing dedicated host(s) where you want to launch your EC2 instance(s). Use comma to provide multiple hosts.",
+          "Default": ""
         },
         "RDPInstanceType": {
             "Type": "String",
