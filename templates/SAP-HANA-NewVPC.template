@@ -281,6 +281,18 @@
                 },
                 ""
             ]
+        },
+        "IfDedicatedHost": {
+          "Fn::Not" : [
+            {
+            "Fn::Equals": [
+                {
+                    "Fn::Select":["0",{"Ref": "DedicatedHostId"}]
+                },
+                ""
+            ]
+          }
+        ]
         }
     },
     "Metadata": {
@@ -690,6 +702,13 @@
                     },
                     "SLESBYOSRegCode": {
                         "Ref": "SLESBYOSRegCode"
+                    },
+                    "DedicatedHostId": {
+                      "Fn::If" : [
+                        "IfDedicatedHost",
+                          {"Fn::Select": ["0",{"Ref": "DedicatedHostId"}]},
+                          ""
+                      ]
                     }
                 }
             }
