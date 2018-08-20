@@ -170,9 +170,9 @@
             ]
         },
         "DedicatedHostId": {
-          "Type": "CommaDelimitedList",
-          "Description": "Existing dedicated host(s) where you want to launch your EC2 instance(s). Use comma to provide multiple hosts.",
-          "Default": ""
+            "Type": "CommaDelimitedList",
+            "Description": "Existing dedicated host(s) where you want to launch your EC2 instance(s). Use comma to provide multiple hosts.",
+            "Default": ""
         },
         "RDPInstanceType": {
             "Type": "String",
@@ -283,16 +283,21 @@
             ]
         },
         "IfDedicatedHost": {
-          "Fn::Not" : [
-            {
-            "Fn::Equals": [
+            "Fn::Not": [
                 {
-                    "Fn::Select":["0",{"Ref": "DedicatedHostId"}]
-                },
-                ""
+                    "Fn::Equals": [
+                        {
+                            "Fn::Select": [
+                                "0",
+                                {
+                                    "Ref": "DedicatedHostId"
+                                }
+                            ]
+                        },
+                        ""
+                    ]
+                }
             ]
-          }
-        ]
         }
     },
     "Metadata": {
@@ -493,49 +498,49 @@
     "Mappings": {
         "AWSAMIRegionMap": {
             "AMI": {
-                "AWSNAT": "amzn-ami-vpc-nat-hvm-2018.03.0.20180622-x86_64-ebs"
+                "AWSNAT": "amzn-ami-vpc-nat-hvm-2018.03.0.20180811-x86_64-ebs"
             },
             "ap-northeast-1": {
-                "AWSNAT": "ami-fe9d4a81"
+                "AWSNAT": "ami-0cf78ae724f63bac0"
             },
             "ap-northeast-2": {
-                "AWSNAT": "ami-aed86dc0"
+                "AWSNAT": "ami-08cfa02141f9e9bee"
             },
             "ap-south-1": {
-                "AWSNAT": "ami-a186acce"
+                "AWSNAT": "ami-0aba92643213491b9"
             },
             "ap-southeast-1": {
-                "AWSNAT": "ami-cd8083b1"
+                "AWSNAT": "ami-0cf24653bcf894797"
             },
             "ap-southeast-2": {
-                "AWSNAT": "ami-37f82155"
+                "AWSNAT": "ami-00c1445796bc0a29f"
             },
             "ca-central-1": {
-                "AWSNAT": "ami-f0e56794"
+                "AWSNAT": "ami-b61b96d2"
             },
             "eu-central-1": {
-                "AWSNAT": "ami-da526d31"
+                "AWSNAT": "ami-06465d49ba60cf770"
             },
             "eu-west-1": {
-                "AWSNAT": "ami-4ab4b8a0"
+                "AWSNAT": "ami-0ea87e2bfa81ca08a"
             },
             "eu-west-2": {
-                "AWSNAT": "ami-bbb950dc"
+                "AWSNAT": "ami-e6768381"
             },
             "sa-east-1": {
-                "AWSNAT": "ami-34ca9058"
+                "AWSNAT": "ami-09c013530239687aa"
             },
             "us-east-1": {
-                "AWSNAT": "ami-980554e7"
+                "AWSNAT": "ami-0422d936d535c63b1"
             },
             "us-east-2": {
-                "AWSNAT": "ami-f70f3692"
+                "AWSNAT": "ami-0f9c61b5a562a16af"
             },
             "us-west-1": {
-                "AWSNAT": "ami-8c8761ef"
+                "AWSNAT": "ami-0d4027d2cdbca669d"
             },
             "us-west-2": {
-                "AWSNAT": "ami-79eca201"
+                "AWSNAT": "ami-40d1f038"
             }
         }
     },
@@ -650,7 +655,18 @@
                         "Ref": "MyInstanceType"
                     },
                     "DedicatedHostId": {
-                        "Ref": "DedicatedHostId"
+                        "Fn::If": [
+                            "IfDedicatedHost",
+                            {
+                                "Fn::Select": [
+                                    "0",
+                                    {
+                                        "Ref": "DedicatedHostId"
+                                    }
+                                ]
+                            },
+                            ""
+                        ]
                     },
                     "RDPInstanceType": {
                         "Ref": "RDPInstanceType"
@@ -702,13 +718,6 @@
                     },
                     "SLESBYOSRegCode": {
                         "Ref": "SLESBYOSRegCode"
-                    },
-                    "DedicatedHostId": {
-                      "Fn::If" : [
-                        "IfDedicatedHost",
-                          {"Fn::Select": ["0",{"Ref": "DedicatedHostId"}]},
-                          ""
-                      ]
                     }
                 }
             }
