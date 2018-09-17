@@ -807,7 +807,7 @@
                 "SLES12SP3SAPHVM": "suse-sles-sap-12-sp3-v20180814-hvm-ssd-x86_64-da7aa9c3-97db-4573-89a6-7fe7348d90b0-ami-0df5b06332b816a8e.4",
                 "SLES12SP1SAPBYOSHVM": "suse-sles-sap-12-sp1-byos-v20170123-hvm-ssd-x86_64",
                 "SLES12SP2SAPBYOSHVM": "suse-sles-sap-12-sp2-byos-v20180816-hvm-ssd-x86_64",
-                "SLES12SP3SAPBYOSHVM": "suse-sles-sap-12-sp3-byos-v20180814-hvm-ssd-x86_64",
+                "SLES12SP3SAPBYOSHVM": "force-ami-update",
                 "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2018.08.15"
             },
             "ap-northeast-1": {
