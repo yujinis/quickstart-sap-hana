@@ -13,7 +13,7 @@
 
 export PATH=${PATH}:/sbin:/usr/sbin:/usr/local/sbin:/root/bin:/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/X11R6/bin:/usr/games:/usr/lib/AmazonEC2/ec2-api-tools/bin:/usr/lib/AmazonEC2/ec2-ami-tools/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin
 
-usage() { 
+usage() {
     cat <<EOF
 Usage: $0 #size:Type:{#PIOPS}:DeviceStart:Name
 Examples: 20:gp2:/dev/sdb:node [ 1 gp2 EBS, 20 GB , /dev/sdb
@@ -31,7 +31,7 @@ EOF
 [[ $# -ne 1 ]] && usage;
 ARGS_LIST=$1
 
-[ -e /root/install/config.sh ] && source /root/install/config.sh 
+[ -e /root/install/config.sh ] && source /root/install/config.sh
 export AWS_DEFAULT_REGION=${REGION}
 export AWS_DEFAULT_AVAILABILITY_ZONE=${AVAILABILITY_ZONE}
 
@@ -76,7 +76,7 @@ log() {
 	if [ -e /root/install/config.sh ]; then
 		echo $* 2>&1 |  tee -a ${HANA_LOG_FILE}
 	else
-		echo $* 2>&1 
+		echo $* 2>&1
 	fi
 }
 
@@ -94,7 +94,7 @@ wait_for_volume_create () {
 			*ok* ) break;;
         esac
 		sleep 10
-	done	
+	done
 	log ${volumeid}:"ok"
 }
 
@@ -111,7 +111,7 @@ wait_for_attach_volume () {
 			*attached* ) break;;
         esac
 		sleep 10
-	done	
+	done
 	log ${volumeid}:"attached"
 }
 
@@ -132,7 +132,7 @@ attach_and_wait_for_attach_volume () {
     	then
     		echo "MAX_COUNTER Violated in attach_and_wait_for_attach_volume"
     		break
-    	else    		
+    	else
 	#  This will throw an error and it's okay. See too soon issue below
 			status=$(${AWS} ec2 describe-volumes --volume-ids ${volumeid}  | \
 					${JQ_COMMAND} '.Volumes[].Attachments[].State' )
@@ -148,7 +148,7 @@ attach_and_wait_for_attach_volume () {
 		    fi
 			sleep 10
 		fi
-	done	
+	done
 	log ${volumeid}:"attached"
 }
 
@@ -158,10 +158,24 @@ attach_and_wait_for_attach_volume () {
 set_device_delete_ontermination () {
 	local device="$1"
     blkdev_template='"[{\"DeviceName\":\"DEVICE_STRING\",\"Ebs\":{\"DeleteOnTermination\":true}}]"'
-   
+
 	blkdev_json=$(echo -n ${blkdev_template} | sed "s:DEVICE_STRING:$device:")
 	echo ${AWS} ec2 modify-instance-attribute --instance-id ${AWS_INSTANCEID} --block-device-mappings ${blkdev_json} | sh
 	log ${device}->"DeleteOnTermination:True"
+}
+
+# ------------------------------------------------------------------
+#          Find NVME device ID if Applicable
+# ------------------------------------------------------------------
+find_nvme_device_id() {
+nvme_vol_id=$(echo $1 | sed -e 's/-//g')
+nvme_id=$(nvme list | grep $nvme_vol_id | awk '{print $1}')
+if [ ! -z "$nvme_id" ]
+then
+    echo $nvme_id > /root/install/nvme_id
+else
+    rm /root/install/nvme_id
+fi
 }
 
 log `date` BEGIN Creating Volumes and Attaching ${ARGS_LIST}
@@ -181,7 +195,7 @@ if [[ "${VOL_TYPE}" == "io1" ]] ; then
 	VOL_NAME=${ARGS_LIST_ARRAY[4]}
 	[ -z ${VOL_PIOPS} ] && usage;
 else
-	DEVICE_START=${ARGS_LIST_ARRAY[2]}	
+	DEVICE_START=${ARGS_LIST_ARRAY[2]}
 	VOL_NAME=${ARGS_LIST_ARRAY[3]}
 fi
 
@@ -210,7 +224,7 @@ then
 					--availability-zone ${AWS_DEFAULT_AVAILABILITY_ZONE} \
 					--size ${VOL_SIZE} \
 					--volume-type ${VOL_TYPE}| ${JQ_COMMAND} '.VolumeId')
-	fi	
+	fi
 else
 	if [[ "${VOL_TYPE}" == "io1" ]]; then
 		volumeid=$(${AWS} ec2 create-volume \
@@ -224,13 +238,12 @@ else
 					--availability-zone ${AWS_DEFAULT_AVAILABILITY_ZONE} --encrypted \
 					--size ${VOL_SIZE} \
 					--volume-type ${VOL_TYPE}| ${JQ_COMMAND} '.VolumeId')
-	fi	
+	fi
 fi
 
 	volumeid=$(echo ${volumeid} | sed 's/^"\(.*\)"$/\1/')
 	log "Creating new volume ${volumeid}. Waiting for create"
-	wait_for_volume_create ${volumeid}	
-
+	wait_for_volume_create ${volumeid}
 	device=${DEVICE_START}
 #	Attach volume to the instance and expose with the specified device name
 	log "Attaching new volume ${volumeid} as ${device}. Waiting for attach"
@@ -238,22 +251,17 @@ fi
 # ------------------------------------------------------------------
 #  Note: Wierd "too soon" issue
 #   At the time of writing, there seems to be an issue attaching a volume
-#   right after getting okay from create. Wierd. 
+#   right after getting okay from create. Wierd.
 #   I loop attach on same device, thought it will throw an error
 # ------------------------------------------------------------------
 
 	#${AWS} ec2 attach-volume --volume-id ${volumeid} --instance-id ${AWS_INSTANCEID} --device ${device}
-	#wait_for_attach_volume ${volumeid}	
-	attach_and_wait_for_attach_volume ${volumeid} ${device}	
+	#wait_for_attach_volume ${volumeid}
+	attach_and_wait_for_attach_volume ${volumeid} ${device}
 	log "setting device attribute  ${device}:DeleteOnTermination"
 	set_device_delete_ontermination ${device}
 	log "setting device name  ${device}:$VOL_NAME"
-	 ${AWS} ec2 create-tags --resources ${volumeid}  --tags Key=Name,Value=${VOL_NAME}
+	${AWS} ec2 create-tags --resources ${volumeid}  --tags Key=Name,Value=${VOL_NAME}
+  find_nvme_device_id ${volumeid}
 
-
-   
-log `date` END Creating Volumes and Attaching ${ARGS_LIST}
-
-
-
-
+  log `date` END Creating Volumes and Attaching ${ARGS_LIST}

@@ -6,10 +6,11 @@ import json
 
 aws_cmd = '/usr/local/bin/aws --debug'
 ebs_attach_cmd = 'sh -x /root/install/create-attach-single-volume.sh '
+nvme_device_id = '/root/install/nvme_id'
 
 def exe_cmd(cmd,cwd=None):
     #print 'DISABLED COMMAND ' + cmd
-    return
+#    return
     if cwd == None:
         proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
         proc.wait()
@@ -78,10 +79,11 @@ def stripe_hanashared_vol(drives):
     buffer  = 1
     size = size - buffer
     sizeG = str(size) + 'G'
-
-    device = drives[0]['device'].replace('/dev/s','/dev/xv')
-    cmd = ' mkfs.xfs -f ' + device
-
+    if os.path.isfile(nvme_device_id):
+        device = open(nvme_device_id, 'r').read().rstrip()
+    else:
+        device = drives[0]['device'].replace('/dev/s','/dev/xv')
+    cmd = ' mkfs.xfs -f ' + device + ' -L HANA_SHARE '
     #cmd = 'lvcreate -n lvhanashared  '
     #cmd = cmd + ' -i ' + str(len(drives))
     #cmd = cmd + ' -I 256 ' + ' -L ' + sizeG + ' vghanashared'
@@ -144,7 +146,10 @@ def create_backup_volgrp(drives):
     cmd = 'vgcreate vghanaback '
     for d in drives:
         dev = d['device']
-        cmd = cmd + ' ' + short2long_drive(d['device'])
+        if 'nvme' in dev:
+            cmd = cmd + ' ' + d['device']
+        else:
+            cmd = cmd + ' ' + short2long_drive(d['device'])
     exe_cmd(cmd)
     print cmd
 
@@ -152,7 +157,10 @@ def create_hanashared_volgrp(drives):
     cmd = 'vgcreate vghanashared '
     for d in drives:
     	dev = d['device']
-        cmd = cmd + ' ' + short2long_drive(d['device'])
+        if 'nvme' in dev:
+            cmd = cmd + ' ' + d['device']
+        else:
+            cmd = cmd + ' ' + short2long_drive(d['device'])
     exe_cmd(cmd)
     print cmd
 
@@ -161,7 +169,10 @@ def create_hanadata_volgrp(drives):
     cmd = 'vgcreate vghanadata '
     for d in drives:
     	dev = d['device']
-        cmd = cmd + ' ' + short2long_drive(d['device'])
+        if 'nvme' in dev:
+            cmd = cmd + ' ' + d['device']
+        else:
+            cmd = cmd + ' ' + short2long_drive(d['device'])
     exe_cmd(cmd)
     print cmd
 
@@ -169,13 +180,19 @@ def create_hanalog_volgrp(drives):
     cmd = 'vgcreate vghanalog '
     for d in drives:
     	dev = d['device']
-        cmd = cmd + ' ' + short2long_drive(d['device'])
+        if 'nvme' in dev:
+            cmd = cmd + ' ' + d['device']
+        else:
+            cmd = cmd + ' ' + short2long_drive(d['device'])
     exe_cmd(cmd)
     print cmd
 
 def init_drive(device):
-    cmd = 'pvcreate ' + device
-    cmd = cmd.replace('/dev/sd','/dev/xvd')
+    if 'nvme' in device:
+        cmd = 'pvcreate ' + device
+    else:
+        cmd = 'pvcreate ' + device
+        cmd = cmd.replace('/dev/sd','/dev/xvd')
     exe_cmd(cmd)
     print cmd
 
@@ -186,12 +203,16 @@ def create_attach_ebs(device,io_type,size,tag,piops = None):
         cmd = cmd + ':'.join([size,io_type,device,tag])
         exe_cmd(cmd)
         print cmd
+        if os.path.isfile(nvme_device_id):
+            device = open(nvme_device_id, 'r').read().rstrip()
         init_drive(device)
     else:
         cmd = ebs_attach_cmd
         cmd = cmd + ':'.join([size,io_type,str(piops),device,tag])
         exe_cmd(cmd)
         print cmd
+        if os.path.isfile(nvme_device_id):
+            device = open(nvme_device_id, 'r').read().rstrip()
         init_drive(device)
 
 def create_attach_single_ebs(device,io_type,size,tag,piops = None):
@@ -225,7 +246,7 @@ def main():
     parser.add_argument('-hostcount', dest="hostcount",metavar="INT",required = True,
                               help='Total Hostcount?')
     parser.add_argument('-which', dest="which",metavar="STRING",required = True,
-                              help='Which Storage? [backup,hana_data,hana_log,shared,usr_sap,]')
+                              help='Which Storage? [backup,hana_data,hana_log,shared,usr_sap,media]')
     parser.add_argument('-instance_type', dest="instance_type",metavar="STRING",required = True,
                               help='Which instance_type?')
     parser.add_argument('-storage_type', dest="storage_type",metavar="STRING",required = True,
@@ -255,6 +276,10 @@ def main():
         print 'Shared storage valid only on HANA master'
         print 'WARNING: Did not build shared storage on worker'
         return
+    if ismaster != 1 and which == 'media':
+        print 'Media storage valid only on HANA master'
+        print 'WARNING: Did not build shared storage on worker'
+        return
 
     with open(config) as f:
         config_json = json.loads(f.read())
@@ -267,6 +292,9 @@ def main():
             size = d['size'].replace("G","")
             tag = 'SAP-HANA-Backup'
             create_attach_ebs(device,io_type,size,tag,None)
+            if os.path.isfile(nvme_device_id):
+                nvme_device = open(nvme_device_id, 'r').read().rstrip()
+                d['device'] = '"'+nvme_device+'"'
         create_backup_volgrp(drives)
         stripe_backup_vol(drives)
         return
@@ -283,6 +311,9 @@ def main():
             size = d['size'].replace("G","")
             tag = 'HANA-Data'
             create_attach_ebs(device,io_type,size,tag,piops)
+            if os.path.isfile(nvme_device_id):
+                nvme_device = open(nvme_device_id, 'r').read().rstrip()
+                d['device'] = '"'+nvme_device+'"'
         create_hanadata_volgrp(drives)
         count = len(drives)
         stripe_hanadata_vol(stripe,count)
@@ -300,6 +331,9 @@ def main():
             size = d['size'].replace("G","")
             tag = 'HANA-Log'
             create_attach_ebs(device,io_type,size,tag,piops)
+            if os.path.isfile(nvme_device_id):
+                nvme_device = open(nvme_device_id, 'r').read().rstrip()
+                d['device'] = '"'+nvme_device+'"'
         create_hanalog_volgrp(drives)
         count = len(drives)
         stripe_hanalog_vol(stripe,count)
@@ -308,30 +342,37 @@ def main():
     if which == 'shared':
         drives = config_json['shared']['master'][instance_type][storage_type]['drives']
         if len(drives) == 1:
-	        for d in drives:
-		            device = d['device']
-		            io_type = storage_type
-		            size = d['size'].replace("G","")
-		            tag = 'SAP-HANA-Shared'
-		            piops = None
-		            if 'piops' in d:
-		                piops = d['piops']
-		            create_attach_single_ebs(device,io_type,size,tag,piops)
-		            device = drives[0]['device'].replace('/dev/s','/dev/xv')
-		            mkfs_cmd = 'mkfs.xfs -f ' + device
-		            print mkfs_cmd
+            for d in drives:
+                device = d['device']
+                io_type = storage_type
+                size = d['size'].replace("G","")
+                tag = 'SAP-HANA-Shared'
+                piops = None
+                if 'piops' in d:
+                    piops = d['piops']
+                create_attach_single_ebs(device,io_type,size,tag,piops)
+                if os.path.isfile(nvme_device_id):
+                    device = open(nvme_device_id, 'r').read().rstrip()
+                else:
+                    device = drives[0]['device'].replace('/dev/s','/dev/xv')
+                mkfs_cmd = ' mkfs.xfs -f ' + device + ' -L HANA_SHARE '
+                exe_cmd(mkfs_cmd)
+                print mkfs_cmd
         else:
-	        for d in drives:
-	            device = d['device']
-	            io_type = storage_type
-	            size = d['size'].replace("G","")
-	            tag = 'SAP-HANA-Shared'
-	            piops = None
-	            if 'piops' in d:
-	                piops = d['piops']
-	            create_attach_ebs(device,io_type,size,tag,piops)
-	        create_hanashared_volgrp(drives)
-	        stripe_hanashared_vol(drives)
+            for d in drives:
+                device = d['device']
+                io_type = storage_type
+                size = d['size'].replace("G","")
+                tag = 'SAP-HANA-Shared'
+                piops = None
+                if 'piops' in d:
+                    piops = d['piops']
+                create_attach_ebs(device,io_type,size,tag,piops)
+                if os.path.isfile(nvme_device_id):
+                    nvme_device = open(nvme_device_id, 'r').read().rstrip()
+                    d['device'] = '"'+nvme_device+'"'
+            create_hanashared_volgrp(drives)
+            stripe_hanashared_vol(drives)
         return
 
     if which == 'usr_sap':
@@ -347,9 +388,36 @@ def main():
             piops = None
             if 'piops' in d:
                 piops = d['piops']
-            create_attach_ebs(device,io_type,size,tag,piops)
+            create_attach_single_ebs(device,io_type,size,tag,piops)
+            if os.path.isfile(nvme_device_id):
+                device = open(nvme_device_id, 'r').read().rstrip()
+            else:
+                device = drives[0]['device'].replace('/dev/s','/dev/xv')
+        mkfs_cmd = 'mkfs.xfs -f ' + device + ' -L USR_SAP '
+        exe_cmd(mkfs_cmd)
+        print mkfs_cmd
         return
 
+    if which == 'media':
+        if ismaster == 1:
+            drives = config_json['media']['master'][storage_type]['drives']
+        for d in drives:
+            device = d['device']
+            io_type = storage_type
+            size = d['size'].replace("G","")
+            tag = 'SAP-HANA-MEDIA'
+            piops = None
+            if 'piops' in d:
+                piops = d['piops']
+            create_attach_single_ebs(device,io_type,size,tag,piops)
+            if os.path.isfile(nvme_device_id):
+                device = open(nvme_device_id, 'r').read().rstrip()
+            else:
+                device = drives[0]['device'].replace('/dev/s','/dev/xv')
+        mkfs_cmd = 'mkfs.xfs -f ' + device + ' -L HANA_MEDIA '
+        exe_cmd(mkfs_cmd)
+        print mkfs_cmd
+        return
 
 
 if __name__ == "__main__":

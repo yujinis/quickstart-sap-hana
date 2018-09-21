@@ -30,6 +30,9 @@ myInstance=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/doc
 
 export USE_NEW_STORAGE=1
 
+[ -e /root/install/config.sh ] && source /root/install/config.sh
+[ -e /root/install/os.sh ] && source /root/install/os.sh
+
 # ------------------------------------------------------------------
 #          Choose default log file
 # ------------------------------------------------------------------
@@ -42,6 +45,43 @@ log() {
 	echo $* 2>&1 | tee -a ${HANA_LOG_FILE}
 }
 
+update_status () {
+   local status="$1"
+   if [ "$status" ]; then
+      if [ -e /root/install/cluster-watch-engine.sh ]; then
+         sh /root/install/cluster-watch-engine.sh -s "$status"
+      fi
+   fi
+}
+
+create_volume () {
+	if (( ${USE_NEW_STORAGE} == 1 )); then
+		log `date` "Creating Physical Volumes for SAP HANA Data and Log volume groups"
+		#for i in {b..m}
+		for i in {b..f}
+		do
+		  pvcreate /dev/xvd$i
+		done
+		for i in {h..i}
+		do
+		  pvcreate /dev/xvd$i
+		done
+	fi
+}
+
+
+set_noop_scheduler () {
+	log `date` "Setting i/o scheduler to noop for each physical volume"
+	for i in `pvs | grep dev | awk '{print $1}' | sed s/\\\/dev\\\///`
+	do
+	  echo "noop" > /sys/block/$i/queue/scheduler
+	  printf "$i: "
+	  cat /sys/block/$i/queue/scheduler
+	done
+
+}
+
+
 # ------------------------------------------------------------------
 #          Read all inputs
 # ------------------------------------------------------------------
@@ -49,7 +89,7 @@ log() {
 
 while getopts ":h:s:i:p:n:d:w:l:" o; do
     case "${o}" in
-        h) usage && exit 0
+    h) usage && exit 0
 			;;
 		s) SID=${OPTARG}
 			;;
@@ -61,19 +101,15 @@ while getopts ":h:s:i:p:n:d:w:l:" o; do
 			;;
 		d) DOMAIN=${OPTARG}
 			;;
-        w) WORKER_HOSTNAME=${OPTARG}
-            ;;
-       	l) HANA_LOG_FILE=${OPTARG}
-            ;;
-       	*)
-            usage
-            ;;
+    w) WORKER_HOSTNAME=${OPTARG}
+      ;;
+    l) HANA_LOG_FILE=${OPTARG}
+      ;;
+    *)
+       usage
+      ;;
     esac
 done
-
-
-[ -e /root/install/config.sh ] && source /root/install/config.sh
-[ -e /root/install/os.sh ] && source /root/install/os.sh
 
 
 if (( $(isSLES12) == 1 )); then
@@ -119,33 +155,44 @@ else
 fi
 
 
-log `date` "Building storage script to provision and configure EBS volumes for SAP HANA"
+#log `date` "Building storage script to provision and configure EBS volumes for SAP HANA"
 STORAGE_SCRIPT=/root/install/storage_builder_generated_master.sh
+log `date` "Provisioning and configuring EBS Volumes for HANA Backup"
 python /root/install/build_storage.py  -config /root/install/storage.json  \
 					     -ismaster ${IsMasterNode} \
 					     -hostcount ${HostCount} -which backup \
 					     -instance_type ${MyInstanceType} -storage_type ${BACKUP_VOL} \
 					     > ${STORAGE_SCRIPT}
+log `date` "Provisioning and configuring EBS Volumes for HANA Data"
 python /root/install/build_storage.py  -config /root/install/storage.json  \
 							 -ismaster ${IsMasterNode} \
 							 -hostcount ${HostCount} -which hana_data \
 							 -instance_type ${MyInstanceType} -storage_type ${MyHanaDataVolumeType} \
 							 >> ${STORAGE_SCRIPT}
+log `date` "Provisioning and configuring EBS Volumes for HANA Log"
 python /root/install/build_storage.py  -config /root/install/storage.json  \
 							 -ismaster ${IsMasterNode} \
 							 -hostcount ${HostCount} -which hana_log \
 							 -instance_type ${MyInstanceType} -storage_type ${MyHanaLogVolumeType} \
 							 >> ${STORAGE_SCRIPT}
+log `date` "Provisioning and configuring EBS Volumes for HANA Shared"
 python /root/install/build_storage.py  -config /root/install/storage.json  \
 					     -ismaster ${IsMasterNode} \
 					     -hostcount ${HostCount} -which shared \
 					     -instance_type ${MyInstanceType} -storage_type ${SHARED_VOL} \
 					     >> ${STORAGE_SCRIPT}
+log `date` "Provisioning and configuring EBS Volumes for USR-SAP"
 python /root/install/build_storage.py  -config /root/install/storage.json  \
 					     -ismaster ${IsMasterNode} \
 					     -hostcount ${HostCount} -which usr_sap \
 					     -instance_type ${MyInstanceType} -storage_type ${USR_SAP_VOL} \
 					     >> ${STORAGE_SCRIPT}
+log `date` "Provisioning and configuring EBS Volumes for HANA Media"
+python /root/install/build_storage.py  -config /root/install/storage.json  \
+							 -ismaster ${IsMasterNode} \
+							 -hostcount ${HostCount} -which media \
+							 -instance_type ${MyInstanceType} -storage_type ${HANA_MEDIA_VOL} \
+							 >> ${STORAGE_SCRIPT}
 
 
 
@@ -165,43 +212,6 @@ if [ $(issignal_check) == 1 ]; then
     exit 1
 fi
 
-update_status () {
-   local status="$1"
-   if [ "$status" ]; then
-      if [ -e /root/install/cluster-watch-engine.sh ]; then
-         sh /root/install/cluster-watch-engine.sh -s "$status"
-      fi
-   fi
-}
-
-create_volume () {
-	if (( ${USE_NEW_STORAGE} == 1 )); then
-		log `date` "Creating Physical Volumes for SAP HANA Data and Log volume groups"
-		#for i in {b..m}
-		for i in {b..f}
-		do
-		  pvcreate /dev/xvd$i
-		done
-		for i in {h..i}
-		do
-		  pvcreate /dev/xvd$i
-		done
-	fi
-}
-
-
-set_noop_scheduler () {
-	log `date` "Setting i/o scheduler to noop for each physical volume"
-	for i in `pvs | grep dev | awk '{print $1}' | sed s/\\\/dev\\\///`
-	do
-	  echo "noop" > /sys/block/$i/queue/scheduler
-	  printf "$i: "
-	  cat /sys/block/$i/queue/scheduler
-	done
-
-}
-
-
 
 # ------------------------------------------------------------------
 #          Make sure all input parameters are filled
@@ -218,17 +228,17 @@ shift $((OPTIND-1))
 [[ $# -gt 0 ]] && usage;
 
 
-if (( ${USE_NEW_STORAGE} == 1 ));
-then
-	log `date` "Using New Storage from storage.json"
-	sh -x ${STORAGE_SCRIPT} >> ${HANA_LOG_FILE}
-	log `date` "END Storage from storage.json"
-fi
+#if (( ${USE_NEW_STORAGE} == 1 ));
+#then
+#	log `date` "Using New Storage from storage.json"
+#	sh -x ${STORAGE_SCRIPT} >> ${HANA_LOG_FILE}
+#	log `date` "END Storage from storage.json"
+#fi
 
 echo `date` BEGIN install-master  2>&1 | tee -a ${HANA_LOG_FILE}
 
 update_status "CONFIGURING_INSTANCE_FOR_HANA"
-create_volume;
+#create_volume;
 set_noop_scheduler;
 
 
@@ -264,75 +274,51 @@ set_noop_scheduler;
 #          Format filesystems
 # ------------------------------------------------------------------
 
-if (( ${USE_NEW_STORAGE} == 1 ));
-then
-
-	log `date` "Formatting block device for /usr/sap"
-	mkfs.xfs -f /dev/xvds
-
-	## 9.1 Create a new volume to store media.
-	## This is where media bits will be downloaded from S3 and extracted
-	log `date` "Creating volume for HANA Media /media"
-	sh -x /root/install/create-attach-single-volume.sh 50:gp2:/dev/sdz:HANA-MEDIA
-	mkfs.xfs -f /dev/xvdz
-	mkdir -p /media/
-	mount /dev/xvdz /media/
-
-else
-	log `date` "Creating volume group vghana"
-	#vgcreate vghana /dev/xvd{b..m}
-	vgcreate vghana /dev/xvd{b..d}
-
-	###7. Created a new volume group called vghanaback  (Master only)
-	vgcreate vghanaback /dev/xvd{e..f}
-
-
-	###8. Updated number of stripes to 3 for logical volumes created under volume group vghana (Both Master and Worker)
-
-	lvcreate -n lvhanashared -i 3 -I 256 -L ${mysharedSize}  vghana
-	log `date` "Creating hana data logical volume"
-	lvcreate -n lvhanadata -i 3 -I 256  -L ${mydataSize} vghana
-	log `date` "Creating hana log logical volume"
-	lvcreate -n lvhanalog  -i 3 -I 256 -L ${mylogSize} vghana
-
-
-	##9.Created a new logical volume called lvhanaback with 2 stripes (Master Only)
-	log `date` "Creating backup logical volume"
-	lvcreate -n lvhanaback  -i 2 -I 256  -L ${mybackupSize} vghanaback
-
-	log `date` "Formatting block device for /usr/sap"
-	mkfs.xfs -f /dev/xvds
-
-	## 9.1 Create a new volume to store media.
-	## This is where media bits will be downloaded from S3 and extracted
-	mkfs.xfs -f /dev/xvdz
-	mkdir -p /media/
-	mount /dev/xvdz /media/
-fi
-
-
-# TODO: REMOVE THIS BEFORE LAUNCH
-# ------------------------------------------------------------------
-if (( ${ENABLE_FAST_DEBUG} == 1 ));
-then
-	log `date` "WARNING !!!!!! FAST DEBUG ENABLED. NEED TO DISABLE THIS!"
-	log `date` "BYPASSING S3 MEDIA DOWNLOAD"
-	mkdir -p /media
-	cp -r /home/ec2-user/media.cache /media
-else
-	log `date` "Downloading SAP HANA Media from S3: START"
-	# Download media
-	python ${SCRIPT_DIR}/download_media.py  -o /media/
-	log `date` "Downloading SAP HANA Media from S3: END"
-	# extract media
-
-	log `date` "Extracting SAP HANA Media: START"
-	sh ${SCRIPT_DIR}/extract.sh
-	log `date` "Extracting SAP HANA Media: END"
-fi
-
-
-
+# if (( ${USE_NEW_STORAGE} == 1 ));
+# then
+#
+# #	log `date` "Formatting block device for /usr/sap"
+# #	mkfs.xfs -f /dev/xvds
+#
+# 	## 9.1 Create a new volume to store media.
+# 	## This is where media bits will be downloaded from S3 and extracted
+# 	log `date` "Creating volume for HANA Media /media"
+# 	sh -x /root/install/create-attach-single-volume.sh 50:gp2:/dev/sdz:HANA-MEDIA
+# 	mkfs.xfs -f /dev/xvdz
+# 	mkdir -p /media/
+# 	mount /dev/xvdz /media/
+#
+# else
+# 	log `date` "Creating volume group vghana"
+# 	#vgcreate vghana /dev/xvd{b..m}
+# 	vgcreate vghana /dev/xvd{b..d}
+#
+# 	###7. Created a new volume group called vghanaback  (Master only)
+# 	vgcreate vghanaback /dev/xvd{e..f}
+#
+#
+# 	###8. Updated number of stripes to 3 for logical volumes created under volume group vghana (Both Master and Worker)
+#
+# 	lvcreate -n lvhanashared -i 3 -I 256 -L ${mysharedSize}  vghana
+# 	log `date` "Creating hana data logical volume"
+# 	lvcreate -n lvhanadata -i 3 -I 256  -L ${mydataSize} vghana
+# 	log `date` "Creating hana log logical volume"
+# 	lvcreate -n lvhanalog  -i 3 -I 256 -L ${mylogSize} vghana
+#
+#
+# 	##9.Created a new logical volume called lvhanaback with 2 stripes (Master Only)
+# 	log `date` "Creating backup logical volume"
+# 	lvcreate -n lvhanaback  -i 2 -I 256  -L ${mybackupSize} vghanaback
+#
+# 	log `date` "Formatting block device for /usr/sap"
+# 	mkfs.xfs -f /dev/xvds
+#
+# 	## 9.1 Create a new volume to store media.
+# 	## This is where media bits will be downloaded from S3 and extracted
+# 	mkfs.xfs -f /dev/xvdz
+# 	mkdir -p /media/
+# 	mount /dev/xvdz /media/
+# fi
 
 
 #/backup /hana/shared /hana/log /hana/data
@@ -357,27 +343,27 @@ mkdir -p /media
 mkdir -p /hana /hana/log /hana/data /hana/shared
 mkdir -p /backup
 
-log `date` "Creating SAP and HANA shared dir"
-mkdir -p /shared
-if (( ${USE_NEW_STORAGE} == 1 ));then
-	mkfs.xfs -f /dev/xvde
-	mount /dev/xvde /hana/shared/
-fi
+#log `date` "Creating SAP and HANA shared dir"
+#mkdir -p /shared
+#if (( ${USE_NEW_STORAGE} == 1 ));then
+#	mkfs.xfs -f /dev/xvde
+#	mount /dev/xvde /hana/shared/
+#fi
 
 log `date` "Creating mount points in fstab"
 
 if  ( [ "$MyOS" = "SLES11SP4HVM" ] || [ "$MyOS" = "RHEL66SAPHVM" ] || [ "$MyOS" = "RHEL67SAPHVM" ] );
 then
-	echo "/dev/xvds /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
-	echo "/dev/xvdz /media   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0"  >> /etc/fstab
-	echo "/dev/xvde /hana/shared   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
+	echo "/dev/disk/by-label/USR_SAP /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
+	echo "/dev/disk/by-label/HANA_MEDIA /media   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0"  >> /etc/fstab
+	echo "/dev/disk/by-label/HANA_SHARE /hana/shared   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghanadata-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghanalog-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghanaback-lvhanaback     /backup        xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
 else
-	echo "/dev/xvds /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
-	echo "/dev/xvdz /media   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0"  >> /etc/fstab
-	echo "/dev/xvde /hana/shared   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
+	echo "/dev/disk/by-label/USR_SAP /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
+	echo "/dev/disk/by-label/HANA_MEDIA /media   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0"  >> /etc/fstab
+	echo "/dev/disk/by-label/HANA_SHARE /hana/shared   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghanadata-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghanalog-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghanaback-lvhanaback     /backup        xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
@@ -386,11 +372,28 @@ fi
 
 ##10. Updated the fstab entry for /backup (Master only)
 
-
-log `date` "mounting filesystems"
+log `date` "Mounting filesystems"
 mount -a
 mount
 
+# ------------------------------------------------------------------
+if (( ${ENABLE_FAST_DEBUG} == 1 ));
+then
+	log `date` "WARNING !!!!!! FAST DEBUG ENABLED. NEED TO DISABLE THIS!"
+	log `date` "BYPASSING S3 MEDIA DOWNLOAD"
+	mkdir -p /media
+	cp -r /home/ec2-user/media.cache /media
+else
+	log `date` "Downloading SAP HANA Media from S3: START"
+	# Download media
+	python ${SCRIPT_DIR}/download_media.py  -o /media/
+	log `date` "Downloading SAP HANA Media from S3: END"
+	# extract media
+
+	log `date` "Extracting SAP HANA Media: START"
+	sh ${SCRIPT_DIR}/extract.sh
+	log `date` "Extracting SAP HANA Media: END"
+fi
 
 # ------------------------------------------------------------------
 #          Creating additional directories
@@ -481,7 +484,6 @@ cd /root/install/
 /usr/local/bin/aws s3 cp s3://aws-data-provider/bin/aws-agent_install.sh /root/install/aws-agent_install.sh
 chmod +x aws-agent_install.sh
 ./aws-agent_install.sh
-
 
 
 exit 0

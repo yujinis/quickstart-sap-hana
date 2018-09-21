@@ -231,6 +231,7 @@ install_prereq_sles12sp1() {
 	  zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
     zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
     zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
+    zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
     #SLES 12 installation fails with libnuma
     zypper -n install libnuma-devel | tee -a ${HANA_LOG_FILE}
     #Install unrar for media extraction
@@ -270,6 +271,7 @@ install_prereq_sles12sp2() {
 	  zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
     zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
     zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
+    zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
     #Install unrar for media extraction
     zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
     #SLES 12 installation fails with libnuma
@@ -310,6 +312,7 @@ install_prereq_sles12sp3() {
 	  zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
     zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
     zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
+    zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
     #Install unrar for media extraction
     zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
     #SLES 12 installation fails with libnuma
@@ -340,6 +343,7 @@ install_prereq_sles12sp1sap() {
     zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
     zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
     zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+    zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
     systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
     #Install unrar for media extraction
     zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
@@ -361,6 +365,7 @@ install_prereq_sles12sp2sap() {
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
@@ -387,6 +392,7 @@ install_prereq_sles12sp3sap() {
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
@@ -414,6 +420,8 @@ install_prereq_sles12sp1sapbyos() {
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+  systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
   # Apply all Recommended HANA settings with SAPTUNE
@@ -434,6 +442,7 @@ install_prereq_sles12sp2sapbyos() {
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
@@ -459,6 +468,7 @@ install_prereq_sles12sp3sapbyos() {
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
@@ -598,6 +608,16 @@ disable_hostname() {
     #error check and return
 }
 
+enable_resize_to_from_nitro() {
+conf_file="/etc/dracut.conf.d/07-aws-type-switch.conf"
+  if [ -f $conf_file ]; then
+     log "`date`  File $conf_file already exist so skipping the step to enable resize"
+  else
+     log "`date`  File $conf_file doesn't exist. Executing steps to enable resize"
+     echo 'drivers+="ena ext4 nvme nvme-core virtio virtio_scsi xen-blkfront xen-netfront "' >> $conf_file
+     mkinitrd | tee -a ${HANA_LOG_FILE}
+  fi
+}
 #***END Functions***
 
 # ------------------------------------------------------------------
@@ -695,6 +715,7 @@ case "$MyOS" in
     start_fs
     start_oss_configs
     set_clocksource
+    enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP2 related pre-requisites" ;;
   SLES12SP3HVM )
     log "`date` Start - Executing SLES 12 SP2 related pre-requisites"
@@ -705,6 +726,7 @@ case "$MyOS" in
     start_fs
     start_oss_configs
     set_clocksource
+    enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP2 related pre-requisites" ;;
   SLES12SP1SAPHVM )
     log "`date` Start - Executing SLES 12 SP1 for SAP related pre-requisites"
@@ -716,12 +738,14 @@ case "$MyOS" in
     install_prereq_sles12sp2sap
     set_clocksource
     disable_hostname
+    enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP2 for SAP related pre-requisites" ;;
   SLES12SP3SAPHVM )
     log "`date` Start - Executing SLES 12 SP3 for SAP related pre-requisites"
     install_prereq_sles12sp3sap
     set_clocksource
     disable_hostname
+    enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP3 for SAP related pre-requisites" ;;
   SLES12SP1SAPBYOSHVM )
     log "`date` Start - Executing SLES 12 SP1 for SAP BYOS related pre-requisites"
@@ -740,6 +764,7 @@ case "$MyOS" in
     start_ntp
     start_fs
     set_clocksource
+    enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP2 for SAP BYOS related pre-requisites" ;;
   SLES12SP3SAPBYOSHVM )
     log "`date` Start - Executing SLES 12 SP3 for SAP BYOS related pre-requisites"
@@ -749,6 +774,7 @@ case "$MyOS" in
     start_ntp
     start_fs
     set_clocksource
+    enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP3 for SAP BYOS related pre-requisites" ;;
 esac
 

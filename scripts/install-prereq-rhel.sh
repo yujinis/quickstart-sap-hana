@@ -206,6 +206,7 @@ install_prereq_rhel73() {
   yum -y install compat-sap-c++-6 | tee -a ${HANA_LOG_FILE}
   yum -y install tuned-profiles-sap-hana | tee -a ${HANA_LOG_FILE}
   yum -y update glibc.x86_64 | tee -a ${HANA_LOG_FILE}
+  yum -y install nvme-cli | tee -a ${HANA_LOG_FILE}
 
 }
 
@@ -219,6 +220,21 @@ install_prereq_rhel74() {
   yum -y install compat-sap-c++-6 | tee -a ${HANA_LOG_FILE}
   yum -y install tuned-profiles-sap-hana | tee -a ${HANA_LOG_FILE}
   yum -y update glibc.x86_64 | tee -a ${HANA_LOG_FILE}
+  yum -y install nvme-cli | tee -a ${HANA_LOG_FILE}
+
+}
+
+install_prereq_rhel75() {
+  log "`date` Installing packages required for RHEL 7.4"
+
+  yum -y install xfsprogs 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install autofs 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install gcc | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-5 | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-6 | tee -a ${HANA_LOG_FILE}
+  yum -y install tuned-profiles-sap-hana | tee -a ${HANA_LOG_FILE}
+  yum -y update glibc.x86_64 | tee -a ${HANA_LOG_FILE}
+  yum -y install nvme-cli | tee -a ${HANA_LOG_FILE}
 
 }
 
@@ -303,6 +319,19 @@ start_oss_configs_rhel73() {
 }
 
 start_oss_configs_rhel74() {
+
+    #This section is from OSS #2292690 - SAP HANA DB: Recommended OS settings for RHEL 7
+
+    log "`date` - Apply saptune HANA profile"
+    mkdir /etc/tuned/sap-hana
+    cp /usr/lib/tuned/sap-hana/tuned.conf /etc/tuned/sap-hana/tuned.conf # OSS Note 2292690
+    sed -i '/force_latency/ c\force_latency=70' /etc/tuned/sap-hana/tuned.conf # OSS Note 2292690
+    tuned-adm profile sap-hana | tee -a ${HANA_LOG_FILE}
+    tuned-adm active | tee -a ${HANA_LOG_FILE}
+
+}
+
+start_oss_configs_rhel75() {
 
     #This section is from OSS #2292690 - SAP HANA DB: Recommended OS settings for RHEL 7
 
@@ -444,4 +473,15 @@ case "$MyOS" in
     download_unrar
     lockversion
     log "`date` End - Executing RHEL 7.4 related pre-requisites" ;;
+  RHEL75SAPHVM )
+    log "`date` Start - Executing RHEL 7.5 related pre-requisites"
+    install_prereq_rhel75
+    start_oss_configs_rhel75
+    preserve_hostname
+    start_ntp
+    start_fs
+    set_clocksource_rhel7x
+    download_unrar
+    lockversion
+    log "`date` End - Executing RHEL 7.5 related pre-requisites" ;;
 esac

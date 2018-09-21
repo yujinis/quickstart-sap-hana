@@ -13,7 +13,7 @@
 
 export PATH=${PATH}:/sbin:/usr/sbin:/usr/local/sbin:/root/bin:/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/X11R6/bin:/usr/games:/usr/lib/AmazonEC2/ec2-api-tools/bin:/usr/lib/AmazonEC2/ec2-ami-tools/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin
 
-usage() { 
+usage() {
     cat <<EOF
 Usage: $0 #vol:#size:Type:{#PIOPS}:DeviceStart:Name
 Examples: 5:20:gp2:/dev/sdb:node [ 5 gp2 EBS, 20 GB each, /dev/sd{b,c,d,e,f}
@@ -31,7 +31,7 @@ EOF
 [[ $# -ne 1 ]] && usage;
 ARGS_LIST=$1
 
-[ -e /root/install/config.sh ] && source /root/install/config.sh 
+[ -e /root/install/config.sh ] && source /root/install/config.sh
 export AWS_DEFAULT_REGION=${REGION}
 export AWS_DEFAULT_AVAILABILITY_ZONE=${AVAILABILITY_ZONE}
 
@@ -75,7 +75,7 @@ log() {
 	if [ -e /root/install/config.sh ]; then
 		echo $* 2>&1 |  tee -a ${HANA_LOG_FILE}
 	else
-		echo $* 2>&1 
+		echo $* 2>&1
 	fi
 }
 
@@ -93,7 +93,7 @@ wait_for_volume_create () {
 			*ok* ) break;;
         esac
 		sleep 10
-	done	
+	done
 	log ${volumeid}:"ok"
 }
 
@@ -110,7 +110,7 @@ wait_for_attach_volume () {
 			*attached* ) break;;
         esac
 		sleep 10
-	done	
+	done
 	log ${volumeid}:"attached"
 }
 
@@ -120,7 +120,7 @@ wait_for_attach_volume () {
 set_device_delete_ontermination () {
 	local device="$1"
     blkdev_template='"[{\"DeviceName\":\"DEVICE_STRING\",\"Ebs\":{\"DeleteOnTermination\":true}}]"'
-   
+
 	blkdev_json=$(echo -n ${blkdev_template} | sed "s:DEVICE_STRING:$device:")
 	echo aws ec2 modify-instance-attribute --instance-id ${AWS_INSTANCEID} --block-device-mappings ${blkdev_json} | sh
 	log ${device}->"DeleteOnTermination:True"
@@ -145,7 +145,7 @@ if [[ "${VOL_TYPE}" == "io1" ]] ; then
 	VOL_NAME=${ARGS_LIST_ARRAY[5]}
 	[ -z ${VOL_PIOPS} ] && usage;
 else
-	DEVICE_START=${ARGS_LIST_ARRAY[3]}	
+	DEVICE_START=${ARGS_LIST_ARRAY[3]}
 	VOL_NAME=${ARGS_LIST_ARRAY[4]}
 fi
 
@@ -170,7 +170,7 @@ while [  $COUNTER -lt ${VOL_COUNT} ]; do
 	device=${DEVICE_GENERIC}${DeviceNames[${DeviceIndexStart}]}
 	device=$(echo ${device} | sed 's/^"\(.*\)"$/\1/')
 	let DeviceIndexStart=DeviceIndexStart+1
-	let COUNTER=COUNTER+1 
+	let COUNTER=COUNTER+1
 	if [[ "${VOL_TYPE}" == "io1" ]]; then
 		volumeid=$(aws ec2 create-volume \
 					--region ${AWS_DEFAULT_REGION} \
@@ -183,15 +183,15 @@ while [  $COUNTER -lt ${VOL_COUNT} ]; do
 					--availability-zone ${AWS_DEFAULT_AVAILABILITY_ZONE} \
 					--size ${VOL_SIZE} \
 					--volume-type ${VOL_TYPE}| ${JQ_COMMAND} '.VolumeId')
-	fi	
+	fi
 	volumeid=$(echo ${volumeid} | sed 's/^"\(.*\)"$/\1/')
 	log "Creating new volume ${volumeid}. Waiting for create"
-	wait_for_volume_create ${volumeid}	
-	
+	wait_for_volume_create ${volumeid}
+
 #	Attach volume to the instance and expose with the specified device name
 	log "Attaching new volume ${volumeid} as ${device}. Waiting for attach"
 	aws ec2 attach-volume --volume-id ${volumeid} --instance-id ${AWS_INSTANCEID} --device ${device}
-	wait_for_attach_volume ${volumeid}	
+	wait_for_attach_volume ${volumeid}
 	log "setting device attribute  ${device}:DeleteOnTermination"
 	set_device_delete_ontermination ${device}
 	log "setting device name  ${device}:$VOL_NAME"
@@ -199,9 +199,5 @@ while [  $COUNTER -lt ${VOL_COUNT} ]; do
 done
 
 
-			   
+
 log `date` END Creating Volumes and Attaching ${ARGS_LIST}
-
-
-
-
