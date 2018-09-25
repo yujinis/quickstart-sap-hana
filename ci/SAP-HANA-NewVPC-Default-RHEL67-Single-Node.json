@@ -98,9 +98,5 @@
     {
         "ParameterKey": "Proxy",
         "ParameterValue": ""
-    },
-    {
-        "ParameterKey": "QSS3BucketName",
-        "ParameterValue": "$[taskcat_autobucket]"
     }
 ]
