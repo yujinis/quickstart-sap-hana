@@ -22,11 +22,11 @@ tests:
     regions:
       - us-west-2
     template_file: SAP-HANA-NewVPC.template
-  # default-rhel73-single:
-  #   parameter_input: SAP-HANA-NewVPC-Default-RHEL73-Single-Node.json
-  #   regions:
-  #     - us-east-2
-  #   template_file: SAP-HANA-NewVPC.template
+  default-rhel73-single:
+    parameter_input: SAP-HANA-NewVPC-Default-RHEL73-Single-Node.json
+    regions:
+      - us-east-2
+    template_file: SAP-HANA-NewVPC.template
   # default-sles12sp1-single-x1:
   #   parameter_input: SAP-HANA-NewVPC-Default-SLES12SP1-Single-Node-X1.json
   #   regions:
