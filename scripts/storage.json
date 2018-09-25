@@ -2619,5 +2619,17 @@
                 }
             }
         }
+    },
+    "media": {
+        "master": {
+              "gp2": {
+                  "drives": [
+                      {
+                          "device": "/dev/sdz",
+                          "size": "50G"
+                      }
+                  ]
+              }
+        }
     }
 }

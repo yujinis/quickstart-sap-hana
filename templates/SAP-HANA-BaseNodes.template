@@ -2621,6 +2621,8 @@
                                 "\n",
                                 "sh /root/install/writeconfig.sh USR_SAP_VOL=gp2",
                                 "\n",
+                                "sh /root/install/writeconfig.sh HANA_MEDIA_VOL=gp2",
+                                "\n",
                                 "echo ",
                                 {
                                     "Fn::Join": [
