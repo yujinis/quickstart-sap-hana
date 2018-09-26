@@ -1277,27 +1277,6 @@
                 ]
             }
         },
-        "HANAMasterCloneInterface": {
-            "Type": "AWS::EC2::NetworkInterface",
-            "Properties": {
-                "Description": "Network Interface for HANA Master Clone (PreCheck)",
-                "SubnetId": {
-                    "Ref": "HANASubnet"
-                },
-                "GroupSet": [
-                    {
-                        "Ref": "HANASecurityGroup"
-                    }
-                ],
-                "SourceDestCheck": "true",
-                "Tags": [
-                    {
-                        "Key": "Network",
-                        "Value": "Private"
-                    }
-                ]
-            }
-        },
         "HANAWorker1Interface": {
             "Type": "AWS::EC2::NetworkInterface",
             "Condition": "TwoOrMoreNodes",
