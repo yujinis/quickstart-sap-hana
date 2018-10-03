@@ -273,7 +273,8 @@
         "SLESBYOSRegCode": {
             "Type": "String",
             "Default": "",
-            "Description": "Registration code for SUSE BYOS (Applicable only if you use BYOS Option)."
+            "Description": "Registration code for SUSE BYOS (Applicable only if you use BYOS Option).",
+            "NoEcho": "true"
         }
     },
     "Conditions": {
