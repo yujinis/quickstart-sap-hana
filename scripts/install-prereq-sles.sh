@@ -547,9 +547,9 @@ start_fs() {
 
 set_clocksource () {
   log "`date` Setting clocksource to TSC"
-  echo "tsc" > /sys/devices/system/clocksource/*/current_clocksource
+  echo "tsc" > /sys/devices/system/clocksource/clocksource0/current_clocksource
   log "`date` Configuring boot.local to set clocksource to TSC upon reboot"
-  echo "echo "tsc" > /sys/devices/system/clocksource/*/current_clocksource" >> /etc/init.d/after.local
+  echo "echo "tsc" > /sys/devices/system/clocksource/clocksource0/current_clocksource" >> /etc/init.d/after.local
 }
 
 start_oss_configs() {

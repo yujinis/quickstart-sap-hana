@@ -15,7 +15,6 @@
         },
         "AvailabilityZone": {
             "Description": "The Availability Zone where SAP HANA subnets will be created.",
-            "Default": "us-west-2a",
             "Type": "AWS::EC2::AvailabilityZone::Name"
         },
         "AutoRecovery": {
