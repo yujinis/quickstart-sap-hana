@@ -530,6 +530,9 @@
             "eu-west-2": {
                 "AWSNAT": "ami-e6768381"
             },
+            "eu-west-3": {
+                "AWSNAT": "ami-0050bb60cea70c5b3"
+            },
             "sa-east-1": {
                 "AWSNAT": "ami-09c013530239687aa"
             },

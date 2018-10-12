@@ -92,6 +92,9 @@
             "eu-west-2": {
                 "AMZNLINUX": "ami-f976839e"
             },
+            "eu-west-3": {
+                "AMZNLINUX": "ami-0050bb60cea70c5b3"
+            },
             "sa-east-1": {
                 "AMZNLINUX": "ami-07b14488da8ea02a0"
             },
