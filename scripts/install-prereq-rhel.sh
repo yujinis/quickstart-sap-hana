@@ -462,8 +462,8 @@ case "$MyOS" in
     download_unrar
     lockversion
     log "`date` End - Executing RHEL 7.3 related pre-requisites" ;;
-  RHEL74SAPHVM )
-    log "`date` Start - Executing RHEL 7.4 related pre-requisites"
+  RHEL74SAPHAUSHVM )
+    log "`date` Start - Executing RHEL 7.4 with HA and US related pre-requisites"
     install_prereq_rhel74
     start_oss_configs_rhel74
     preserve_hostname
@@ -471,8 +471,19 @@ case "$MyOS" in
     start_fs
     set_clocksource_rhel7x
     download_unrar
-    lockversion
-    log "`date` End - Executing RHEL 7.4 related pre-requisites" ;;
+#   lockversion - Version lock not required for HA & EUS AMIs
+    log "`date` End - Executing RHEL 7.4 with HA and US related pre-requisites" ;;
+  RHEL75SAPHAUSHVM )
+    log "`date` Start - Executing RHEL 7.5 with HA and US related pre-requisites"
+    install_prereq_rhel75
+    start_oss_configs_rhel75
+    preserve_hostname
+    start_ntp
+    start_fs
+    set_clocksource_rhel7x
+    download_unrar
+#   lockversion - Version lock not required for HA & EUS AMIs
+    log "`date` End - Executing RHEL 7.5 with HA and US related pre-requisites" ;;
   RHEL75SAPHVM )
     log "`date` Start - Executing RHEL 7.5 related pre-requisites"
     install_prereq_rhel75

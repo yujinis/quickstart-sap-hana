@@ -137,6 +137,9 @@
             "Default": "SuSELinux12SP3ForSAP",
             "AllowedValues": [
                 "RedHatLinux73ForSAP",
+                "RedHatLinux75ForSAP",
+                "RedHatLinux74ForSAP-With-HA-US",
+                "RedHatLinux75ForSAP-With-HA-US",
                 "SuSELinux11SP4",
                 "SuSELinux12SP1",
                 "SuSELinux12SP3",
