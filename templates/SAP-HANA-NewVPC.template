@@ -508,52 +508,52 @@
     "Mappings": {
         "AWSAMIRegionMap": {
             "AMI": {
-                "AWSNAT": "amzn-ami-vpc-nat-hvm-2018.03.0.20180811-x86_64-ebs"
+                "AWSNAT": "amzn-ami-vpc-nat-hvm-2018.03.0.20181116-x86_64-ebs"
             },
             "ap-northeast-1": {
-                "AWSNAT": "ami-0cf78ae724f63bac0"
+                "AWSNAT": "ami-00d29e4cb217ae06b"
             },
             "ap-northeast-2": {
-                "AWSNAT": "ami-08cfa02141f9e9bee"
+                "AWSNAT": "ami-0d98591cbf9ef1ffd"
             },
             "ap-south-1": {
-                "AWSNAT": "ami-0aba92643213491b9"
+                "AWSNAT": "ami-00b3aa8a93dd09c13"
             },
             "ap-southeast-1": {
-                "AWSNAT": "ami-0cf24653bcf894797"
+                "AWSNAT": "ami-01514bb1776d5c018"
             },
             "ap-southeast-2": {
-                "AWSNAT": "ami-00c1445796bc0a29f"
+                "AWSNAT": "ami-062c04ec46aecd204"
             },
             "ca-central-1": {
-                "AWSNAT": "ami-b61b96d2"
+                "AWSNAT": "ami-0b32354309da5bba5"
             },
             "eu-central-1": {
-                "AWSNAT": "ami-06465d49ba60cf770"
+                "AWSNAT": "ami-06a5303d47fbd8c60"
             },
             "eu-west-1": {
-                "AWSNAT": "ami-0ea87e2bfa81ca08a"
+                "AWSNAT": "ami-024107e3e3217a248"
             },
             "eu-west-2": {
-                "AWSNAT": "ami-e6768381"
+                "AWSNAT": "ami-0ca65a55561666293"
             },
             "eu-west-3": {
-                "AWSNAT": "ami-0050bb60cea70c5b3"
+                "AWSNAT": "ami-0641e4dfc1427f114"
             },
             "sa-east-1": {
-                "AWSNAT": "ami-09c013530239687aa"
+                "AWSNAT": "ami-057f5d52ff7ae75ae"
             },
             "us-east-1": {
-                "AWSNAT": "ami-0422d936d535c63b1"
+                "AWSNAT": "ami-00a9d4a05375b2763"
             },
             "us-east-2": {
-                "AWSNAT": "ami-0f9c61b5a562a16af"
+                "AWSNAT": "ami-00d1f8201864cc10c"
             },
             "us-west-1": {
-                "AWSNAT": "ami-0d4027d2cdbca669d"
+                "AWSNAT": "ami-097ad469381034fa2"
             },
             "us-west-2": {
-                "AWSNAT": "ami-40d1f038"
+                "AWSNAT": "ami-0b840e8a1ce4cdf15"
             }
         }
     },
