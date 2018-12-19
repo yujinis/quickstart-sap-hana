@@ -154,7 +154,6 @@ else
 	 	exit 1
 fi
 
-
 #log `date` "Building storage script to provision and configure EBS volumes for SAP HANA"
 STORAGE_SCRIPT=/root/install/storage_builder_generated_master.sh
 log `date` "Provisioning and configuring EBS Volumes for HANA Backup"
@@ -193,7 +192,6 @@ python /root/install/build_storage.py  -config /root/install/storage.json  \
 							 -hostcount ${HostCount} -which media \
 							 -instance_type ${MyInstanceType} -storage_type ${HANA_MEDIA_VOL} \
 							 >> ${STORAGE_SCRIPT}
-
 
 
 # ------------------------------------------------------------------
@@ -329,12 +327,28 @@ do
    mkfs.xfs /dev/mapper/$lv
 done
 
+
+# ------------------------------------------------------------------
+#       Nov 28, 2018 
+#		Create swap file /SWAPS/swap2G, 2G in size 
+#		Update /etc/fstab
+# ------------------------------------------------------------------
+log `date` "Creating 2G swap space /SWAPS/swap2G"
+mkdir /SWAPS
+sf=/SWAPS/swap2G
+dd if=/dev/zero of=${sf} bs=1G count=2
+chmod 600 ${sf}
+mkswap ${sf}
+swapon ${sf}
+echo "${sf}	swap swap defaults 0 0" >> /etc/fstab 
+log `swapon --show` "End of creating swap space"
+
+
 # ------------------------------------------------------------------
 #          Create mount points and important directories
 #		   Update /etc/fstab
 #		   Mount all filesystems
 # ------------------------------------------------------------------
-
 
 log `date` "Creating SAP and HANA directories"
 mkdir -p /usr/sap

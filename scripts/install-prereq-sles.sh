@@ -332,6 +332,64 @@ install_prereq_sles12sp3() {
     #error check and return
 }
 
+install_prereq_sles15() {
+    # ------------------------------------------------------------------
+    #          Install all the pre-requisites for SAP HANA
+    # ------------------------------------------------------------------
+
+    log "## Installing required OS Packages## "
+    zypper -n install systemd 2>&1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install gtk2 2>&1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install java-1_6_0-ibm 2>&1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libicu  | tee -a ${HANA_LOG_FILE}
+    zypper -n install mozilla-xulrunner*  | tee -a ${HANA_LOG_FILE}
+    zypper -n install sudo  | tee -a ${HANA_LOG_FILE}
+    zypper -n install syslog-ng  | tee -a ${HANA_LOG_FILE}
+    zypper -n install tcsh libssh2-1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install autoyast2-installation | tee -a ${HANA_LOG_FILE}
+    zypper -n install yast2-ncurses  | tee -a ${HANA_LOG_FILE}
+    zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
+	 zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
+    zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+
+    ## --------------------------------------------------------------------------------------- ##
+    ## /sbin/insserv has to be installed for HANA install program or it fails with error below ##
+    ## --------------------------------------------------------------------------------------- ##
+    zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+    
+    ## ----------------------------------------------------------------- ##
+    ## unrar has been replaced by unar in SLES 15, and is implemented as ##
+    ## a symbolic link to unar "unrar --> /usr/bin/unar. Since unar does ##
+    ## not work with SAP software packages so we just copy form QS depot ##
+    ## ----------------------------------------------------------------- ##
+    wget ${DOWNLOADLINK}/scripts/unrar --output-document=/usr/bin/unrar
+
+    ## ----------------------------------------------------------------- ##
+    ## SLES 15 no longer supports ifconfig and moved it from package     ##
+    ## net-tools to net-tools-deprecated. Once ifconfig is completely    ##
+    ## removed we'll need to use command "ip" to obtain server IPs       ##
+    ## ----------------------------------------------------------------- ##
+    zypper -n install net-tools-deprecated | tee -a ${HANA_LOG_FILE}
+    
+    #SLES 12 installation fails with libnuma
+    zypper -n install libnuma-devel | tee -a ${HANA_LOG_FILE}
+    #Remove ulimit package
+    zypper remove ulimit > /dev/null
+
+    chkconfig boot.kdump  | tee -a ${HANA_LOG_FILE}
+    chkconfig kdump off
+    echo "net.ipv4.tcp_slow_start_after_idle=0" >> /etc/sysctl.conf
+    sysctl -p /etc/sysctl.conf  | tee -a ${HANA_LOG_FILE}
+
+    #ipcs -l  | tee -a ${HANA_LOG_FILE}
+    echo "kernel.shmmni=65536" >> /etc/sysctl.conf
+    sysctl -p /etc/sysctl.conf  | tee -a ${HANA_LOG_FILE}
+
+    #error check and return
+}
+
 install_prereq_sles12sp1sap() {
     # ------------------------------------------------------------------
     #          Install all the pre-requisites for SAP HANA
@@ -408,6 +466,53 @@ install_prereq_sles12sp3sap() {
 
 }
 
+install_prereq_sles15sap() {
+  # ------------------------------------------------------------------
+  #          Install all SLES15ForSAP pre-requisites for SAP HANA
+  # ------------------------------------------------------------------
+
+  log "`date` - Install / Update OS Packages## "
+  zypper -n install systemd 2>&1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install tuned  | tee -a ${HANA_LOG_FILE}
+  zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
+  zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
+  zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+  systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  #Install unrar for media extraction
+  #zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+  ## ----------------------------------------------------------------- ##
+  ## unrar has been replaced by unar in SLES 15, and is implemented as ##
+  ## a symbolic link to unar "unrar --> /usr/bin/unar. Since unar does ##
+  ## not work with SAP software packages so we just copy form QS depot ##
+  ## ----------------------------------------------------------------- ##
+  wget ${DOWNLOADLINK}/scripts/unrar --output-document=/usr/bin/unrar
+
+  ## ----------------------------------------------------------------- ##
+  ## SLES 15 no longer supports ifconfig and moved it from package     ##
+  ## net-tools to net-tools-deprecated. Once ifconfig is completely    ##
+  ## removed we'll need to use command "ip" to obtain server IPs       ##
+  ## ----------------------------------------------------------------- ##
+  zypper -n install net-tools-deprecated | tee -a ${HANA_LOG_FILE}
+ 
+  # Apply all Recommended HANA settings with SAPTUNE
+  log "`date` - Start saptune daemon"
+  saptune daemon start | tee -a ${HANA_LOG_FILE}
+  log "`date` - Apply saptune HANA profile"
+  mkdir /etc/tuned/saptune # OSS Note 2205917
+  cp /usr/lib/tuned/saptune/tuned.conf /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  sed -i "/\[cpu\]/ a force_latency=70" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  sed -i "s/script.sh/\/usr\/lib\/tuned\/saptune\/script.sh/" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  ## ------------------------------------------------------------------- ##
+  ## OSS note 2684254 : Disable Transparent Hugepages that can hang HANA ##
+  ## This change takes effect only after a system reboot                 ##
+  ## ------------------------------------------------------------------- ##
+  echo never > /sys/kernel/mm/transparent_hugepage/enabled
+  grub2-mkconfig -o /boot/grub2/grub.cfg
+  ## ------------------------------------------------------------------- ##
+  saptune solution apply HANA | tee -a ${HANA_LOG_FILE}
+}
+
 install_prereq_sles12sp1sapbyos() {
   # ------------------------------------------------------------------
   #          Install all the pre-requisites for SAP HANA
@@ -472,6 +577,45 @@ install_prereq_sles12sp3sapbyos() {
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+  # Apply all Recommended HANA settings with SAPTUNE
+  log "`date` - Start saptune daemon"
+  saptune daemon start | tee -a ${HANA_LOG_FILE}
+  log "`date` - Apply saptune HANA profile"
+  mkdir /etc/tuned/saptune # OSS Note 2205917
+  cp /usr/lib/tuned/saptune/tuned.conf /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  sed -i "/\[cpu\]/ a force_latency=70" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  sed -i "s/script.sh/\/usr\/lib\/tuned\/saptune\/script.sh/" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  saptune solution apply HANA | tee -a ${HANA_LOG_FILE}
+
+}
+
+install_prereq_sles15sapbyos() {
+  # ------------------------------------------------------------------
+  #          Install all the pre-requisites for SAP HANA
+  # ------------------------------------------------------------------
+  log "`date` - Install / Update OS Packages## "
+  zypper -n install systemd 2>&1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install tuned  | tee -a ${HANA_LOG_FILE}
+  zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
+  zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
+  zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+  systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  #Install unrar for media extraction
+  ## ----------------------------------------------------------------- ##
+  ## unrar has been replaced by unar in SLES 15, and is implemented as ##
+  ## a symbolic link to unar "unrar --> /usr/bin/unar. Since unar does ##
+  ## not work with SAP software packages so we just copy form QS depot ##
+  ## ----------------------------------------------------------------- ##
+  wget ${DOWNLOADLINK}/scripts/unrar --output-document=/usr/bin/unrar
+
+  ## ----------------------------------------------------------------- ##
+  ## SLES 15 no longer supports ifconfig and moved it from package     ##
+  ## net-tools to net-tools-deprecated. Once ifconfig is completely    ##
+  ## removed we'll need to use command "ip" to obtain server IPs       ##
+  ## ----------------------------------------------------------------- ##
+  zypper -n install net-tools-deprecated | tee -a ${HANA_LOG_FILE}
+  
   # Apply all Recommended HANA settings with SAPTUNE
   log "`date` - Start saptune daemon"
   saptune daemon start | tee -a ${HANA_LOG_FILE}
@@ -614,11 +758,17 @@ conf_file="/etc/dracut.conf.d/07-aws-type-switch.conf"
      log "`date`  File $conf_file already exist so skipping the step to enable resize"
   else
      log "`date`  File $conf_file doesn't exist. Executing steps to enable resize"
-     echo 'drivers+="ena ext4 nvme nvme-core virtio virtio_scsi xen-blkfront xen-netfront "' >> $conf_file
+     ## ----------------------------------------------------------------------------------------------- ##
+     ## -- Added xfs to $conf_file for SLES 15                                                       -- ##
+     ## -- SLES15 creates root file system as xfs, instead ext4 by earlier versions.                 -- ##
+     ## -- Instances won't start after reboot as the root file system can't be mounted               -- ##
+     ## ----------------------------------------------------------------------------------------------- ##
+     echo 'drivers+="ena xfs ext4 nvme nvme-core virtio virtio_scsi xen-blkfront xen-netfront "' >> $conf_file
      mkinitrd | tee -a ${HANA_LOG_FILE}
   fi
 }
 #***END Functions***
+
 
 # ------------------------------------------------------------------
 #         Code Body section
@@ -728,6 +878,16 @@ case "$MyOS" in
     set_clocksource
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP2 related pre-requisites" ;;
+  SLES15HVM )
+    log "`date` Start - Executing SLES 15 related pre-requisites"
+    install_prereq_sles15
+    disable_dhcp
+    disable_hostname
+    start_fs
+    start_oss_configs
+    set_clocksource
+    enable_resize_to_from_nitro
+    log "`date` End - Executing SLES 15 related pre-requisites" ;;
   SLES12SP1SAPHVM )
     log "`date` Start - Executing SLES 12 SP1 for SAP related pre-requisites"
     install_prereq_sles12sp1sap
@@ -747,6 +907,13 @@ case "$MyOS" in
     disable_hostname
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP3 for SAP related pre-requisites" ;;
+  SLES15SAPHVM )
+    log "`date` Start - Executing SLES 15 for SAP related pre-requisites"
+    install_prereq_sles15sap
+    set_clocksource
+    disable_hostname
+    enable_resize_to_from_nitro
+    log "`date` End - Executing SLES 15 for SAP related pre-requisites" ;;
   SLES12SP1SAPBYOSHVM )
     log "`date` Start - Executing SLES 12 SP1 for SAP BYOS related pre-requisites"
     install_prereq_sles12sp1sapbyos
@@ -776,6 +943,15 @@ case "$MyOS" in
     set_clocksource
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP3 for SAP BYOS related pre-requisites" ;;
+  SLES15SAPBYOSHVM )
+    log "`date` Start - Executing SLES 15 for SAP BYOS related pre-requisites"
+    install_prereq_sles15sapbyos
+    disable_dhcp
+    disable_hostname
+    start_fs
+    set_clocksource
+    enable_resize_to_from_nitro
+    log "`date` End - Executing SLES 15 for SAP BYOS related pre-requisites" ;;
 esac
 
 #install_prereq

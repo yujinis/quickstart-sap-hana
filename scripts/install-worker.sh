@@ -136,14 +136,12 @@ python /root/install/build_storage.py  -config /root/install/storage.json  \
 					     >> ${STORAGE_SCRIPT}
 
 
-
-
-if (( ${USE_NEW_STORAGE} == 1 ));
-then
-	log `date` "Using New Storage from storage.json"
-	sh -x ${STORAGE_SCRIPT} >> ${HANA_LOG_FILE}
-	log `date` "END Storage from storage.json"
-fi
+#if (( ${USE_NEW_STORAGE} == 1 ));
+#then
+#	log `date` "Using New Storage from storage.json"
+#	sh -x ${STORAGE_SCRIPT} >> ${HANA_LOG_FILE}
+#	log `date` "END Storage from storage.json"
+#fi
 
 
 log `date` BEGIN install-worker
@@ -165,16 +163,16 @@ update_status "CONFIGURING_INSTANCE_FOR_HANA"
 #          Create PV's for LVM2 saphana volume group
 # ------------------------------------------------------------------
 
-if (( ${USE_NEW_STORAGE} == 1 ));
-then
-	log `date` "Disabled Creating Physical Volumes for saphana volume group"
-else
-	log `date` "Creating Physical Volumes for saphana volume group"
-	for i in {b..e}
-	do
-	  pvcreate /dev/xvd$i
-	done
-fi
+#if (( ${USE_NEW_STORAGE} == 1 ));
+#then
+#	log `date` "Disabled Creating Physical Volumes for saphana volume group"
+#else
+#	log `date` "Creating Physical Volumes for saphana volume group"
+#	for i in {b..e}
+#	do
+#	  pvcreate /dev/xvd$i
+#	done
+#fi
 
 # ------------------------------------------------------------------
 #           Set i/o scheduler to noop
@@ -250,24 +248,22 @@ log `date` "Creating volume group vghana"
 # fi
 
 
-if (( ${USE_NEW_STORAGE} == 1 ));
-then
-	echo "Disabled old storage code"
-	log `date` "Formatting block device for /usr/sap"
-	mkfs.xfs -f /dev/xvds
-
-else
-	log `date` "Formatting block device for /usr/sap"
-	mkfs.xfs -f /dev/xvds
-
+#if (( ${USE_NEW_STORAGE} == 1 ));
+#then
+#	echo "Disabled old storage code"
+#	log `date` "Formatting block device for /usr/sap"
+#	mkfs.xfs -f /dev/xvds
+#else
+#	log `date` "Formatting block device for /usr/sap"
+#	mkfs.xfs -f /dev/xvds
 
 	## 9.1 Create a new volume to store media.
 	## This is where media bits will be downloaded from S3 and extracted
 
-	mkfs.xfs -f /dev/xvdz
-	mkdir -p /media/
-	mount /dev/xvdz /media/
-fi
+#	mkfs.xfs -f /dev/xvdz
+#	mkdir -p /media/
+#	mount /dev/xvdz /media/
+#fi
 
 
 #/backup /hana/shared /hana/log /hana/data
@@ -277,6 +273,21 @@ do
    mkfs.xfs /dev/mapper/$lv
 done
 
+
+# ------------------------------------------------------------------
+#       Nov 28, 2018 
+#		Create swap file /SWAPS/swap2G, 2G in size 
+#		Update /etc/fstab
+# ------------------------------------------------------------------
+log `date` "Creating 2G swap space /SWAPS/swap2G"
+mkdir /SWAPS
+sf=/SWAPS/swap2G
+dd if=/dev/zero of=${sf} bs=1G count=2
+chmod 600 ${sf}
+mkswap ${sf}
+swapon ${sf}
+echo "${sf}	swap swap defaults 0 0" >> /etc/fstab 
+log `swapon --show` "End of creating swap space"
 
 
 # ------------------------------------------------------------------
@@ -294,15 +305,16 @@ log `date` "Creating mount points in fstab"
 
 if  ( [ "$MyOS" = "SLES11SP4HVM" ] || [ "$MyOS" = "RHEL66SAPHVM" ] || [ "$MyOS" = "RHEL67SAPHVM" ] );
 then
-	echo "/dev/xvds			   /usr/sap       xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
+#	echo "/dev/xvds			   /usr/sap       xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
+    echo "/dev/disk/by-label/USR_SAP /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghanadata-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghanalog-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
 else
-	echo "/dev/xvds			   /usr/sap       xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
+#	echo "/dev/xvds			   /usr/sap       xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
+	echo "/dev/disk/by-label/USR_SAP /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghanadata-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
 	echo "/dev/mapper/vghanalog-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
 fi
-
 
 log `date` "mounting filesystems"
 mount -a
