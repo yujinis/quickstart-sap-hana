@@ -31,8 +31,8 @@ if [ -d "$DIR" ]; then
 fi
 
 cd /root/install
-
-for f in awscli-bundle.zip cluster-watch-engine.sh config.sh install-aws.sh install-hana-master.sh install-hana-worker.sh install-master.sh install-prereq.sh install-worker.sh jq reconcile-ips.py reconcile-ips.sh wait-for-master.sh wait-for-workers.sh debug-log.sh download.sh fence-cluster.sh log2s3.sh README.txt *.sh *.py *.json
+grep -v '\-p ' misc.log > install_details.log
+for f in awscli-bundle.zip cluster-watch-engine.sh config.sh install-aws.sh install-hana-master.sh install-hana-worker.sh install-master.sh install-prereq.sh install-worker.sh jq reconcile-ips.py reconcile-ips.sh wait-for-master.sh wait-for-workers.sh debug-log.sh download.sh fence-cluster.sh log2s3.sh README.txt misc.log *.sh *.py *.json
 do
    FILE=/root/install/${f}
    if [ -f "$FILE" ]; then
@@ -51,7 +51,7 @@ fi
 #echo "/root/install has been cleaned up after install" >> /root/install/README.txt
 
 # Finally as part of cleanup, delete the password from log files
-for f in /var/log/cloud-init.log  /var/log/messages 
+for f in /var/log/cloud-init.log  /var/log/messages
 do
   log "Cleaning secret info from $f"
   sed -i '/install-master/d' $f

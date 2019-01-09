@@ -2494,7 +2494,8 @@
                         "Fn::Join": [
                             "",
                             [
-                                "#!/bin/bash -xv\n",
+                                "#!/bin/bash -x\n",
+                                "mkdir /root/install \n",
                                 "exec 3>&1 1>>/root/install/misc.log 2>&1 \n",
                                 "hostname ",
                                 {
@@ -2555,7 +2556,6 @@
                                 "\n",
                                 "export NO_PROXY=localhost,127.0.0.1,169.254.169.254",
                                 "\n",
-                                "mkdir /root/install\n",
                                 "wget https://s3.amazonaws.com/",
                                 {
                                     "Ref": "PrivateBucket"
@@ -2913,7 +2913,8 @@
                         "Fn::Join": [
                             "",
                             [
-                                "#!/bin/bash -v\n",
+                                "#!/bin/bash -x\n",
+                                "mkdir /root/install \n",
                                 "exec 3>&1 1>>/root/install/misc.log 2>&1 \n",
                                 "hostname ",
                                 {
@@ -2986,7 +2987,6 @@
                                 "\n",
                                 "export NO_PROXY=localhost,127.0.0.1,169.254.169.254",
                                 "\n",
-                                "mkdir /root/install\n",
                                 "wget https://s3.amazonaws.com/",
                                 {
                                     "Ref": "PrivateBucket"
@@ -3292,7 +3292,8 @@
                         "Fn::Join": [
                             "",
                             [
-                                "#!/bin/bash -v\n",
+                                "#!/bin/bash -x\n",
+                                "mkdir /root/install \n",
                                 "exec 3>&1 1>>/root/install/misc.log 2>&1 \n",
                                 "hostname ",
                                 {
@@ -3365,7 +3366,6 @@
                                 "\n",
                                 "export NO_PROXY=localhost,127.0.0.1,169.254.169.254",
                                 "\n",
-                                "mkdir /root/install\n",
                                 "wget https://s3.amazonaws.com/",
                                 {
                                     "Ref": "PrivateBucket"
@@ -3671,7 +3671,8 @@
                         "Fn::Join": [
                             "",
                             [
-                                "#!/bin/bash -v\n",
+                                "#!/bin/bash -x\n",
+                                "mkdir /root/install \n",
                                 "exec 3>&1 1>>/root/install/misc.log 2>&1 \n",
                                 "hostname ",
                                 {
@@ -3744,7 +3745,6 @@
                                 "\n",
                                 "export NO_PROXY=localhost,127.0.0.1,169.254.169.254",
                                 "\n",
-                                "mkdir /root/install\n",
                                 "wget https://s3.amazonaws.com/",
                                 {
                                     "Ref": "PrivateBucket"
@@ -4050,7 +4050,8 @@
                         "Fn::Join": [
                             "",
                             [
-                                "#!/bin/bash -v\n",
+                                "#!/bin/bash -x\n",
+                                "mkdir /root/install \n",
                                 "exec 3>&1 1>>/root/install/misc.log 2>&1 \n",
                                 "hostname ",
                                 {
@@ -4123,7 +4124,6 @@
                                 "\n",
                                 "export NO_PROXY=localhost,127.0.0.1,169.254.169.254",
                                 "\n",
-                                "mkdir /root/install\n",
                                 "wget https://s3.amazonaws.com/",
                                 {
                                     "Ref": "PrivateBucket"
@@ -4429,7 +4429,8 @@
                         "Fn::Join": [
                             "",
                             [
-                                "#!/bin/bash -v\n",
+                                "#!/bin/bash -x\n",
+                                "mkdir /root/install \n",
                                 "exec 3>&1 1>>/root/install/misc.log 2>&1 \n",
                                 "hostname ",
                                 {
@@ -4502,7 +4503,6 @@
                                 "\n",
                                 "export NO_PROXY=localhost,127.0.0.1,169.254.169.254",
                                 "\n",
-                                "mkdir /root/install\n",
                                 "wget https://s3.amazonaws.com/",
                                 {
                                     "Ref": "PrivateBucket"
