@@ -2496,7 +2496,6 @@
                             [
                                 "#!/bin/bash -x\n",
                                 "mkdir /root/install \n",
-                                "exec 3>&1 1>>/root/install/misc.log 2>&1 \n",
                                 "hostname ",
                                 {
                                     "Ref": "HANAMasterHostname"
@@ -2915,7 +2914,6 @@
                             [
                                 "#!/bin/bash -x\n",
                                 "mkdir /root/install \n",
-                                "exec 3>&1 1>>/root/install/misc.log 2>&1 \n",
                                 "hostname ",
                                 {
                                     "Fn::Join": [
@@ -3294,7 +3292,6 @@
                             [
                                 "#!/bin/bash -x\n",
                                 "mkdir /root/install \n",
-                                "exec 3>&1 1>>/root/install/misc.log 2>&1 \n",
                                 "hostname ",
                                 {
                                     "Fn::Join": [
@@ -3673,7 +3670,6 @@
                             [
                                 "#!/bin/bash -x\n",
                                 "mkdir /root/install \n",
-                                "exec 3>&1 1>>/root/install/misc.log 2>&1 \n",
                                 "hostname ",
                                 {
                                     "Fn::Join": [
@@ -4052,7 +4048,6 @@
                             [
                                 "#!/bin/bash -x\n",
                                 "mkdir /root/install \n",
-                                "exec 3>&1 1>>/root/install/misc.log 2>&1 \n",
                                 "hostname ",
                                 {
                                     "Fn::Join": [
@@ -4431,7 +4426,6 @@
                             [
                                 "#!/bin/bash -x\n",
                                 "mkdir /root/install \n",
-                                "exec 3>&1 1>>/root/install/misc.log 2>&1 \n",
                                 "hostname ",
                                 {
                                     "Fn::Join": [

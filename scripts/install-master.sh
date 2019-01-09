@@ -41,6 +41,13 @@ if [ -z "${HANA_LOG_FILE}" ] ; then
     HANA_LOG_FILE=${SCRIPT_DIR}/install.log
 fi
 
+# Cleanup secret details from log files
+for f in /var/log/cloud-init.log  /var/log/messages /var/log/cloud-init-output.log
+do
+  log "Cleaning secrets info from $f"
+  sed -i '/install-master/d' $f
+done
+
 log() {
 	echo $* 2>&1 | tee -a ${HANA_LOG_FILE}
 }
@@ -329,8 +336,8 @@ done
 
 
 # ------------------------------------------------------------------
-#       Nov 28, 2018 
-#		Create swap file /SWAPS/swap2G, 2G in size 
+#       Nov 28, 2018
+#		Create swap file /SWAPS/swap2G, 2G in size
 #		Update /etc/fstab
 # ------------------------------------------------------------------
 log `date` "Creating 2G swap space /SWAPS/swap2G"
@@ -340,7 +347,7 @@ dd if=/dev/zero of=${sf} bs=1G count=2
 chmod 600 ${sf}
 mkswap ${sf}
 swapon ${sf}
-echo "${sf}	swap swap defaults 0 0" >> /etc/fstab 
+echo "${sf}	swap swap defaults 0 0" >> /etc/fstab
 log `swapon --show` "End of creating swap space"
 
 
