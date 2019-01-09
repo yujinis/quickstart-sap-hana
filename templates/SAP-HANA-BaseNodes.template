@@ -2494,7 +2494,7 @@
                         "Fn::Join": [
                             "",
                             [
-                                "#!/bin/bash -x\n",
+                                "#!/bin/bash -xv\n",
                                 "mkdir /root/install \n",
                                 "hostname ",
                                 {
@@ -2912,7 +2912,7 @@
                         "Fn::Join": [
                             "",
                             [
-                                "#!/bin/bash -x\n",
+                                "#!/bin/bash -xv\n",
                                 "mkdir /root/install \n",
                                 "hostname ",
                                 {
@@ -3290,7 +3290,7 @@
                         "Fn::Join": [
                             "",
                             [
-                                "#!/bin/bash -x\n",
+                                "#!/bin/bash -xv\n",
                                 "mkdir /root/install \n",
                                 "hostname ",
                                 {
@@ -3668,7 +3668,7 @@
                         "Fn::Join": [
                             "",
                             [
-                                "#!/bin/bash -x\n",
+                                "#!/bin/bash -xv\n",
                                 "mkdir /root/install \n",
                                 "hostname ",
                                 {
@@ -4046,7 +4046,7 @@
                         "Fn::Join": [
                             "",
                             [
-                                "#!/bin/bash -x\n",
+                                "#!/bin/bash -xv\n",
                                 "mkdir /root/install \n",
                                 "hostname ",
                                 {
@@ -4424,7 +4424,7 @@
                         "Fn::Join": [
                             "",
                             [
-                                "#!/bin/bash -x\n",
+                                "#!/bin/bash -xv\n",
                                 "mkdir /root/install \n",
                                 "hostname ",
                                 {
