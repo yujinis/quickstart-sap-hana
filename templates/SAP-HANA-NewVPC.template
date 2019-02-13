@@ -592,7 +592,7 @@
         "BaseNodes": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
-                "TemplateURL": "https://s3.amazonaws.com/howard-qs/quickstart-sap-hana/templates/SAP-HANA-BaseNodes.template",
+                "TemplateURL": "https://s3.amazonaws.com/aws-quickstart/quickstart-sap-hana/templates/SAP-HANA-BaseNodes.template",
                 "Parameters": {
                     "PrivSubCIDR": {
                         "Ref": "PrivSubCIDR"
@@ -738,7 +738,7 @@
         "BaseNetwork": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
-                "TemplateURL": "https://s3.amazonaws.com/howard-qs/quickstart-sap-hana/templates/SAP-HANA-BaseNetwork.template",
+                "TemplateURL": "https://s3.amazonaws.com/aws-quickstart/quickstart-sap-hana/templates/SAP-HANA-BaseNetwork.template",
                 "Parameters": {
                     "VPC": {
                         "Ref": "VPC"
