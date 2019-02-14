@@ -270,7 +270,10 @@
         "LatestWS2012AmiId": {
             "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
             "Default": "/aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-English-64Bit-Base",
-            "Description": "Do not change. Fetch latest Windows Server 2012 image id"
+            "Description": "Do not change. Fetch latest Windows Server 2012 image id.",
+            "AllowedValues": [
+                "/aws/service/ami-windows-latest/Windows_Server-2012-R2_RTM-English-64Bit-Base"
+            ]
         }
     },
     "Metadata": {
