@@ -8,6 +8,7 @@ SCRIPT_DIR=/root/install/
 CLUSTERWATCH_SCRIPT=${SCRIPT_DIR}/ClusterWatchEngine.sh
 MIN_KERN="310"
 OSRELEASE="/etc/redhat-release"
+RHEL_SSM_RPM="https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm"
 
 # ------------------------------------------------------------------
 #          Choose default log file
@@ -212,7 +213,6 @@ install_prereq_rhel73() {
 
 install_prereq_rhel74() {
   log "`date` Installing packages required for RHEL 7.4"
-
   yum -y install xfsprogs 2>&1 | tee -a ${HANA_LOG_FILE}
   yum -y install autofs 2>&1 | tee -a ${HANA_LOG_FILE}
   yum -y install gcc | tee -a ${HANA_LOG_FILE}
@@ -221,12 +221,11 @@ install_prereq_rhel74() {
   yum -y install tuned-profiles-sap-hana | tee -a ${HANA_LOG_FILE}
   yum -y update glibc.x86_64 | tee -a ${HANA_LOG_FILE}
   yum -y install nvme-cli | tee -a ${HANA_LOG_FILE}
-
+  yum -y install ${RHEL_SSM_RPM} | tee -a ${HANA_LOG_FILE}
 }
 
 install_prereq_rhel75() {
-  log "`date` Installing packages required for RHEL 7.4"
-
+  log "`date` Installing packages required for RHEL 7.5"
   yum -y install xfsprogs 2>&1 | tee -a ${HANA_LOG_FILE}
   yum -y install autofs 2>&1 | tee -a ${HANA_LOG_FILE}
   yum -y install gcc | tee -a ${HANA_LOG_FILE}
@@ -235,7 +234,7 @@ install_prereq_rhel75() {
   yum -y install tuned-profiles-sap-hana | tee -a ${HANA_LOG_FILE}
   yum -y update glibc.x86_64 | tee -a ${HANA_LOG_FILE}
   yum -y install nvme-cli | tee -a ${HANA_LOG_FILE}
-
+  yum -y install ${RHEL_SSM_RPM} | tee -a ${HANA_LOG_FILE}
 }
 
 start_ntp() {
