@@ -840,8 +840,8 @@
             "AMI": {
                 "RHEL73SAPHVM": "SAP-7.3_HVM-20180116-x86_64-1-Hourly2-GP2-b676039c-a4f8-4be7-9866-c804b1ade684-ami-d4ffddae.4",
                 "RHEL75SAPHVM": "SAP-7.5_HVM_GA-20180911-x86_64-0-Hourly2-GP2-b676039c-a4f8-4be7-9866-c804b1ade684-ami-01e5a531ae8d3d976.4",
-                "RHEL74SAPHAUSHVM": "update-SAPHAE4S-7.4_HVM-20181108-x86_64-2-Hourly2-GP2-5cca0aac-b678-4e46-80e2-344cfed26a62-ami-0c3e857ffeab71ac5.4",
-                "RHEL75SAPHAUSHVM": "update-SAPHAEUS-7.5_HVM-20181108-x86_64-2-Hourly2-GP2-5cca0aac-b678-4e46-80e2-344cfed26a62-ami-081c0b27c08752050.4",
+                "RHEL74SAPHAUSHVM": "force-ami-update",
+                "RHEL75SAPHAUSHVM": "force-ami-update",
                 "SLES11SP4HVM": "suse-sles-11-sp4-v20180816-hvm-ssd-x86_64",
                 "SLES12SP1HVM": "suse-sles-12-sp1-v20161021-hvm-ssd-x86_64",
                 "SLES12SP2HVM": "suse-sles-12-sp2-v20170620-hvm-ssd-x86_64",
