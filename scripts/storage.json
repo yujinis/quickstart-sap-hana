@@ -465,7 +465,7 @@
                                 }
                             ]
                         }
-                    }      
+                    }
                 }
             }
         },
@@ -1095,7 +1095,7 @@
                                 }
                             ]
                         }
-                    } 
+                    }
                 }
             }
         },
@@ -1410,7 +1410,7 @@
                                 }
                             ]
                         }
-                    } 
+                    }
                 }
             }
         },
@@ -1692,7 +1692,7 @@
                                 {
                                     "device": "/dev/sdg",
                                     "size": "5120G"
-                                }   
+                                }
                             ]
                         },
                         "st1": {
@@ -1714,7 +1714,7 @@
                                 {
                                     "device": "/dev/sdg",
                                     "size": "5120G"
-                                }   
+                                }
                             ]
                         },
                         "st1": {
@@ -1725,7 +1725,7 @@
                                 }
                             ]
                         }
-                    } 
+                    }
                 }
             }
         }
@@ -3474,11 +3474,11 @@
                     "drives": [
                         {
                             "device": "/dev/sdh",
-                            "size": "175G"
+                            "size": "300G"
                         },
                         {
                             "device": "/dev/sdi",
-                            "size": "175G"
+                            "size": "300G"
                         }
                     ],
                     "stride": 256,
@@ -3486,7 +3486,7 @@
                         {
                             "drive": "/hana/log",
                             "logical_volume": "lvhanalog",
-                            "size": "325G"
+                            "size": "512G"
                         }
                     ],
                     "volume_group": "vghanalog"
@@ -3495,7 +3495,7 @@
                     "drives": [
                         {
                             "device": "/dev/sdh",
-                            "piops": 1000,
+                            "piops": 2000,
                             "size": "260G"
                         }
                     ],
@@ -3591,7 +3591,7 @@
                     ],
                     "volume_group": "vghanalog"
                 }
-            } 
+            }
         }
     },
     "shared": {

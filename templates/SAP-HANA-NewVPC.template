@@ -134,27 +134,34 @@
         "MyOS": {
             "Type": "String",
             "Description": "Operating system (SLES or RHEL) and version for master/worker nodes.",
-            "Default": "SuSELinux12SP3ForSAP",
+            "Default": "SuSELinux12SP4ForSAP",
             "AllowedValues": [
                 "RedHatLinux73ForSAP",
                 "RedHatLinux75ForSAP",
                 "RedHatLinux74ForSAP-With-HA-US",
                 "RedHatLinux75ForSAP-With-HA-US",
+                "RedHatLinux76ForSAP-With-HA-US",
                 "SuSELinux11SP4",
                 "SuSELinux12SP1",
                 "SuSELinux12SP3",
+                "SuSELinux12SP4",
+                "SuSELinux15",
                 "SuSELinux12SP1ForSAP",
                 "SuSELinux12SP2ForSAP",
                 "SuSELinux12SP3ForSAP",
+                "SuSELinux12SP4ForSAP",
+                "SuSELinux15ForSAP",
                 "SuSELinux12SP1ForSAP-BYOS",
                 "SuSELinux12SP2ForSAP-BYOS",
-                "SuSELinux12SP3ForSAP-BYOS"
+                "SuSELinux12SP3ForSAP-BYOS",
+                "SuSELinux12SP4ForSAP-BYOS",
+                "SuSELinux15ForSAP-BYOS"
             ]
         },
         "MyInstanceType": {
             "Type": "String",
             "Description": "Instance type for SAP HANA host.",
-            "Default": "r4.2xlarge",
+            "Default": "r5.2xlarge",
             "AllowedValues": [
                 "r3.8xlarge",
                 "r3.4xlarge",
@@ -167,6 +174,7 @@
                 "r5.4xlarge",
                 "r5.12xlarge",
                 "r5.24xlarge",
+                "r5.metal",
                 "x1.16xlarge",
                 "x1.32xlarge",
                 "x1e.xlarge",
@@ -186,7 +194,7 @@
         "RDPInstanceType": {
             "Type": "String",
             "Description": "Instance type for Windows RDP instance.",
-            "Default": "c4.large",
+            "Default": "c5.large",
             "AllowedValues": [
                 "c4.large",
                 "c4.xlarge",
@@ -592,7 +600,7 @@
         "BaseNodes": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
-                "TemplateURL": "https://s3.amazonaws.com/aws-quickstart/quickstart-sap-hana/templates/SAP-HANA-BaseNodes.template",
+                "TemplateURL": "https://s3.amazonaws.com/hana-qs/templates/SAP-HANA-BaseNodes.template",
                 "Parameters": {
                     "PrivSubCIDR": {
                         "Ref": "PrivSubCIDR"

@@ -29,28 +29,29 @@ command_exists () {
 EXTRACT_DIR=/media/extracted/
 COMPRESS_DIR=/media/compressed/
 source /root/install/config.sh
-EXE=$(/usr/bin/find ${COMPRESS_DIR}  -name '*.exe')
+HANA_MEDIA_EXE_FILE=$(/usr/bin/find ${COMPRESS_DIR}  -iname '*.exe')
+HANA_MEDIA_ZIP_FILE=$(/usr/bin/find ${COMPRESS_DIR}  -iname '*.zip')
 
 mkdir -p ${EXTRACT_DIR}
 
-if command_exists unrar ; then
-	/usr/bin/unrar x ${EXE} ${EXTRACT_DIR}
-else
-
+if [[ ! -z ${HANA_MEDIA_EXE_FILE} ]] ; then
+  if command_exists unrar ; then
+    /usr/bin/unrar x ${HANA_MEDIA_EXE_FILE} ${EXTRACT_DIR}
+  else
 # ------------------------------------------------------------------
 #   At the time of writing, marketplace RHEL and marketplace SLES
 #	did not have unrar package. As a workaround, we download as below
 #   TODO: This is a temporary workaround and needs to be fixed in AMI
 # ------------------------------------------------------------------
-	log "WARNING: Downloading from repoforge. Prefer prebaked AMIs"
-
-
-	mkdir -p /root/install/misc
-	wget http://www.rarlab.com/rar/unrar-5.0-RHEL5x64.tar.gz -O /root/install/misc/unrar-5.0-RHEL5x64.tar.gz
-	(cd /root/install/misc && tar xvf /root/install/misc/unrar-5.0-RHEL5x64.tar.gz && chmod 755 /root/install/misc/unrar)
-	/root/install/misc/unrar x ${EXE} ${EXTRACT_DIR}
-
-	#wget http://pkgs.repoforge.org/unrar/unrar-5.0.3-1.el6.rf.x86_64.rpm -O /root/install/misc/unrar-5.0.3-1.el6.rf.x86_64.rpm
-	#rpm -i /root/install/misc/unrar-5.0.3-1.el6.rf.x86_64.rpm
-	#/usr/bin/unrar x ${EXE} ${EXTRACT_DIR}
+     log "`date` Downloading from repoforge."
+     mkdir -p /root/install/misc
+     wget http://www.rarlab.com/rar/unrar-5.0-RHEL5x64.tar.gz -O /root/install/misc/unrar-5.0-RHEL5x64.tar.gz
+     (cd /root/install/misc && tar xvf /root/install/misc/unrar-5.0-RHEL5x64.tar.gz && chmod 755 /root/install/misc/unrar)
+     /root/install/misc/unrar x ${HANA_MEDIA_EXE_FILE} ${EXTRACT_DIR}
+  fi
+elif [[ ! -z ${HANA_MEDIA_ZIP_FILE} ]] ; then
+  log "`date` Extracting SAP HANA Media files"
+  unzip ${HANA_MEDIA_ZIP_FILE} -d ${EXTRACT_DIR}
+else
+  log "`date` Warning - Correct SAP HANA media files not found in compressed directory. Check your media folder."
 fi

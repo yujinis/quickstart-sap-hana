@@ -132,6 +132,7 @@ log '================================================================='
 # 	cat $PASSFILE | $HANAMEDIA/HDB_LCM_LINUX_X86_64/hdblcm --action=install --components=client,server --batch --autostart=1 -sid=$SID  --hostname=$MASTER_HOSTNAME --number=$INSTANCE  --hdbinst_server_ignore=check_hardware --read_password_from_stdin=xml >> ${HANA_LOG_FILE} 2>&1
 # else
 # removed check_hardware
+chmod 777 /media/compressed/DATA_UNITS/HDB_LCM_LINUX_X86_64/hdblcm
 cat $PASSFILE | $HANAMEDIA/HDB_LCM_LINUX_X86_64/hdblcm --action=install --components=client,server --batch --autostart=1 -sid=$SID  --hostname=$MASTER_HOSTNAME --number=$INSTANCE  --read_password_from_stdin=xml >> ${HANA_LOG_FILE} 2>&1
 # fi
 # sabari - End removing Version condition

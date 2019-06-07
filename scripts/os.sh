@@ -37,7 +37,6 @@ isRHEL7() {
   fi
 }
 
-
 isSLES11SP4() {
     if [ "$MyOS" == "SLES11SP4HVM" ]; then
       echo 1
@@ -64,6 +63,14 @@ isSLES12SP1() {
 
 isSLES12SP2() {
     if [ "$MyOS" == "SLES12SP2HVM" ]; then
+      echo 1
+    else
+      echo 0
+    fi
+}
+
+isSLES12SP4() {
+    if [ "$MyOS" == "SLES12SP4HVM" ]; then
       echo 1
     else
       echo 0
@@ -102,6 +109,14 @@ isSLES12SP3SAP() {
     fi
 }
 
+isSLES12SP4SAP() {
+    if [ "$MyOS" == "SLES12SP4SAPHVM" ]; then
+      echo 1
+    else
+      echo 0
+    fi
+}
+
 isSLES15SAP() {
     if [ "$MyOS" == "SLES15SAPHVM" ]; then
       echo 1
@@ -128,6 +143,14 @@ isSLES12SP2SAPBYOS() {
 
 isSLES12SP3SAPBYOS() {
     if [ "$MyOS" == "SLES12SP3SAPBYOSHVM" ]; then
+      echo 1
+    else
+      echo 0
+    fi
+}
+
+isSLES12SP4SAPBYOS() {
+    if [ "$MyOS" == "SLES12SP4SAPBYOSHVM" ]; then
       echo 1
     else
       echo 0

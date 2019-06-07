@@ -196,6 +196,11 @@ install_prereq_sles12() {
   zypper -n install libnuma-devel | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+  zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+  # Install most current libatomic1 if available
+  zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
   #Remove ulimit package
   zypper remove ulimit > /dev/null
   chkconfig boot.kdump  | tee -a ${HANA_LOG_FILE}
@@ -228,7 +233,7 @@ install_prereq_sles12sp1() {
     zypper -n install autoyast2-installation | tee -a ${HANA_LOG_FILE}
     zypper -n install yast2-ncurses  | tee -a ${HANA_LOG_FILE}
     zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
-	  zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
+	zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
     zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
     zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
     zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
@@ -236,6 +241,11 @@ install_prereq_sles12sp1() {
     zypper -n install libnuma-devel | tee -a ${HANA_LOG_FILE}
     #Install unrar for media extraction
     zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+    zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+    zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+    # Install most current libatomic1 if available
+    zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
     #Remove ulimit package
     zypper remove ulimit > /dev/null
     chkconfig boot.kdump  | tee -a ${HANA_LOG_FILE}
@@ -268,12 +278,17 @@ install_prereq_sles12sp2() {
     zypper -n install autoyast2-installation | tee -a ${HANA_LOG_FILE}
     zypper -n install yast2-ncurses  | tee -a ${HANA_LOG_FILE}
     zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
-	  zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
     zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
     zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
     zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
     #Install unrar for media extraction
     zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+    zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+    zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+    # Install most current libatomic1 if available
+    zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
     #SLES 12 installation fails with libnuma
     zypper -n install libnuma-devel | tee -a ${HANA_LOG_FILE}
     #Remove ulimit package
@@ -309,12 +324,67 @@ install_prereq_sles12sp3() {
     zypper -n install autoyast2-installation | tee -a ${HANA_LOG_FILE}
     zypper -n install yast2-ncurses  | tee -a ${HANA_LOG_FILE}
     zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
-	  zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
     zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
     zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
     zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
     #Install unrar for media extraction
     zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+    zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+    zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+    # Install most current libatomic1 if available
+    zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
+    #SLES 12 installation fails with libnuma
+    zypper -n install libnuma-devel | tee -a ${HANA_LOG_FILE}
+    #Remove ulimit package
+    zypper remove ulimit > /dev/null
+
+    chkconfig boot.kdump  | tee -a ${HANA_LOG_FILE}
+    chkconfig kdump off
+    echo "net.ipv4.tcp_slow_start_after_idle=0" >> /etc/sysctl.conf
+    sysctl -p /etc/sysctl.conf  | tee -a ${HANA_LOG_FILE}
+
+    #ipcs -l  | tee -a ${HANA_LOG_FILE}
+    echo "kernel.shmmni=65536" >> /etc/sysctl.conf
+    sysctl -p /etc/sysctl.conf  | tee -a ${HANA_LOG_FILE}
+
+    #error check and return
+}
+
+install_prereq_sles12sp4() {
+    # ------------------------------------------------------------------
+    #          Install all the pre-requisites for SAP HANA
+    # ------------------------------------------------------------------
+
+    log "## Installing required OS Packages## "
+    zypper -n install systemd 2>&1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install gtk2 2>&1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install java-1_6_0-ibm 2>&1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libicu  | tee -a ${HANA_LOG_FILE}
+    zypper -n install mozilla-xulrunner*  | tee -a ${HANA_LOG_FILE}
+    zypper -n install ntp  | tee -a ${HANA_LOG_FILE}
+    zypper -n install sudo  | tee -a ${HANA_LOG_FILE}
+    zypper -n install syslog-ng  | tee -a ${HANA_LOG_FILE}
+    zypper -n install tcsh libssh2-1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install autoyast2-installation | tee -a ${HANA_LOG_FILE}
+    zypper -n install yast2-ncurses  | tee -a ${HANA_LOG_FILE}
+    zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
+    zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
+    zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+    ## ------------------------------------------------------------------------------------------ ##
+    ## As of SLES12 SP4, /sbin/insserv has to be installed for HANA install program or it'll fail ##
+    ## ------------------------------------------------------------------------------------------ ##
+    zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+    #Install unrar for media extraction
+    zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+    zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+    zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+    # Install most current libatomic1 if available
+    zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
     #SLES 12 installation fails with libnuma
     zypper -n install libnuma-devel | tee -a ${HANA_LOG_FILE}
     #Remove ulimit package
@@ -349,32 +419,45 @@ install_prereq_sles15() {
     zypper -n install autoyast2-installation | tee -a ${HANA_LOG_FILE}
     zypper -n install yast2-ncurses  | tee -a ${HANA_LOG_FILE}
     zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
-	 zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
     zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
     zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
     zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
 
-    ## --------------------------------------------------------------------------------------- ##
-    ## /sbin/insserv has to be installed for HANA install program or it fails with error below ##
-    ## --------------------------------------------------------------------------------------- ##
+    ## ------------------------------------------------------------------------------------------ ##
+    ## As of SLES12 SP4, /sbin/insserv has to be installed for HANA install program or it'll fail ##
+    ## ------------------------------------------------------------------------------------------ ##
     zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
-    
-    ## ----------------------------------------------------------------- ##
-    ## unrar has been replaced by unar in SLES 15, and is implemented as ##
-    ## a symbolic link to unar "unrar --> /usr/bin/unar. Since unar does ##
-    ## not work with SAP software packages so we just copy form QS depot ##
-    ## ----------------------------------------------------------------- ##
-    wget ${DOWNLOADLINK}/scripts/unrar --output-document=/usr/bin/unrar
 
     ## ----------------------------------------------------------------- ##
-    ## SLES 15 no longer supports ifconfig and moved it from package     ##
-    ## net-tools to net-tools-deprecated. Once ifconfig is completely    ##
-    ## removed we'll need to use command "ip" to obtain server IPs       ##
+    ## unrar has been replaced by unar in SLES 15, and is implemented as ##
+    ## a symbolic link to unar "unrar --> /usr/bin/unar.                 ##
     ## ----------------------------------------------------------------- ##
+    zypper -n install unrar_wrapper | tee -a ${HANA_LOG_FILE}
+    #wget ${DOWNLOADLINK}/scripts/unrar --output-document=/usr/bin/unrar
+
+    ## ------------------------------------------------------------------------- ##
+    ## Chrony has replaced NTP for time server synchonization as of SLES 15, and ##
+    ## it's installed by default.                                                ##
+    ## Below command is only to update chrony to the most current version.       ##                                                     ##
+    ## ------------------------------------------------------------------------- ##
+    zypper -n install chrony | tee -a ${HANA_LOG_FILE}
+
+    ## --------------------------------------------------------------------- ##
+    ## in SLES 15, command "ifconfig" has been replaced by "ip", and moved   ##
+    ## from package net-tools to net-tools-deprecated. "ip" is installed by  ##
+    ## default. Once "ifconfig" is completely removed we'll need to replace  ##
+    ## "ifconfig" by "ip" in all codes for SLES15.                           ##
+    ## --------------------------------------------------------------------- ##
     zypper -n install net-tools-deprecated | tee -a ${HANA_LOG_FILE}
-    
+
     #SLES 12 installation fails with libnuma
     zypper -n install libnuma-devel | tee -a ${HANA_LOG_FILE}
+    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+    zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+    zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+    # Install most current libatomic1 if available
+    zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
     #Remove ulimit package
     zypper remove ulimit > /dev/null
 
@@ -405,6 +488,11 @@ install_prereq_sles12sp1sap() {
     systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
     #Install unrar for media extraction
     zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+    zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+    zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+    # Install most current libatomic1 if available
+    zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
     # Apply all Recommended HANA settings with SAPTUNE
     log "`date` - Start saptune daemon"
     saptune daemon start | tee -a ${HANA_LOG_FILE}
@@ -427,6 +515,11 @@ install_prereq_sles12sp2sap() {
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+  zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+  # Install most current libatomic1 if available
+  zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
   # Apply all Recommended HANA settings with SAPTUNE
   log "`date` - Start saptune daemon"
   saptune daemon start | tee -a ${HANA_LOG_FILE}
@@ -454,16 +547,51 @@ install_prereq_sles12sp3sap() {
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+  zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+  # Install most current libatomic1 if available
+  zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
   # Apply all Recommended HANA settings with SAPTUNE
   log "`date` - Start saptune daemon"
   saptune daemon start | tee -a ${HANA_LOG_FILE}
   log "`date` - Apply saptune HANA profile"
-  mkdir /etc/tuned/saptune # OSS Note 2205917
-  cp /usr/lib/tuned/saptune/tuned.conf /etc/tuned/saptune/tuned.conf # OSS Note 2205917
-  sed -i "/\[cpu\]/ a force_latency=70" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
-  sed -i "s/script.sh/\/usr\/lib\/tuned\/saptune\/script.sh/" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+#  mkdir /etc/tuned/saptune # OSS Note 2205917
+#  cp /usr/lib/tuned/saptune/tuned.conf /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+#  sed -i "/\[cpu\]/ a force_latency=70" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+#  sed -i "s/script.sh/\/usr\/lib\/tuned\/saptune\/script.sh/" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
   saptune solution apply HANA | tee -a ${HANA_LOG_FILE}
+}
 
+install_prereq_sles12sp4sap() {
+  # ------------------------------------------------------------------
+  #          Install all the pre-requisites for SAP HANA
+  # ------------------------------------------------------------------
+
+  log "`date` - Install / Update OS Packages## "
+  zypper -n install systemd 2>&1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install tuned  | tee -a ${HANA_LOG_FILE}
+  zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
+  zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
+  zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+  systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  #Install unrar for media extraction
+  zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+  zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+  # Install most current libatomic1 if available
+  zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
+  # Apply all Recommended HANA settings with SAPTUNE
+  log "`date` - Start saptune daemon"
+  saptune daemon start | tee -a ${HANA_LOG_FILE}
+  log "`date` - Apply saptune HANA profile"
+#  mkdir /etc/tuned/saptune # OSS Note 2205917
+#  cp /usr/lib/tuned/saptune/tuned.conf /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+#  sed -i "/\[cpu\]/ a force_latency=70" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+#  sed -i "s/script.sh/\/usr\/lib\/tuned\/saptune\/script.sh/" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  saptune solution apply HANA | tee -a ${HANA_LOG_FILE}
 }
 
 install_prereq_sles15sap() {
@@ -479,30 +607,48 @@ install_prereq_sles15sap() {
   zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+  zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+  # Install most current libatomic1 if available
+  zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   #zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
   ## ----------------------------------------------------------------- ##
   ## unrar has been replaced by unar in SLES 15, and is implemented as ##
-  ## a symbolic link to unar "unrar --> /usr/bin/unar. Since unar does ##
-  ## not work with SAP software packages so we just copy form QS depot ##
+  ## a symbolic link to unar "unrar --> /usr/bin/unar.                 ##
   ## ----------------------------------------------------------------- ##
-  wget ${DOWNLOADLINK}/scripts/unrar --output-document=/usr/bin/unrar
+  zypper -n install unrar_wrapper
+  #wget ${DOWNLOADLINK}/scripts/unrar --output-document=/usr/bin/unrar
 
-  ## ----------------------------------------------------------------- ##
-  ## SLES 15 no longer supports ifconfig and moved it from package     ##
-  ## net-tools to net-tools-deprecated. Once ifconfig is completely    ##
-  ## removed we'll need to use command "ip" to obtain server IPs       ##
-  ## ----------------------------------------------------------------- ##
+  ## ------------------------------------------------------------------------- ##
+  ## Chrony has replaced NTP for time server synchonization as of SLES 15, and ##
+  ## it's installed by default.                                                ##
+  ## Below command is only to update chrony to the most current version.       ##                                                     ##
+  ## ------------------------------------------------------------------------- ##
+  zypper -n install chrony
+
+  ## --------------------------------------------------------------------- ##
+  ## in SLES 15, command "ifconfig" has been replaced by "ip", and moved   ##
+  ## from package net-tools to net-tools-deprecated. "ip" is installed by  ##
+  ## default. Once "ifconfig" is completely removed we'll need to replace  ##
+  ## "ifconfig" by "ip" in all codes for SLES15.                           ##
+  ## --------------------------------------------------------------------- ##
   zypper -n install net-tools-deprecated | tee -a ${HANA_LOG_FILE}
- 
+
+  ## --------------------------------- ##
+  ## See SLES15 for SAP install Guides ##
+  ## --------------------------------- ##
+  zypper -n install patterns-sles-sap_server | tee -a ${HANA_LOG_FILE}
+
   # Apply all Recommended HANA settings with SAPTUNE
   log "`date` - Start saptune daemon"
   saptune daemon start | tee -a ${HANA_LOG_FILE}
   log "`date` - Apply saptune HANA profile"
-  mkdir /etc/tuned/saptune # OSS Note 2205917
-  cp /usr/lib/tuned/saptune/tuned.conf /etc/tuned/saptune/tuned.conf # OSS Note 2205917
-  sed -i "/\[cpu\]/ a force_latency=70" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
-  sed -i "s/script.sh/\/usr\/lib\/tuned\/saptune\/script.sh/" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+#  mkdir /etc/tuned/saptune # OSS Note 2205917
+#  cp /usr/lib/tuned/saptune/tuned.conf /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+#  sed -i "/\[cpu\]/ a force_latency=70" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+#  sed -i "s/script.sh/\/usr\/lib\/tuned\/saptune\/script.sh/" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
   ## ------------------------------------------------------------------- ##
   ## OSS note 2684254 : Disable Transparent Hugepages that can hang HANA ##
   ## This change takes effect only after a system reboot                 ##
@@ -529,6 +675,11 @@ install_prereq_sles12sp1sapbyos() {
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+  zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+  # Install most current libatomic1 if available
+  zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
   # Apply all Recommended HANA settings with SAPTUNE
   log "`date` - Start saptune daemon"
   saptune daemon start | tee -a ${HANA_LOG_FILE}
@@ -551,6 +702,11 @@ install_prereq_sles12sp2sapbyos() {
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+  zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+  # Install most current libatomic1 if available
+  zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
   # Apply all Recommended HANA settings with SAPTUNE
   log "`date` - Start saptune daemon"
   saptune daemon start | tee -a ${HANA_LOG_FILE}
@@ -577,6 +733,11 @@ install_prereq_sles12sp3sapbyos() {
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+  zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+  # Install most current libatomic1 if available
+  zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
   # Apply all Recommended HANA settings with SAPTUNE
   log "`date` - Start saptune daemon"
   saptune daemon start | tee -a ${HANA_LOG_FILE}
@@ -586,7 +747,36 @@ install_prereq_sles12sp3sapbyos() {
   sed -i "/\[cpu\]/ a force_latency=70" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
   sed -i "s/script.sh/\/usr\/lib\/tuned\/saptune\/script.sh/" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
   saptune solution apply HANA | tee -a ${HANA_LOG_FILE}
+}
 
+install_prereq_sles12sp4sapbyos() {
+  # ------------------------------------------------------------------
+  #          Install all the pre-requisites for SAP HANA
+  # ------------------------------------------------------------------
+  log "`date` - Install / Update OS Packages## "
+  zypper -n install systemd 2>&1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install tuned  | tee -a ${HANA_LOG_FILE}
+  zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
+  zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
+  zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+  systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  #Install unrar for media extraction
+  zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+  zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+  # Install most current libatomic1 if available
+  zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
+  # Apply all Recommended HANA settings with SAPTUNE
+  log "`date` - Start saptune daemon"
+  saptune daemon start | tee -a ${HANA_LOG_FILE}
+  log "`date` - Apply saptune HANA profile"
+  mkdir /etc/tuned/saptune # OSS Note 2205917
+  cp /usr/lib/tuned/saptune/tuned.conf /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  sed -i "/\[cpu\]/ a force_latency=70" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  sed -i "s/script.sh/\/usr\/lib\/tuned\/saptune\/script.sh/" /etc/tuned/saptune/tuned.conf # OSS Note 2205917
+  saptune solution apply HANA | tee -a ${HANA_LOG_FILE}
 }
 
 install_prereq_sles15sapbyos() {
@@ -601,21 +791,39 @@ install_prereq_sles15sapbyos() {
   zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+  zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+  # Install most current libatomic1 if available
+  zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   ## ----------------------------------------------------------------- ##
   ## unrar has been replaced by unar in SLES 15, and is implemented as ##
-  ## a symbolic link to unar "unrar --> /usr/bin/unar. Since unar does ##
-  ## not work with SAP software packages so we just copy form QS depot ##
+  ## a symbolic link to unar "unrar --> /usr/bin/unar.                 ##
   ## ----------------------------------------------------------------- ##
-  wget ${DOWNLOADLINK}/scripts/unrar --output-document=/usr/bin/unrar
+  zypper -n install unrar_wrapper
+  #wget ${DOWNLOADLINK}/scripts/unrar --output-document=/usr/bin/unrar
 
-  ## ----------------------------------------------------------------- ##
-  ## SLES 15 no longer supports ifconfig and moved it from package     ##
-  ## net-tools to net-tools-deprecated. Once ifconfig is completely    ##
-  ## removed we'll need to use command "ip" to obtain server IPs       ##
-  ## ----------------------------------------------------------------- ##
+  ## ------------------------------------------------------------------------- ##
+  ## Chrony has replaced NTP for time server synchonization as of SLES 15, and ##
+  ## it's installed by default.                                                ##
+  ## Below command is only to update chrony to the most current version.       ##                                                     ##
+  ## ------------------------------------------------------------------------- ##
+  zypper -n install chrony
+
+  ## --------------------------------------------------------------------- ##
+  ## in SLES 15, command "ifconfig" has been replaced by "ip", and moved   ##
+  ## from package net-tools to net-tools-deprecated. "ip" is installed by  ##
+  ## default. Once "ifconfig" is completely removed we'll need to replace  ##
+  ## "ifconfig" by "ip" in all codes for SLES15.                           ##
+  ## --------------------------------------------------------------------- ##
   zypper -n install net-tools-deprecated | tee -a ${HANA_LOG_FILE}
-  
+
+  ## --------------------------------- ##
+  ## See SLES15 for SAP install Guides ##
+  ## --------------------------------- ##
+  zypper -n install patterns-sles-sap_server | tee -a ${HANA_LOG_FILE}
+
   # Apply all Recommended HANA settings with SAPTUNE
   log "`date` - Start saptune daemon"
   saptune daemon start | tee -a ${HANA_LOG_FILE}
@@ -868,8 +1076,19 @@ case "$MyOS" in
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP2 related pre-requisites" ;;
   SLES12SP3HVM )
-    log "`date` Start - Executing SLES 12 SP2 related pre-requisites"
+    log "`date` Start - Executing SLES 12 SP3 related pre-requisites"
     install_prereq_sles12sp3
+    disable_dhcp
+    disable_hostname
+    start_ntp
+    start_fs
+    start_oss_configs
+    set_clocksource
+    enable_resize_to_from_nitro
+    log "`date` End - Executing SLES 12 SP3 related pre-requisites" ;;
+  SLES12SP4HVM )
+    log "`date` Start - Executing SLES 12 SP4 related pre-requisites"
+    install_prereq_sles12sp4
     disable_dhcp
     disable_hostname
     start_ntp
@@ -907,6 +1126,13 @@ case "$MyOS" in
     disable_hostname
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP3 for SAP related pre-requisites" ;;
+  SLES12SP4SAPHVM )
+    log "`date` Start - Executing SLES 12 SP4 for SAP related pre-requisites"
+    install_prereq_sles12sp3sap
+    set_clocksource
+    disable_hostname
+    enable_resize_to_from_nitro
+    log "`date` End - Executing SLES 12 SP4 for SAP related pre-requisites" ;;
   SLES15SAPHVM )
     log "`date` Start - Executing SLES 15 for SAP related pre-requisites"
     install_prereq_sles15sap
@@ -943,6 +1169,16 @@ case "$MyOS" in
     set_clocksource
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP3 for SAP BYOS related pre-requisites" ;;
+  SLES12SP4SAPBYOSHVM )
+    log "`date` Start - Executing SLES 12 SP4 for SAP BYOS related pre-requisites"
+    install_prereq_sles12sp4sapbyos
+    disable_dhcp
+    disable_hostname
+    start_ntp
+    start_fs
+    set_clocksource
+    enable_resize_to_from_nitro
+    log "`date` End - Executing SLES 12 SP4 for SAP BYOS related pre-requisites" ;;
   SLES15SAPBYOSHVM )
     log "`date` Start - Executing SLES 15 for SAP BYOS related pre-requisites"
     install_prereq_sles15sapbyos

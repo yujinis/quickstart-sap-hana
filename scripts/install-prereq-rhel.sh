@@ -139,6 +139,7 @@ disable_dhcp() {
 
 start_fs() {
 
+
   if [ $(isRHEL7) == 1 ]
   then
     log "`date` Enabling Autofs and NFS for RHEL 7.x"
@@ -222,6 +223,9 @@ install_prereq_rhel74() {
   yum -y update glibc.x86_64 | tee -a ${HANA_LOG_FILE}
   yum -y install nvme-cli | tee -a ${HANA_LOG_FILE}
   yum -y install ${RHEL_SSM_RPM} | tee -a ${HANA_LOG_FILE}
+  #Install libatomic and compat-sap-c++-7 to support SAP HANA 2 SP4 and above. OSS Note 2593824
+  yum -y install libatomic | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-7 | tee -a ${HANA_LOG_FILE}
 }
 
 install_prereq_rhel75() {
@@ -235,6 +239,25 @@ install_prereq_rhel75() {
   yum -y update glibc.x86_64 | tee -a ${HANA_LOG_FILE}
   yum -y install nvme-cli | tee -a ${HANA_LOG_FILE}
   yum -y install ${RHEL_SSM_RPM} | tee -a ${HANA_LOG_FILE}
+  #Install libatomic and compat-sap-c++-7 to support SAP HANA 2 SP4 and above. OSS Note 2593824
+  yum -y install libatomic | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-7 | tee -a ${HANA_LOG_FILE}
+}
+
+install_prereq_rhel76() {
+  log "`date` Installing packages required for RHEL 7.6"
+  yum -y install xfsprogs 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install autofs 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install gcc | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-5 | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-6 | tee -a ${HANA_LOG_FILE}
+  yum -y install tuned-profiles-sap-hana | tee -a ${HANA_LOG_FILE}
+  yum -y update glibc.x86_64 | tee -a ${HANA_LOG_FILE}
+  yum -y install nvme-cli | tee -a ${HANA_LOG_FILE}
+  yum -y install ${RHEL_SSM_RPM} | tee -a ${HANA_LOG_FILE}
+  #Install libatomic and compat-sap-c++-7 to support SAP HANA 2 SP4 and above. OSS Note 2593824
+  yum -y install libatomic | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-7 | tee -a ${HANA_LOG_FILE}
 }
 
 start_ntp() {
@@ -312,6 +335,8 @@ start_oss_configs_rhel73() {
     mkdir /etc/tuned/sap-hana
     cp /usr/lib/tuned/sap-hana/tuned.conf /etc/tuned/sap-hana/tuned.conf # OSS Note 2292690
     sed -i '/force_latency/ c\force_latency=70' /etc/tuned/sap-hana/tuned.conf # OSS Note 2292690
+    systemctl start tuned  | tee -a ${HANA_LOG_FILE}
+    systemctl enable tuned | tee -a ${HANA_LOG_FILE}
     tuned-adm profile sap-hana | tee -a ${HANA_LOG_FILE}
     tuned-adm active | tee -a ${HANA_LOG_FILE}
 
@@ -325,6 +350,8 @@ start_oss_configs_rhel74() {
     mkdir /etc/tuned/sap-hana
     cp /usr/lib/tuned/sap-hana/tuned.conf /etc/tuned/sap-hana/tuned.conf # OSS Note 2292690
     sed -i '/force_latency/ c\force_latency=70' /etc/tuned/sap-hana/tuned.conf # OSS Note 2292690
+    systemctl start tuned  | tee -a ${HANA_LOG_FILE}
+    systemctl enable tuned | tee -a ${HANA_LOG_FILE}
     tuned-adm profile sap-hana | tee -a ${HANA_LOG_FILE}
     tuned-adm active | tee -a ${HANA_LOG_FILE}
 
@@ -335,9 +362,26 @@ start_oss_configs_rhel75() {
     #This section is from OSS #2292690 - SAP HANA DB: Recommended OS settings for RHEL 7
 
     log "`date` - Apply saptune HANA profile"
-    mkdir /etc/tuned/sap-hana
-    cp /usr/lib/tuned/sap-hana/tuned.conf /etc/tuned/sap-hana/tuned.conf # OSS Note 2292690
-    sed -i '/force_latency/ c\force_latency=70' /etc/tuned/sap-hana/tuned.conf # OSS Note 2292690
+#    mkdir /etc/tuned/sap-hana
+#    cp /usr/lib/tuned/sap-hana/tuned.conf /etc/tuned/sap-hana/tuned.conf # OSS Note 2292690
+#    sed -i '/force_latency/ c\force_latency=70' /etc/tuned/sap-hana/tuned.conf # OSS Note 2292690
+    systemctl start tuned  | tee -a ${HANA_LOG_FILE}
+    systemctl enable tuned | tee -a ${HANA_LOG_FILE}
+    tuned-adm profile sap-hana | tee -a ${HANA_LOG_FILE}
+    tuned-adm active | tee -a ${HANA_LOG_FILE}
+
+}
+
+start_oss_configs_rhel76() {
+
+    #This section is from OSS #2292690 - SAP HANA DB: Recommended OS settings for RHEL 7
+
+    log "`date` - Apply saptune HANA profile"
+#    mkdir /etc/tuned/sap-hana
+#    cp /usr/lib/tuned/sap-hana/tuned.conf /etc/tuned/sap-hana/tuned.conf # OSS Note 2292690
+#    sed -i '/force_latency/ c\force_latency=70' /etc/tuned/sap-hana/tuned.conf # OSS Note 2292690
+    systemctl start tuned  | tee -a ${HANA_LOG_FILE}
+    systemctl enable tuned | tee -a ${HANA_LOG_FILE}
     tuned-adm profile sap-hana | tee -a ${HANA_LOG_FILE}
     tuned-adm active | tee -a ${HANA_LOG_FILE}
 
@@ -483,6 +527,17 @@ case "$MyOS" in
     download_unrar
 #   lockversion - Version lock not required for HA & EUS AMIs
     log "`date` End - Executing RHEL 7.5 with HA and US related pre-requisites" ;;
+  RHEL76SAPHAUSHVM )
+    log "`date` Start - Executing RHEL 7.5 with HA and US related pre-requisites"
+    install_prereq_rhel76
+    start_oss_configs_rhel76
+    preserve_hostname
+    start_ntp
+    start_fs
+    set_clocksource_rhel7x
+    download_unrar
+#   lockversion - Version lock not required for HA & EUS AMIs
+    log "`date` End - Executing RHEL 7.6 with HA and US related pre-requisites" ;;
   RHEL75SAPHVM )
     log "`date` Start - Executing RHEL 7.5 related pre-requisites"
     install_prereq_rhel75
