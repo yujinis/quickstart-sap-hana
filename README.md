@@ -10,17 +10,14 @@ You can deploy SAP HANA on SLES or RHEL.
 The Quick Start ensures that Amazon EC2, Amazon EBS, and the operating system are optimally configured to achieve the 
 best performance for your SAP HANA system right out of the box.
 
-The Quick Start offers two deployment options:
+The Quick Start offers these deployment options:
 
-- Deploying SAP HANA into a new virtual private cloud (VPC) on AWS
-- Deploying SAP HANA into an existing VPC on AWS
+- Single-AZ (single-node and multi-node)
+- Single-AZ, multi-node, high-availability
 
-You can also use the AWS CloudFormation templates as a starting point for your own implementation.
+The following diagram illustrates the Single-AZ, multi-node option. See the [deployment guide](https://fwd.aws/dvDvB) for descriptions of the other two architectures, as well as best practices, step-by-step instructions, and customization options.
 
-![Quick Start architecture for SAP HANA on AWS](https://d0.awsstatic.com/partner-network/QuickStart/datasheets/sap-on-aws-architecture-single-node.png)
-
-For architectural details, best practices, step-by-step instructions, and customization options, see the 
-[deployment guide](https://fwd.aws/dvDvB).
+![Quick Start architecture for SAP HANA on AWS](https://d0.awsstatic.com/partner-network/QuickStart/datasheets/sap-on-aws-architecture-multi-node_new.png)
 
 To post feedback, submit feature ideas, or report bugs, use the **Issues** section of this GitHub repo.
 If you'd like to submit code for this Quick Start, please review the [AWS Quick Start Contributor's Kit](https://aws-quickstart.github.io/). 
