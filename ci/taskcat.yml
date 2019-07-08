@@ -17,8 +17,8 @@ global:
     - us-west-2
   reporting: true
 tests:
-  sap-hana-sles12sp1-single:
-    parameter_input: SAP-HANA-NewVPC-Default-SLES12SP1-Single-Node.json
+  sap-hana-sles15-single:
+    parameter_input: SAP-HANA-NewVPC-Default-SLES15SAP-Single-Nodee.json
     regions:
       - us-west-1
     template_file: SAP-HANA-NewVPC.template
