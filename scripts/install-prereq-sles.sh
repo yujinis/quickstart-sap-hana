@@ -1022,8 +1022,19 @@ then
       exit 1
     fi
 fi
+# -------------------------------------------------------------------------- #
+# Temp fix for the issue of unable to access SuSE repo issue - 07/06/19
+  if ls -l /etc/products.d/baseproduct | grep -v "SLES_SAP.prod" 1> /dev/null
+  then
+      cd /etc/products.d >> ${HANA_LOG_FILE} 2>&1
+      unlink baseproduct >> ${HANA_LOG_FILE} 2>&1
+      ln -s SLES_SAP.prod baseproduct >> ${HANA_LOG_FILE} 2>&1
+      registercloudguest --force-new >> ${HANA_LOG_FILE} 2>&1
+  fi
+# -------------------------------------------------------------------------- #
 
 #Check to see if zypper repository is accessible
+
 if [ $(check_zypper) == 0 ]
 then
     log "`date` Calling signal-failure.sh from $0 @ `date` with ZYPPER parameter"
