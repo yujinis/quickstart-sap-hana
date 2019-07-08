@@ -1023,7 +1023,8 @@ then
     fi
 fi
 # -------------------------------------------------------------------------- #
-# Temp fix for the issue of unable to access SuSE repo issue - 07/06/19
+# Temporary fix for the issue of unable to access SuSE repo issue - 07/06/19
+# -------------------------------------------------------------------------- #
   if ls -l /etc/products.d/baseproduct | grep -v "SLES_SAP.prod" 1> /dev/null
   then
       cd /etc/products.d >> ${HANA_LOG_FILE} 2>&1

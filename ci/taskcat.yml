@@ -12,7 +12,7 @@ global:
     # - eu-west-1
     # - sa-east-1
     # - us-east-1
-    # - us-west-1
+    - us-west-1
     - us-east-2
     - us-west-2
   reporting: true
@@ -20,7 +20,7 @@ tests:
   sap-hana-sles12sp1-single:
     parameter_input: SAP-HANA-NewVPC-Default-SLES12SP1-Single-Node.json
     regions:
-      - us-west-2
+      - us-west-1
     template_file: SAP-HANA-NewVPC.template
   sap-hana-rhel73-single:
     parameter_input: SAP-HANA-NewVPC-Default-RHEL73-Single-Node.json
