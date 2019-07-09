@@ -61,7 +61,7 @@
     },
     {
         "ParameterKey": "MyOS",
-        "ParameterValue": "SuSELinux12SP3ForSAP"
+        "ParameterValue": "SuSELinux12SP2ForSAP"
     },
     {
         "ParameterKey": "PlacementGroupName",
