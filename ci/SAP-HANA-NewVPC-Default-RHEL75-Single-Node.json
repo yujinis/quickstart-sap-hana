@@ -57,11 +57,11 @@
     },
     {
         "ParameterKey": "MyInstanceType",
-        "ParameterValue": "r4.4xlarge"
+        "ParameterValue": "r4.2xlarge"
     },
     {
         "ParameterKey": "MyOS",
-        "ParameterValue": "SuSELinux12SP2ForSAP"
+        "ParameterValue": "RedHatLinux75ForSAP"
     },
     {
         "ParameterKey": "PlacementGroupName",
