@@ -136,7 +136,6 @@
             "Description": "Operating system (SLES or RHEL) and version for master/worker nodes.",
             "Default": "SuSELinux12SP4ForSAP",
             "AllowedValues": [
-                "RedHatLinux73ForSAP",
                 "RedHatLinux75ForSAP",
                 "RedHatLinux74ForSAP-With-HA-US",
                 "RedHatLinux75ForSAP-With-HA-US",
@@ -146,7 +145,6 @@
                 "SuSELinux12SP3",
                 "SuSELinux12SP4",
                 "SuSELinux15",
-                "SuSELinux12SP1ForSAP",
                 "SuSELinux12SP2ForSAP",
                 "SuSELinux12SP3ForSAP",
                 "SuSELinux12SP4ForSAP",
