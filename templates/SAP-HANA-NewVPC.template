@@ -26,6 +26,15 @@
                 "No"
             ]
         },
+        "AWSEFS": {
+            "Type": "String",
+            "Description": "Use (Yes) or don't use (No) Amazon EFS for HANA shared file system.",
+            "Default": "Yes",
+            "AllowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
         "Encryption": {
             "Type": "String",
             "Description": "Enable (Yes) or disable (No) encryption on EBS volumes.",
@@ -351,6 +360,7 @@
                         "KeyName",
                         "VolumeTypeHanaData",
                         "VolumeTypeHanaLog",
+                        "AWSEFS",
                         "Encryption"
                     ]
                 },
@@ -471,6 +481,9 @@
                 },
                 "InstallHANA": {
                     "default": "Install SAP HANA software?"
+                },
+                "AWSEFS": {
+                    "default": "Would you like to use Amazon EFS?"
                 },
                 "Encryption": {
                     "default": "Would you like to turn on encryption?"
@@ -598,7 +611,7 @@
         "BaseNodes": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
-                "TemplateURL": "https://s3.amazonaws.com/aws-quickstart/quickstart-sap-hana/templates/SAP-HANA-BaseNodes.template",
+                "TemplateURL": "https://s3.amazonaws.com/hana-qs/templates/SAP-HANA-BaseNodes.template",
                 "Parameters": {
                     "PrivSubCIDR": {
                         "Ref": "PrivSubCIDR"
@@ -696,6 +709,9 @@
                     "InstallHANA": {
                         "Ref": "InstallHANA"
                     },
+                    "AWSEFS": {
+                        "Ref": "AWSEFS"
+                    },
                     "Encryption": {
                         "Ref": "Encryption"
                     },
@@ -744,7 +760,7 @@
         "BaseNetwork": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
-                "TemplateURL": "https://s3.amazonaws.com/aws-quickstart/quickstart-sap-hana/templates/SAP-HANA-BaseNetwork.template",
+                "TemplateURL": "https://s3.amazonaws.com/hana-qs/templates/SAP-HANA-BaseNetwork.template",
                 "Parameters": {
                     "VPC": {
                         "Ref": "VPC"

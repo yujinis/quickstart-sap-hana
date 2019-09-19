@@ -108,6 +108,15 @@
                 "No"
             ]
         },
+        "AWSEFS": {
+            "Type": "String",
+            "Description": "Use (Yes) or don't use (No) Amazon EFS for HANA shared file system.",
+            "Default": "Yes",
+            "AllowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
         "Encryption": {
             "Type": "String",
             "Description": "Enable (Yes) or disable (No) encryption on EBS volumes.",
@@ -362,6 +371,7 @@
                         "KeyName",
                         "VolumeTypeHanaData",
                         "VolumeTypeHanaLog",
+                        "AWSEFS",
                         "Encryption"
                     ]
                 },
@@ -476,6 +486,9 @@
                 },
                 "InstallHANA": {
                     "default": "Install SAP HANA software?"
+                },
+                "AWSEFS": {
+                    "default": "Would you like to use Amazon EFS?"
                 },
                 "Encryption": {
                     "default": "Would you like to turn on encryption?"
@@ -771,6 +784,22 @@
                     "Ref": "PlacementGroupName"
                 },
                 ""
+            ]
+        },
+        "UseEFS": {
+            "Fn::Equals": [
+                {
+                    "Ref": "AWSEFS"
+                },
+                "Yes"
+            ]
+        },
+        "NoUseEFS": {
+            "Fn::Equals": [
+                {
+                    "Ref": "AWSEFS"
+                },
+                "No"
             ]
         },
         "UseEncryption": {
@@ -1623,6 +1652,14 @@
                     },
                     {
                         "IpProtocol": "udp",
+                        "CidrIp": {
+                            "Ref": "PrivSubCIDR"
+                        },
+                        "FromPort": "2049",
+                        "ToPort": "2049"
+                    },
+                    {
+                        "IpProtocol": "tcp",
                         "CidrIp": {
                             "Ref": "PrivSubCIDR"
                         },
@@ -2789,6 +2826,21 @@
                                     "Ref": "Proxy"
                                 },
                                 "\n",
+                                "sh /root/install/writeconfig.sh AWSEFS=",
+                                {
+                                    "Ref": "AWSEFS"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSshared=",
+                                {
+                                    "Ref": "EFSshared"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSbackup=",
+                                {
+                                    "Ref": "EFSbackup"
+                                },
+                                "\n",
                                 "sh /root/install/writeconfig.sh no_proxy=localhost,127.0.0.1,169.254.169.254",
                                 "\n",
                                 "sh /root/install/writeconfig.sh NO_PROXY=localhost,127.0.0.1,169.254.169.254",
@@ -3088,6 +3140,21 @@
                                     "Ref": "Proxy"
                                 },
                                 "\n",
+                                "sh /root/install/writeconfig.sh AWSEFS=",
+                                {
+                                    "Ref": "AWSEFS"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSshared=",
+                                {
+                                    "Ref": "EFSshared"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSbackup=",
+                                {
+                                    "Ref": "EFSbackup"
+                                },
+                                "\n",
                                 "export no_proxy=localhost,127.0.0.1,169.254.169.254",
                                 "\n",
                                 "export NO_PROXY=localhost,127.0.0.1,169.254.169.254",
@@ -3212,6 +3279,21 @@
                                 "sh /root/install/writeconfig.sh HTTPS_PROXY=",
                                 {
                                     "Ref": "Proxy"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh AWSEFS=",
+                                {
+                                    "Ref": "AWSEFS"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSshared=",
+                                {
+                                    "Ref": "EFSshared"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSbackup=",
+                                {
+                                    "Ref": "EFSbackup"
                                 },
                                 "\n",
                                 "sh /root/install/writeconfig.sh no_proxy=localhost,127.0.0.1,169.254.169.254",
@@ -3592,6 +3674,21 @@
                                     "Ref": "Proxy"
                                 },
                                 "\n",
+                                "sh /root/install/writeconfig.sh AWSEFS=",
+                                {
+                                    "Ref": "AWSEFS"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSshared=",
+                                {
+                                    "Ref": "EFSshared"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSbackup=",
+                                {
+                                    "Ref": "EFSbackup"
+                                },
+                                "\n",
                                 "sh /root/install/writeconfig.sh no_proxy=localhost,127.0.0.1,169.254.169.254",
                                 "\n",
                                 "sh /root/install/writeconfig.sh NO_PROXY=localhost,127.0.0.1,169.254.169.254",
@@ -3844,6 +3941,21 @@
                                     "Ref": "Proxy"
                                 },
                                 "\n",
+                                "sh /root/install/writeconfig.sh AWSEFS=",
+                                {
+                                    "Ref": "AWSEFS"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSshared=",
+                                {
+                                    "Ref": "EFSshared"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSbackup=",
+                                {
+                                    "Ref": "EFSbackup"
+                                },
+                                "\n",
                                 "export no_proxy=localhost,127.0.0.1,169.254.169.254",
                                 "\n",
                                 "export NO_PROXY=localhost,127.0.0.1,169.254.169.254",
@@ -3968,6 +4080,21 @@
                                 "sh /root/install/writeconfig.sh HTTPS_PROXY=",
                                 {
                                     "Ref": "Proxy"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh AWSEFS=",
+                                {
+                                    "Ref": "AWSEFS"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSshared=",
+                                {
+                                    "Ref": "EFSshared"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSbackup=",
+                                {
+                                    "Ref": "EFSbackup"
                                 },
                                 "\n",
                                 "sh /root/install/writeconfig.sh no_proxy=localhost,127.0.0.1,169.254.169.254",
@@ -4222,6 +4349,21 @@
                                     "Ref": "Proxy"
                                 },
                                 "\n",
+                                "sh /root/install/writeconfig.sh AWSEFS=",
+                                {
+                                    "Ref": "AWSEFS"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSshared=",
+                                {
+                                    "Ref": "EFSshared"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSbackup=",
+                                {
+                                    "Ref": "EFSbackup"
+                                },
+                                "\n",
                                 "export no_proxy=localhost,127.0.0.1,169.254.169.254",
                                 "\n",
                                 "export NO_PROXY=localhost,127.0.0.1,169.254.169.254",
@@ -4346,6 +4488,21 @@
                                 "sh /root/install/writeconfig.sh HTTPS_PROXY=",
                                 {
                                     "Ref": "Proxy"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh AWSEFS=",
+                                {
+                                    "Ref": "AWSEFS"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSshared=",
+                                {
+                                    "Ref": "EFSshared"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSbackup=",
+                                {
+                                    "Ref": "EFSbackup"
                                 },
                                 "\n",
                                 "sh /root/install/writeconfig.sh no_proxy=localhost,127.0.0.1,169.254.169.254",
@@ -4726,6 +4883,21 @@
                                     "Ref": "Proxy"
                                 },
                                 "\n",
+                                "sh /root/install/writeconfig.sh AWSEFS=",
+                                {
+                                    "Ref": "AWSEFS"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSshared=",
+                                {
+                                    "Ref": "EFSshared"
+                                },
+                                "\n",
+                                "sh /root/install/writeconfig.sh EFSbackup=",
+                                {
+                                    "Ref": "EFSbackup"
+                                },
+                                "\n",
                                 "sh /root/install/writeconfig.sh no_proxy=localhost,127.0.0.1,169.254.169.254",
                                 "\n",
                                 "sh /root/install/writeconfig.sh NO_PROXY=localhost,127.0.0.1,169.254.169.254",
@@ -5036,6 +5208,66 @@
                         "Value": {
                             "Ref": "HANAWorkerInstance5"
                         }
+                    }
+                ]
+            }
+        },
+        "EFSshared": {
+            "Type": "AWS::EFS::FileSystem",
+            "Properties": {
+                "PerformanceMode": "generalPurpose",
+                "FileSystemTags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Ref": "HANAMasterHostname"
+                        }
+                    }
+                ]
+            }
+        },
+        "EFSbackup": {
+            "Type": "AWS::EFS::FileSystem",
+            "Properties": {
+                "PerformanceMode": "generalPurpose",
+                "FileSystemTags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Ref": "HANAMasterHostname"
+                        }
+                    }
+                ]
+            }
+        },
+        "EFSMTshared": {
+            "Type": "AWS::EFS::MountTarget",
+            "Properties": {
+                "FileSystemId": {
+                    "Ref": "EFSshared"
+                },
+                "SubnetId": {
+                    "Ref": "HANASubnet"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "HANASecurityGroup"
+                    }
+                ]
+            }
+        },
+        "EFSMTbackup": {
+            "Type": "AWS::EFS::MountTarget",
+            "Properties": {
+                "FileSystemId": {
+                    "Ref": "EFSbackup"
+                },
+                "SubnetId": {
+                    "Ref": "HANASubnet"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "HANASecurityGroup"
                     }
                 ]
             }

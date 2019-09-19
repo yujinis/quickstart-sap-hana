@@ -93,7 +93,6 @@ set_noop_scheduler () {
 #          Read all inputs
 # ------------------------------------------------------------------
 
-
 while getopts ":h:s:i:p:n:d:w:l:" o; do
     case "${o}" in
     h) usage && exit 0
@@ -163,12 +162,21 @@ fi
 
 #log `date` "Building storage script to provision and configure EBS volumes for SAP HANA"
 STORAGE_SCRIPT=/root/install/storage_builder_generated_master.sh
-log `date` "Provisioning and configuring EBS Volumes for HANA Backup"
-python /root/install/build_storage.py  -config /root/install/storage.json  \
-					     -ismaster ${IsMasterNode} \
-					     -hostcount ${HostCount} -which backup \
-					     -instance_type ${MyInstanceType} -storage_type ${BACKUP_VOL} \
-					     > ${STORAGE_SCRIPT}
+if [ ${AWSEFS} == 'No' ] || [ ${HostCount} -eq 1 ]
+then
+    log `date` "Provisioning and configuring EBS Volumes for HANA Backup"
+    python /root/install/build_storage.py  -config /root/install/storage.json  \
+	    				     -ismaster ${IsMasterNode} \
+		    			     -hostcount ${HostCount} -which backup \
+			    		     -instance_type ${MyInstanceType} -storage_type ${BACKUP_VOL} \
+				    	     > ${STORAGE_SCRIPT}
+    log `date` "Provisioning and configuring EBS Volumes for HANA Shared"
+    python /root/install/build_storage.py  -config /root/install/storage.json  \
+	    				     -ismaster ${IsMasterNode} \
+		    			     -hostcount ${HostCount} -which shared \
+			    		     -instance_type ${MyInstanceType} -storage_type ${SHARED_VOL} \
+				    	     >> ${STORAGE_SCRIPT}
+fi
 log `date` "Provisioning and configuring EBS Volumes for HANA Data"
 python /root/install/build_storage.py  -config /root/install/storage.json  \
 							 -ismaster ${IsMasterNode} \
@@ -181,18 +189,12 @@ python /root/install/build_storage.py  -config /root/install/storage.json  \
 							 -hostcount ${HostCount} -which hana_log \
 							 -instance_type ${MyInstanceType} -storage_type ${MyHanaLogVolumeType} \
 							 >> ${STORAGE_SCRIPT}
-log `date` "Provisioning and configuring EBS Volumes for HANA Shared"
-python /root/install/build_storage.py  -config /root/install/storage.json  \
-					     -ismaster ${IsMasterNode} \
-					     -hostcount ${HostCount} -which shared \
-					     -instance_type ${MyInstanceType} -storage_type ${SHARED_VOL} \
-					     >> ${STORAGE_SCRIPT}
 log `date` "Provisioning and configuring EBS Volumes for USR-SAP"
 python /root/install/build_storage.py  -config /root/install/storage.json  \
-					     -ismaster ${IsMasterNode} \
-					     -hostcount ${HostCount} -which usr_sap \
-					     -instance_type ${MyInstanceType} -storage_type ${USR_SAP_VOL} \
-					     >> ${STORAGE_SCRIPT}
+	       				     -ismaster ${IsMasterNode} \
+		    			     -hostcount ${HostCount} -which usr_sap \
+			    		     -instance_type ${MyInstanceType} -storage_type ${USR_SAP_VOL} \
+				    	     >> ${STORAGE_SCRIPT}
 log `date` "Provisioning and configuring EBS Volumes for HANA Media"
 python /root/install/build_storage.py  -config /root/install/storage.json  \
 							 -ismaster ${IsMasterNode} \
@@ -373,23 +375,26 @@ mkdir -p /backup
 
 log `date` "Creating mount points in fstab"
 
+MntOpt=""
 if  ( [ "$MyOS" = "SLES11SP4HVM" ] || [ "$MyOS" = "RHEL66SAPHVM" ] || [ "$MyOS" = "RHEL67SAPHVM" ] );
 then
-	echo "/dev/disk/by-label/USR_SAP /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
-	echo "/dev/disk/by-label/HANA_MEDIA /media   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0"  >> /etc/fstab
-	echo "/dev/disk/by-label/HANA_SHARE /hana/shared   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
-	echo "/dev/mapper/vghanadata-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
-	echo "/dev/mapper/vghanalog-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
-	echo "/dev/mapper/vghanaback-lvhanaback     /backup        xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
-else
-	echo "/dev/disk/by-label/USR_SAP /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
-	echo "/dev/disk/by-label/HANA_MEDIA /media   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0"  >> /etc/fstab
-	echo "/dev/disk/by-label/HANA_SHARE /hana/shared   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
-	echo "/dev/mapper/vghanadata-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
-	echo "/dev/mapper/vghanalog-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
-	echo "/dev/mapper/vghanaback-lvhanaback     /backup        xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
+    MntOpt=",delaylog"
 fi
-
+echo "/dev/disk/by-label/USR_SAP /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
+echo "/dev/disk/by-label/HANA_MEDIA /media   xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0"  >> /etc/fstab
+echo "/dev/mapper/vghanadata-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
+echo "/dev/mapper/vghanalog-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
+if [ ${AWSEFS} == 'Yes' ] && [ ${HostCount} -gt 1 ]
+then
+    log `date` "Provisioning and configuring Amazon EFS for HANA Shared and Backup"
+    EFS_MP_shared="${EFSshared}.efs.${REGION}.amazonaws.com:/ "
+    EFS_MP_backup="${EFSbackup}.efs.${REGION}.amazonaws.com:/ "
+    echo ""$EFS_MP_shared"  "/hana/shared"  nfs nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 0 0"  >> /etc/fstab
+    echo ""$EFS_MP_backup"  "/backup"  nfs nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 0 0"  >> /etc/fstab
+else
+    echo "/dev/disk/by-label/HANA_SHARE /hana/shared   xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
+    echo "/dev/mapper/vghanaback-lvhanaback     /backup        xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
+fi
 
 ##10. Updated the fstab entry for /backup (Master only)
 
@@ -435,34 +440,34 @@ fi
 # ------------------------------------------------------------------
 ##ensure nfs service starts on boot
 if (( $(isSLES) == 1 )); then
-        log `date` "Installing and configuring NFS Server"
-        zypper --non-interactive install nfs-kernel-server
+    log `date` "Installing and configuring NFS Server"
+    zypper --non-interactive install nfs-kernel-server
 fi
-
 sed -i '/STATD_PORT=/ c\STATD_PORT="4000"' /etc/sysconfig/nfs
 sed -i '/LOCKD_TCPPORT=/ c\LOCKD_TCPPORT="4001"' /etc/sysconfig/nfs
 sed -i '/LOCKD_UDPPORT=/ c\LOCKD_UDPPORT="4001"' /etc/sysconfig/nfs
 sed -i '/MOUNTD_PORT=/ c\MOUNTD_PORT="4002"' /etc/sysconfig/nfs
-
 if (( $(isSLES) == 1 )); then
-        service nfsserver start
-        chkconfig nfsserver on
+    service nfsserver start
+    chkconfig nfsserver on
 else
-        service nfs restart
-        chkconfig nfs on
+    service nfs restart
+    chkconfig nfs on
 fi
+if [ ${AWSEFS} == 'No' ]
+then
+    echo "#Share global HANA shares" >> /etc/exports
+    if (( ${USE_NEW_STORAGE} == 1 )); then
+        echo "/hana/shared   ${WORKER_HOSTNAME}*(rw,no_root_squash,no_subtree_check)" >> /etc/exports
+    else
+        echo "/hana/shared   ${WORKER_HOSTNAME}*(rw,no_root_squash,no_subtree_check)" >> /etc/exports
+    fi
+    echo "/backup        ${WORKER_HOSTNAME}*(rw,no_root_squash,no_subtree_check)" >> /etc/exports
+    exportfs -a
 
-echo "#Share global HANA shares" >> /etc/exports
-if (( ${USE_NEW_STORAGE} == 1 )); then
-        echo "/hana/shared   ${WORKER_HOSTNAME}*(rw,no_root_squash,no_subtree_check)" >> /etc/exports
-else
-        echo "/hana/shared   ${WORKER_HOSTNAME}*(rw,no_root_squash,no_subtree_check)" >> /etc/exports
+    log `date` "Current exports"
+    showmount -e
 fi
-echo "/backup        ${WORKER_HOSTNAME}*(rw,no_root_squash,no_subtree_check)" >> /etc/exports
-exportfs -a
-
-log `date` "Current exports"
-showmount -e
 
 # ------------------------------------------------------------------
 #          Pass through HANA installation

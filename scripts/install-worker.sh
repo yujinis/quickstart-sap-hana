@@ -303,18 +303,15 @@ mkdir /backup
 
 log `date` "Creating mount points in fstab"
 
+MntOpt=""
 if  ( [ "$MyOS" = "SLES11SP4HVM" ] || [ "$MyOS" = "RHEL66SAPHVM" ] || [ "$MyOS" = "RHEL67SAPHVM" ] );
 then
-#	echo "/dev/xvds			   /usr/sap       xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
-    echo "/dev/disk/by-label/USR_SAP /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
-	echo "/dev/mapper/vghanadata-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
-	echo "/dev/mapper/vghanalog-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
-else
-#	echo "/dev/xvds			   /usr/sap       xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
-	echo "/dev/disk/by-label/USR_SAP /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
-	echo "/dev/mapper/vghanadata-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
-	echo "/dev/mapper/vghanalog-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k 0 0" >> /etc/fstab
+    MntOpt=",delaylog"
 fi
+#	echo "/dev/xvds			   /usr/sap       xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
+echo "/dev/disk/by-label/USR_SAP /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
+echo "/dev/mapper/vghanadata-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
+echo "/dev/mapper/vghanalog-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
 
 log `date` "mounting filesystems"
 mount -a
@@ -329,21 +326,34 @@ if (( $(isSLES) == 1 )); then
   chkconfig boot.lvm on
 fi
 
-##configure autofs
-log  `date` "Configuring NFS client services"
-sed -i '/auto.master/c\#+auto.master' /etc/auto.master
-echo "/- auto.direct" >> /etc/auto.master
-echo "/hana/shared	-rw,rsize=32768,wsize=32768,timeo=14,intr     $MASTER_HOSTNAME.$DOMAIN:/hana/shared" >> /etc/auto.direct
-echo "/backup		-rw,rsize=32768,wsize=32768,timeo=14,intr     $MASTER_HOSTNAME.$DOMAIN:/backup" >> /etc/auto.direct
+if [ ${AWSEFS} == 'Yes' ]
+then
+    ##configure Amazon EFS
+    log  `date` "Configuring Amazon EFS"
+    EFS_MP_shared=""$EFSshared".efs."$REGION".amazonaws.com:/ "
+    EFS_MP_backup=""$EFSbackup".efs."$REGION".amazonaws.com:/ "
+    echo ""$EFS_MP_shared"  "/hana/shared"  nfs nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 0 0"  >> /etc/fstab
+    echo ""$EFS_MP_backup"  "/backup"  nfs nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 0 0"  >> /etc/fstab
+else
+    ##configure autofs
+    log  `date` "Configuring NFS client services"
+    sed -i '/auto.master/c\#+auto.master' /etc/auto.master
+    echo "/- auto.direct" >> /etc/auto.master
+    echo "/hana/shared	-rw,rsize=32768,wsize=32768,timeo=14,intr     $MASTER_HOSTNAME.$DOMAIN:/hana/shared" >> /etc/auto.direct
+    echo "/backup		-rw,rsize=32768,wsize=32768,timeo=14,intr     $MASTER_HOSTNAME.$DOMAIN:/backup" >> /etc/auto.direct
 
-mount -t nfs $MASTER_HOSTNAME.$DOMAIN:/hana/shared /hana/shared
-mount -t nfs $MASTER_HOSTNAME.$DOMAIN:/backup /backup
+    mount -t nfs $MASTER_HOSTNAME.$DOMAIN:/hana/shared /hana/shared
+    mount -t nfs $MASTER_HOSTNAME.$DOMAIN:/backup /backup
 
-#trigger automount to mount shared filesystems
-echo "trigger automount to mount shared filesystems"
-ls -l /hana/shared
-ls -l /backup
+    #trigger automount to mount shared filesystems
+    echo "trigger automount to mount shared filesystems"
+    ls -l /hana/shared
+    ls -l /backup
+fi
 
+log `date` "mounting filesystems"
+mount -a
+mount
 
 # ------------------------------------------------------------------
 #          Pass through HANA installation
