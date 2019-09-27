@@ -212,10 +212,15 @@ DeleteTable() {
 }
 
 GetMyIp() {
-    ip=$(ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
+    if which ifconfig >/dev/null 2>&1
+    then
+        ip=$(ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
+    else
+        ip=$(ip route get 1.2.3.4 | awk '{print $7}')
+    fi  
     # Begin RHEL 7.2  addition
     if [ $ip = '']; then
-    ip=$(ifconfig eth0 | grep 'inet ' | cut -d: -f2 | awk '{ print $2}')
+        ip=$(ifconfig eth0 | grep 'inet ' | cut -d: -f2 | awk '{ print $2}')
     fi
     # End RHEL 7.2 addition
     if [ $TEST_ENVIRON -eq 1 ]; then

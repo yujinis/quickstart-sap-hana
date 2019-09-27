@@ -184,7 +184,12 @@ DeleteTable() {
 }
 
 GetMyIp() {
-    ip=$(ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
+    if which ifconfig >/dev/null 2>&1
+    then
+        ip=$(ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
+    else
+        ip=$(ip route get 1.2.3.4 | awk '{print $7}')
+    fi  
     if [ $TEST_ENVIRON -eq 1 ]; then
         echo ${TEST_IP}
     else
