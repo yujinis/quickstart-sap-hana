@@ -363,7 +363,7 @@ if [ "${INSTALL_HANA}" == "No" ]; then
     log `date` "INSTALL_HANA set to no, will pass through install-worker.sh"
     exit 0
 else
-    log `date` "INSTALL_HANA set to yes, will install HANA via install-worker.sh"
+    log `date` "INSTALL_HANA set to yes, will install HANA via install-hana-worker.sh"
 fi
 
 #------------------------------------------------------------------

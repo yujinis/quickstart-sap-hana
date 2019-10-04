@@ -425,6 +425,7 @@ install_prereq_sles15() {
     zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
     # See OSS note 2788495
     zypper -n install libopenssl1_0_0
+    zypper -n install libssh2-1
 
     ## ------------------------------------------------------------------------------------------ ##
     ## As of SLES12 SP4, /sbin/insserv has to be installed for HANA install program or it'll fail ##
@@ -645,6 +646,7 @@ install_prereq_sles15sap() {
   
   # See OSS note 2788495
   zypper -n install libopenssl1_0_0
+  zypper -n install libssh2-1
   
   # Apply all Recommended HANA settings with SAPTUNE
   log "`date` - Start saptune daemon"
@@ -803,6 +805,7 @@ install_prereq_sles15sapbyos() {
   zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
   # See OSS note 2788495
   zypper -n install libopenssl1_0_0
+  zypper -n install libssh2-1
   #Install unrar for media extraction
   ## ----------------------------------------------------------------- ##
   ## unrar has been replaced by unar in SLES 15, and is implemented as ##
@@ -1028,7 +1031,20 @@ then
       sleep 300
       exit 1
     fi
+    # Activate SUSE legacy and public cloud module. See SAP OSS note  
+    log "`date` Activating legacy and public cloud modules. See SAP OSS note 2684254"
+    if SUSEConnect -p sle-module-legacy/15/x86_64 >/dev/null && SUSEConnect -p sle-module-public-cloud/15/x86_64 >/dev/null
+    then
+        log "`date` SUSE15 legacy and public cloud module installation SUCCEED"
+    else
+        log "`date` SUSE15 legacy and public cloud module installation FAILED. Check ${HANA_LOG_FILE}"
+        /root/install/signal-failure.sh "SUSECONNECTFAIL"
+        touch "$SIG_FLAG_FILE"
+        sleep 300
+        exit 1
+    fi
 fi
+
 # -------------------------------------------------------------------------- #
 # Temporary fix for the issue of unable to access SuSE repo issue - 07/06/19
 # -------------------------------------------------------------------------- #

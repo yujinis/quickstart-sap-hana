@@ -88,20 +88,14 @@ log `date` BEGIN install-hana-worker
 #          install_worker()
 #          retry_mount()
 # ------------------------------------------------------------------
-
-
-retry_mount() {
-  log `date` "Retrying /hana/share mount"
-  service autofs restart
-  if [ ! -e ${HDBLCM} ]; then
-  	if (( ${USE_NEW_STORAGE} == 1 )); then
-	     mount -t nfs $MASTER_HOSTNAME.$DOMAIN:/hana/shared /hana/shared
-	 else
-	     mount -t nfs $MASTER_HOSTNAME.$DOMAIN:/hana/shared /hana/shared
-	 fi
-     mount -t nfs $MASTER_HOSTNAME.$DOMAIN:/backup /backup
-  log `date` "Hard mounted NFS mounts, consider adding to /etc/fstab"
-  fi
+retry_mount() 
+{
+    log `date` "Retrying /hana/share mount"
+    service autofs restart
+    if [ ! -e ${HDBLCM} ]; then
+        mount /hana/shared
+    fi
+    mount /backup
 }
 
 if (( ${USE_NEW_STORAGE} == 1 )); then
@@ -153,7 +147,7 @@ install_worker() {
     # Use SAPSYS_GROUPID from master
 
 	#if (( $(isRHEL) == 1 )); then
-	  groupadd sapsys -g ${SAPSYS_GROUPID}
+	groupadd sapsys -g ${SAPSYS_GROUPID}
 	#fi
 
 	if (( ${USE_NEW_STORAGE} == 1 )); then
@@ -209,16 +203,15 @@ install_worker() {
 #          Main install code
 # ------------------------------------------------------------------
 
-
 if install_worker; then
-   log `date` "Host Added..."
- else
-   if retry_mount; then
-      if install_worker; then
-         log `date` "Host Added..."
-      fi
-   else
-      log `date` "Unable to mount /hana/shared filesystem from $MASTER_HOSTNAME"
+    log `date` "Host Added..."
+else
+    if retry_mount; then
+        if install_worker; then
+            log `date` "Host Added..."
+        fi
+    else
+        log `date` "Unable to mount /hana/shared filesystem"
    fi
 fi
 
