@@ -425,7 +425,7 @@ install_prereq_sles15() {
     zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
     # See OSS note 2788495
     zypper -n install libopenssl1_0_0
-    zypper -n install libssh2-1
+#    zypper -n install libssh2-1
 
     ## ------------------------------------------------------------------------------------------ ##
     ## As of SLES12 SP4, /sbin/insserv has to be installed for HANA install program or it'll fail ##
@@ -646,7 +646,7 @@ install_prereq_sles15sap() {
   
   # See OSS note 2788495
   zypper -n install libopenssl1_0_0
-  zypper -n install libssh2-1
+#  zypper -n install libssh2-1
   
   # Apply all Recommended HANA settings with SAPTUNE
   log "`date` - Start saptune daemon"
@@ -805,7 +805,7 @@ install_prereq_sles15sapbyos() {
   zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
   # See OSS note 2788495
   zypper -n install libopenssl1_0_0
-  zypper -n install libssh2-1
+#  zypper -n install libssh2-1
   #Install unrar for media extraction
   ## ----------------------------------------------------------------- ##
   ## unrar has been replaced by unar in SLES 15, and is implemented as ##
