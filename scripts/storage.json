@@ -70,6 +70,58 @@
                           ]
                       }
                   },
+                  "u-18tb1.metal": {
+                      "gp2": {
+                          "drives": [
+                              {
+                                  "device": "/dev/sdf",
+                                  "size": "8192G"
+                              },
+                              {
+                                  "device": "/dev/sdg",
+                                  "size": "8192G"
+                              }
+                          ]
+                      },
+                      "st1": {
+                          "drives": [
+                              {
+                                  "device": "/dev/sdf",
+                                  "size": "16384G"
+                              },
+                              {
+                                  "device": "/dev/sdg",
+                                  "size": "16384G"
+                              }
+                          ]
+                      }
+                  },
+                  "u-24tb1.metal": {
+                      "gp2": {
+                          "drives": [
+                              {
+                                  "device": "/dev/sdf",
+                                  "size": "8192G"
+                              },
+                              {
+                                  "device": "/dev/sdg",
+                                  "size": "8192G"
+                              }
+                          ]
+                      },
+                      "st1": {
+                          "drives": [
+                              {
+                                  "device": "/dev/sdf",
+                                  "size": "16384G"
+                              },
+                              {
+                                  "device": "/dev/sdg",
+                                  "size": "16384G"
+                              }
+                          ]
+                      }
+                  },
                   "x1e.xlarge": {
                       "gp2": {
                           "drives": [
@@ -1897,6 +1949,170 @@
                   "volume_group": "vghanadata"
               }
           },
+          "u-18tb1.metal": {
+              "gp2": {
+                  "drives": [
+                      {
+                          "device": "/dev/sdb",
+                          "size": "3600G"
+                      },
+                      {
+                          "device": "/dev/sdc",
+                          "size": "3600G"
+                      },
+                      {
+                          "device": "/dev/sdd",
+                          "size": "3600G"
+                      },
+                      {
+                          "device": "/dev/sdm",
+                          "size": "3600G"
+                      },
+                      {
+                          "device": "/dev/sdn",
+                          "size": "3600G"
+                      },
+                      {
+                          "device": "/dev/sdo",
+                          "size": "3600G"
+                      }
+                  ],
+                  "stride": 256,
+                  "stripe": [
+                      {
+                          "drive": "/hana/data",
+                          "logical_volume": "lvhanadata",
+                          "size": "21500G"
+                      }
+                  ],
+                  "volume_group": "vghanadata"
+              },
+              "io1": {
+                  "drives": [
+                      {
+                          "device": "/dev/sdb",
+                          "piops": 3000,
+                          "size": "3600G"
+                      },
+                      {
+                          "device": "/dev/sdc",
+                          "piops": 3000,
+                          "size": "3600G"
+                      },
+                      {
+                          "device": "/dev/sdd",
+                          "piops": 3000,
+                          "size": "3600G"
+                      },
+                      {
+                          "device": "/dev/sdm",
+                          "piops": 3000,
+                          "size": "3600G"
+                      },
+                      {
+                          "device": "/dev/sdn",
+                          "piops": 3000,
+                          "size": "3600G"
+                      },
+                      {
+                          "device": "/dev/sdo",
+                          "piops": 3000,
+                          "size": "3600G"
+                      }
+                  ],
+                  "stride": 256,
+                  "stripe": [
+                      {
+                          "drive": "/hana/data",
+                          "logical_volume": "lvhanadata",
+                          "size": "21500G"
+                      }
+                  ],
+                  "volume_group": "vghanadata"
+              }
+          },
+          "u-24tb1.metal": {
+              "gp2": {
+                  "drives": [
+                      {
+                          "device": "/dev/sdb",
+                          "size": "4800G"
+                      },
+                      {
+                          "device": "/dev/sdc",
+                          "size": "4800G"
+                      },
+                      {
+                          "device": "/dev/sdd",
+                          "size": "4800G"
+                      },
+                      {
+                          "device": "/dev/sdm",
+                          "size": "4800G"
+                      },
+                      {
+                          "device": "/dev/sdn",
+                          "size": "4800G"
+                      },
+                      {
+                          "device": "/dev/sdo",
+                          "size": "4800G"
+                      }
+                  ],
+                  "stride": 256,
+                  "stripe": [
+                      {
+                          "drive": "/hana/data",
+                          "logical_volume": "lvhanadata",
+                          "size": "28700G"
+                      }
+                  ],
+                  "volume_group": "vghanadata"
+              },
+              "io1": {
+                  "drives": [
+                      {
+                          "device": "/dev/sdb",
+                          "piops": 3000,
+                          "size": "4800G"
+                      },
+                      {
+                          "device": "/dev/sdc",
+                          "piops": 3000,
+                          "size": "4800G"
+                      },
+                      {
+                          "device": "/dev/sdd",
+                          "piops": 3000,
+                          "size": "4800G"
+                      },
+                      {
+                          "device": "/dev/sdm",
+                          "piops": 3000,
+                          "size": "4800G"
+                      },
+                      {
+                          "device": "/dev/sdn",
+                          "piops": 3000,
+                          "size": "4800G"
+                      },
+                      {
+                          "device": "/dev/sdo",
+                          "piops": 3000,
+                          "size": "4800G"
+                      }
+                  ],
+                  "stride": 256,
+                  "stripe": [
+                      {
+                          "drive": "/hana/data",
+                          "logical_volume": "lvhanadata",
+                          "size": "28700G"
+                      }
+                  ],
+                  "volume_group": "vghanadata"
+              }
+          },
           "x1e.xlarge": {
               "gp2": {
                   "drives": [
@@ -2854,6 +3070,88 @@
                   "volume_group": "vghanalog"
               }
           },
+          "u-18tb1.metal": {
+              "gp2": {
+                  "drives": [
+                      {
+                          "device": "/dev/sdh",
+                          "size": "300G"
+                      },
+                      {
+                          "device": "/dev/sdi",
+                          "size": "300G"
+                      }
+                  ],
+                  "stride": 256,
+                  "stripe": [
+                      {
+                          "drive": "/hana/log",
+                          "logical_volume": "lvhanalog",
+                          "size": "512G"
+                      }
+                  ],
+                  "volume_group": "vghanalog"
+              },
+              "io1": {
+                  "drives": [
+                      {
+                          "device": "/dev/sdh",
+                          "piops": 2000,
+                          "size": "525G"
+                      }
+                  ],
+                  "stride": 256,
+                  "stripe": [
+                      {
+                          "drive": "/hana/log",
+                          "logical_volume": "lvhanalog",
+                          "size": "512G"
+                      }
+                  ],
+                  "volume_group": "vghanalog"
+              }
+          },
+          "u-24tb1.metal": {
+              "gp2": {
+                  "drives": [
+                      {
+                          "device": "/dev/sdh",
+                          "size": "300G"
+                      },
+                      {
+                          "device": "/dev/sdi",
+                          "size": "300G"
+                      }
+                  ],
+                  "stride": 256,
+                  "stripe": [
+                      {
+                          "drive": "/hana/log",
+                          "logical_volume": "lvhanalog",
+                          "size": "512G"
+                      }
+                  ],
+                  "volume_group": "vghanalog"
+              },
+              "io1": {
+                  "drives": [
+                      {
+                          "device": "/dev/sdh",
+                          "piops": 2000,
+                          "size": "525G"
+                      }
+                  ],
+                  "stride": 256,
+                  "stripe": [
+                      {
+                          "drive": "/hana/log",
+                          "logical_volume": "lvhanalog",
+                          "size": "512G"
+                      }
+                  ],
+                  "volume_group": "vghanalog"
+              }
+          },
           "x1e.xlarge": {
               "gp2": {
                   "drives": [
@@ -3626,6 +3924,26 @@
                   ]
               }
           },
+          "u-18tb1.metal": {
+              "gp2": {
+                  "drives": [
+                      {
+                          "device": "/dev/sde",
+                          "size": "1024G"
+                      }
+                  ]
+              }
+          },
+          "u-24tb1.metal": {
+              "gp2": {
+                  "drives": [
+                      {
+                          "device": "/dev/sde",
+                          "size": "1024G"
+                      }
+                  ]
+              }
+          },
           "x1e.xlarge": {
               "gp2": {
                   "drives": [
@@ -3831,6 +4149,26 @@
               }
           },
           "u-12tb1.metal": {
+              "gp2": {
+                  "drives": [
+                      {
+                          "device": "/dev/sds",
+                          "size": "50G"
+                      }
+                  ]
+              }
+          },
+          "u-18tb1.metal": {
+              "gp2": {
+                  "drives": [
+                      {
+                          "device": "/dev/sds",
+                          "size": "50G"
+                      }
+                  ]
+              }
+          },
+          "u-24tb1.metal": {
               "gp2": {
                   "drives": [
                       {
