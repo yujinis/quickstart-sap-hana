@@ -632,7 +632,7 @@ install_prereq_sles15sap() {
   zypper -n install chrony
 
   ## --------------------------------------------------------------------- ##
-  ## in SLES 15, command "ifconfig" has been replaced by "ip", and moved   ##
+  ## In SLES 15, command "ifconfig" has been replaced by "ip", and moved   ##
   ## from package net-tools to net-tools-deprecated. "ip" is installed by  ##
   ## default. Once "ifconfig" is completely removed we'll need to replace  ##
   ## "ifconfig" by "ip" in all codes for SLES15.                           ##
@@ -806,6 +806,7 @@ install_prereq_sles15sapbyos() {
   # See OSS note 2788495
   zypper -n install libopenssl1_0_0
 #  zypper -n install libssh2-1
+
   #Install unrar for media extraction
   ## ----------------------------------------------------------------- ##
   ## unrar has been replaced by unar in SLES 15, and is implemented as ##
@@ -1020,25 +1021,30 @@ then
     CheckSLESRegistration=$(SUSEConnect -s | grep ACTIVE)
     if [ "$CheckSLESRegistration" ]
     then
-      log "`date` SUSE BYOS registration was successful"
-      log "`date` Adding Public Cloud Module 12 x86_64 extension"
-      SUSEConnect -p sle-module-public-cloud/12/x86_64 | tee -a ${HANA_LOG_FILE}
+        log "`date` SUSE BYOS registration was successful"
     else
-      log "`date` SUSE BYOS registration did not succeed"
-      log "`date` Exiting QuickStart, check SUSE registration code"
-      /root/install/signal-failure.sh "SUSECONNECTFAIL"
-      touch "$SIG_FLAG_FILE"
-      sleep 300
-      exit 1
-    fi
-    # Activate SUSE legacy and public cloud module. See SAP OSS note  
-    log "`date` Activating legacy and public cloud modules. See SAP OSS note 2684254"
-    if SUSEConnect -p sle-module-legacy/15/x86_64 >/dev/null && SUSEConnect -p sle-module-public-cloud/15/x86_64 >/dev/null
-    then
-        log "`date` SUSE15 legacy and public cloud module installation SUCCEED"
-    else
-        log "`date` SUSE15 legacy and public cloud module installation FAILED. Check ${HANA_LOG_FILE}"
         /root/install/signal-failure.sh "SUSECONNECTFAIL"
+        log "`date` Exiting QuickStart, check SUSE registration code"
+        touch "$SIG_FLAG_FILE"
+        sleep 300
+        exit 1
+    fi
+    #
+    # Activating SUSE legacy and public cloud modules
+    #
+    log "`date` Adding ${MyOS} Public Cloud Module x86_64 extension"
+    if [[ "$MyOS" =~ 12 ]]
+    then
+        SUSEConnect -p sle-module-public-cloud/12/x86_64 | tee -a ${HANA_LOG_FILE}
+    elif [[ "$MyOS" =~ 15 ]]
+    then 
+        SUSEConnect -p sle-module-legacy/15/x86_64 >>${HANA_LOG_FILE}  && SUSEConnect -p sle-module-public-cloud/15/x86_64 >>${HANA_LOG_FILE}
+    fi
+    if [ $? -eq 0 ]
+    then
+        log "`date` SUSE public cloud module activation SUCCEED"
+    else
+        /root/install/signal-failure.sh "ACTMODULEFAIL"
         touch "$SIG_FLAG_FILE"
         sleep 300
         exit 1

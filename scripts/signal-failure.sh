@@ -91,6 +91,13 @@ case "$1" in
       echo curl -X PUT -H 'Content-Type:' --data-binary '{"Status" : "FAILURE","Reason" : "SUSE BYOS registration did not succeed. Check SUSE registration code or internet connection","UniqueId" : "HANAMaster","Data" : "Failure"}' "${WaitForMasterInstallWaitHandle}"
       ;;
 
+      ACTMODULEFAIL) log "`date` SUSE public cloud module activation FAILED"
+
+      curl -X PUT -H 'Content-Type:' --data-binary '{"Status" : "FAILURE","Reason" : "SUSE public cloud module activation FAILED. Check internet connection","UniqueId" : "HANAMaster","Data" : "Failure"}' "${WaitForMasterInstallWaitHandle}"
+
+      echo curl -X PUT -H 'Content-Type:' --data-binary '{"Status" : "FAILURE","Reason" : "SUSE public cloud module activation FAILED. Check internet connection","UniqueId" : "HANAMaster","Data" : "Failure"}' "${WaitForMasterInstallWaitHandle}"
+      ;;
+
       EMPTY_STORAGE_JSON) log "`date` Valid storage.json file not found"
 
       curl -X PUT -H 'Content-Type:' --data-binary '{"Status" : "FAILURE","Reason" : "storage.json file not found or found empty . If custom storage.json is used, check file permission.","UniqueId" : "HANAMaster","Data" : "Failure"}' "${WaitForMasterInstallWaitHandle}"
