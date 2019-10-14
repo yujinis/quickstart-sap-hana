@@ -908,11 +908,25 @@ start_fs() {
     #error check and return
 }
 
-set_clocksource () {
-  log "`date` Setting clocksource to TSC"
-  echo "tsc" > /sys/devices/system/clocksource/clocksource0/current_clocksource
-  log "`date` Configuring boot.local to set clocksource to TSC upon reboot"
-  echo "echo "tsc" > /sys/devices/system/clocksource/clocksource0/current_clocksource" >> /etc/init.d/after.local
+set_clocksource () 
+{
+    log "`date` Setting clocksource to tsc"
+    # Checking for Nitro instances
+    if grep tsc /sys/devices/system/clocksource/clocksource0/available_clocksource >> ${HANA_LOG_FILE} 2>&1
+    then
+        if grep tsc /sys/devices/system/clocksource/clocksource0/current_clocksource >> ${HANA_LOG_FILE} 2>&1
+        then 
+            log "`date` Do nothing! Clocksource is already set to tsc"
+        else
+            echo "tsc" > /sys/devices/system/clocksource/clocksource0/current_clocksource
+            sed -i.bkup 's/GRUB_CMDLINE_LINUX="/&clocksource=tsc tsc=reliable/' /etc/default/grub
+            grub2-mkconfig -o /boot/grub2/grub.cfg >> ${HANA_LOG_FILE} 2>&1
+#            log "`date` Configuring boot.local to set clocksource to TSC upon reboot"
+#            echo "echo "tsc" > /sys/devices/system/clocksource/clocksource0/current_clocksource" >> /etc/init.d/after.local
+        fi
+    else
+        log "`date` Clocksource tsc is not supported on Nitro instance"
+    fi
 }
 
 start_oss_configs() {
@@ -1062,6 +1076,22 @@ fi
       registercloudguest --force-new >> ${HANA_LOG_FILE} 2>&1
   fi
 # -------------------------------------------------------------------------- #
+
+# -------------------------------------------------------------------------- #
+# Check and set nvme_core.io_timeout.                                        #
+# -------------------------------------------------------------------------- #
+if grep nvme_core.io_timeout=4294967295 /etc/default/grub >> ${HANA_LOG_FILE} 2>&1
+then
+    log "`date` Do nothing. nvme_io_timeout is already set correctly"
+else
+    # ------------------------------------------------------------- #
+    # Note: This should be set for Nitro systems only but just in   #
+    # case any changes in the future. Setting it on non-Nitro       #
+    # systems posts no impact.                                      #
+    # ------------------------------------------------------------- #
+    log "`date` Setting nvme_core.io_timeout=4294967295"
+    sed -i 's/nvme_core\.io_timeout=254/nvme_core\.io_timeout=4294967295/' /etc/default/grub
+fi
 
 #Check to see if zypper repository is accessible
 
