@@ -196,7 +196,7 @@ install_prereq_sles12() {
   zypper -n install libnuma-devel | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
-  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
   zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
   # Install most current libatomic1 if available
@@ -233,7 +233,7 @@ install_prereq_sles12sp1() {
     zypper -n install autoyast2-installation | tee -a ${HANA_LOG_FILE}
     zypper -n install yast2-ncurses  | tee -a ${HANA_LOG_FILE}
     zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
-	zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
+	  zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
     zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
     zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
     zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
@@ -241,7 +241,7 @@ install_prereq_sles12sp1() {
     zypper -n install libnuma-devel | tee -a ${HANA_LOG_FILE}
     #Install unrar for media extraction
     zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
-    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
     zypper -n install gcc | tee -a ${HANA_LOG_FILE}
     zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
     # Install most current libatomic1 if available
@@ -284,7 +284,7 @@ install_prereq_sles12sp2() {
     zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
     #Install unrar for media extraction
     zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
-    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
     zypper -n install gcc | tee -a ${HANA_LOG_FILE}
     zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
     # Install most current libatomic1 if available
@@ -330,7 +330,7 @@ install_prereq_sles12sp3() {
     zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
     #Install unrar for media extraction
     zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
-    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
     zypper -n install gcc | tee -a ${HANA_LOG_FILE}
     zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
     # Install most current libatomic1 if available
@@ -380,7 +380,7 @@ install_prereq_sles12sp4() {
     zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
     #Install unrar for media extraction
     zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
-    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
     zypper -n install gcc | tee -a ${HANA_LOG_FILE}
     zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
     # Install most current libatomic1 if available
@@ -456,7 +456,7 @@ install_prereq_sles15() {
 
     #SLES 12 installation fails with libnuma
     zypper -n install libnuma-devel | tee -a ${HANA_LOG_FILE}
-    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
     zypper -n install gcc | tee -a ${HANA_LOG_FILE}
     zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
     # Install most current libatomic1 if available
@@ -491,7 +491,7 @@ install_prereq_sles12sp1sap() {
     systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
     #Install unrar for media extraction
     zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
-    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
     zypper -n install gcc | tee -a ${HANA_LOG_FILE}
     zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
     # Install most current libatomic1 if available
@@ -518,7 +518,7 @@ install_prereq_sles12sp2sap() {
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
-  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
   zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
   # Install most current libatomic1 if available
@@ -550,7 +550,7 @@ install_prereq_sles12sp3sap() {
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
-  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
   zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
   # Install most current libatomic1 if available
@@ -581,7 +581,7 @@ install_prereq_sles12sp4sap() {
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
-  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
   zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
   # Install most current libatomic1 if available
@@ -610,7 +610,7 @@ install_prereq_sles15sap() {
   zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
-  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
   zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
   # Install most current libatomic1 if available
@@ -643,11 +643,11 @@ install_prereq_sles15sap() {
   ## See SLES15 for SAP install Guides ##
   ## --------------------------------- ##
   zypper -n install patterns-sles-sap_server | tee -a ${HANA_LOG_FILE}
-  
+
   # See OSS note 2788495
   zypper -n install libopenssl1_0_0
 #  zypper -n install libssh2-1
-  
+
   # Apply all Recommended HANA settings with SAPTUNE
   log "`date` - Start saptune daemon"
   saptune daemon start | tee -a ${HANA_LOG_FILE}
@@ -682,7 +682,7 @@ install_prereq_sles12sp1sapbyos() {
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
-  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
   zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
   # Install most current libatomic1 if available
@@ -709,7 +709,7 @@ install_prereq_sles12sp2sapbyos() {
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
-  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
   zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
   # Install most current libatomic1 if available
@@ -740,7 +740,7 @@ install_prereq_sles12sp3sapbyos() {
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
-  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
   zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
   # Install most current libatomic1 if available
@@ -770,7 +770,7 @@ install_prereq_sles12sp4sapbyos() {
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
-  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
   zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
   # Install most current libatomic1 if available
@@ -798,7 +798,7 @@ install_prereq_sles15sapbyos() {
   zypper -n install amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
   systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
-  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824. 
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
   zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
   # Install most current libatomic1 if available
@@ -908,14 +908,14 @@ start_fs() {
     #error check and return
 }
 
-set_clocksource () 
+set_clocksource ()
 {
     log "`date` Setting clocksource to tsc"
     # Checking for Nitro instances
     if grep tsc /sys/devices/system/clocksource/clocksource0/available_clocksource >> ${HANA_LOG_FILE} 2>&1
     then
         if grep tsc /sys/devices/system/clocksource/clocksource0/current_clocksource >> ${HANA_LOG_FILE} 2>&1
-        then 
+        then
             log "`date` Do nothing! Clocksource is already set to tsc"
         else
             echo "tsc" > /sys/devices/system/clocksource/clocksource0/current_clocksource
@@ -1000,6 +1000,19 @@ conf_file="/etc/dracut.conf.d/07-aws-type-switch.conf"
      mkinitrd | tee -a ${HANA_LOG_FILE}
   fi
 }
+
+fix_slesforsap_suse_repo() {
+  # -------------------------------------------------------------------------- #
+  # Temporary fix for the issue of unable to access SuSE repo issue - 07/06/19
+  # -------------------------------------------------------------------------- #
+    if ls -l /etc/products.d/baseproduct | grep -v "SLES_SAP.prod" 1> /dev/null
+    then
+        cd /etc/products.d >> ${HANA_LOG_FILE} 2>&1
+        unlink baseproduct >> ${HANA_LOG_FILE} 2>&1
+        ln -s SLES_SAP.prod baseproduct >> ${HANA_LOG_FILE} 2>&1
+        registercloudguest --force-new >> ${HANA_LOG_FILE} 2>&1
+    fi
+}
 #***END Functions***
 
 
@@ -1051,7 +1064,7 @@ then
     then
         SUSEConnect -p sle-module-public-cloud/12/x86_64 | tee -a ${HANA_LOG_FILE}
     elif [[ "$MyOS" =~ 15 ]]
-    then 
+    then
         SUSEConnect -p sle-module-legacy/15/x86_64 >>${HANA_LOG_FILE}  && SUSEConnect -p sle-module-public-cloud/15/x86_64 >>${HANA_LOG_FILE}
     fi
     if [ $? -eq 0 ]
@@ -1065,16 +1078,6 @@ then
     fi
 fi
 
-# -------------------------------------------------------------------------- #
-# Temporary fix for the issue of unable to access SuSE repo issue - 07/06/19
-# -------------------------------------------------------------------------- #
-  if ls -l /etc/products.d/baseproduct | grep -v "SLES_SAP.prod" 1> /dev/null
-  then
-      cd /etc/products.d >> ${HANA_LOG_FILE} 2>&1
-      unlink baseproduct >> ${HANA_LOG_FILE} 2>&1
-      ln -s SLES_SAP.prod baseproduct >> ${HANA_LOG_FILE} 2>&1
-      registercloudguest --force-new >> ${HANA_LOG_FILE} 2>&1
-  fi
 # -------------------------------------------------------------------------- #
 
 # -------------------------------------------------------------------------- #
@@ -1196,6 +1199,7 @@ case "$MyOS" in
     set_clocksource
     disable_hostname
     enable_resize_to_from_nitro
+    fix_slesforsap_suse_repo
     log "`date` End - Executing SLES 12 SP3 for SAP related pre-requisites" ;;
   SLES12SP4SAPHVM )
     log "`date` Start - Executing SLES 12 SP4 for SAP related pre-requisites"
@@ -1203,6 +1207,7 @@ case "$MyOS" in
     set_clocksource
     disable_hostname
     enable_resize_to_from_nitro
+    fix_slesforsap_suse_repo
     log "`date` End - Executing SLES 12 SP4 for SAP related pre-requisites" ;;
   SLES15SAPHVM )
     log "`date` Start - Executing SLES 15 for SAP related pre-requisites"
@@ -1210,6 +1215,7 @@ case "$MyOS" in
     set_clocksource
     disable_hostname
     enable_resize_to_from_nitro
+    fix_slesforsap_suse_repo
     log "`date` End - Executing SLES 15 for SAP related pre-requisites" ;;
   SLES12SP1SAPBYOSHVM )
     log "`date` Start - Executing SLES 12 SP1 for SAP BYOS related pre-requisites"
