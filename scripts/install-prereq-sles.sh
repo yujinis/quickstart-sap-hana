@@ -1092,8 +1092,8 @@ else
     # case any changes in the future. Setting it on non-Nitro       #
     # systems posts no impact.                                      #
     # ------------------------------------------------------------- #
-    log "`date` Setting nvme_core.io_timeout=4294967295"
-    sed -i 's/nvme_core\.io_timeout=254/nvme_core\.io_timeout=4294967295/' /etc/default/grub
+    #log "`date` Setting nvme_core.io_timeout=4294967295"
+    # sed -i 's/nvme_core\.io_timeout=254/nvme_core\.io_timeout=4294967295/' /etc/default/grub
 fi
 
 #Check to see if zypper repository is accessible
