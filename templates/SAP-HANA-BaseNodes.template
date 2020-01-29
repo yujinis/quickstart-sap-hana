@@ -299,43 +299,35 @@
             "Filters":{
                 "RHEL75SAPHVM":{
                     "name":"SAP-7.5_HVM_GA-????????-x86_64-0-Hourly2-GP2-b676039c-a4f8-4be7-9866-c804b1ade684-*",
-                    "owner-alias":"aws-marketplace",
-                    "product-code.type":"marketplace"
+                    "owner-alias":"aws-marketplace"
                 },
                 "RHEL74SAPHAUSHVM":{
                   "name":"SAPHAE4S-7.4_HVM-????????-x86_64-2-Hourly2-GP2-5cca0aac-b678-4e46-80e2-344cfed26a62-*",
-                  "owner-alias":"aws-marketplace",
-                  "product-code.type":"marketplace"
+                  "owner-alias":"aws-marketplace"
                 },
                 "RHEL75SAPHAUSHVM":{
                   "name":"SAPHAEUS-7.5_HVM-????????-x86_64-2-Hourly2-GP2-5cca0aac-b678-4e46-80e2-344cfed26a62-*",
-                  "owner-alias":"aws-marketplace",
-                  "product-code.type":"marketplace"
+                  "owner-alias":"aws-marketplace"
                 },
                 "RHEL76SAPHAUSHVM":{
                   "name":"SAP-7.6_E4S_HA_US_HVM-????????-x86_64-2-Hourly2-GP2-5cca0aac-b678-4e46-80e2-344cfed26a62-*",
-                  "owner-alias":"aws-marketplace",
-                  "product-code.type":"marketplace"
+                  "owner-alias":"aws-marketplace"
                 },
                 "SLES12SP2SAPHVM":{
                   "name":"*-e3458d64-5c36-4577-bd98-0ee19e3eaeec-*",
-                  "owner-alias":"aws-marketplace",
-                  "product-code.type":"marketplace"
+                  "owner-alias":"aws-marketplace"
                 },
                 "SLES12SP3SAPHVM":{
                   "name":"*-da7aa9c3-97db-4573-89a6-7fe7348d90b0-*",
-                  "owner-alias":"aws-marketplace",
-                  "product-code.type":"marketplace"
+                  "owner-alias":"aws-marketplace"
                 },
                 "SLES12SP4SAPHVM":{
                   "name":"*-8f7bb679-fb90-4446-aa80-9b6cfd834710-*",
-                  "owner-alias":"aws-marketplace",
-                  "product-code.type":"marketplace"
+                  "owner-alias":"aws-marketplace"
                 },
                 "SLES15SAPHVM":{
                   "name":"*-6a4bc5af-a084-4f96-8402-5cd249e9091d-*",
-                  "owner-alias":"aws-marketplace",
-                  "product-code.type":"marketplace"
+                  "owner-alias":"aws-marketplace"
                 }
             }
         },
