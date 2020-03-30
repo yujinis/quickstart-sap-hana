@@ -1,0 +1,43 @@
+project:
+  name: quickstart-sap-hana
+  owner: quickstart-eng@amazon.com
+  package_lambda: false
+  regions:
+  - us-east-2
+  - us-west-2
+  s3_bucket: ''
+tests:
+  sap-hana-sles12sp4-single:
+    parameters:
+      AutoRecovery: "Yes"
+      AvailabilityZone: $[alfred_genaz_1]
+      BASTIONInstanceType: t2.small
+      DMZCIDR: 10.0.2.0/24
+      DomainName: local
+      Encryption: "No"
+      HANAInstallMedia: s3://quickstart-ci-media/sap/hana/sps12/
+      HANAMasterHostname: imdbmaster
+      HANAMasterPass: $[alfred_genpass_16]
+      HANAWorkerHostname: imdbworker
+      HostCount: 1
+      InstallHANA: "Yes"
+      InstallRDPInstance: "No"
+      KeyName: cikey
+      MyInstanceType: r4.2xlarge
+      MyOS: RedHatLinux75ForSAP
+      PlacementGroupName: ""
+      PrivSubCIDR: 10.0.1.0/24
+      RDPInstanceType: c4.large
+      RemoteAccessCIDR: 10.0.0.0/16
+      SAPInstanceNum: "00"
+      VolumeTypeHanaData: gp2
+      VolumeTypeHanaLog: gp2
+      Proxy: ""
+      DedicatedHostId: ""
+      SID: HDB
+      VPCCIDR: 10.0.0.0/16
+      QSS3BucketName: $[taskcat_autobucket]
+      QSS3BucketRegion: $[taskcat_current_region]
+    regions:
+    - us-west-2
+    template: templates/SAP-HANA-NewVPC.template
