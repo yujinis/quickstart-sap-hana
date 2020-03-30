@@ -265,6 +265,33 @@ Parameters:
     Description: Registration code for SUSE BYOS (Applicable only if you use BYOS
       Option).
     NoEcho: 'true'
+  QSS3BucketName:
+    AllowedPattern: '^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$'
+    ConstraintDescription:
+      Quick Start bucket name can include numbers, lowercase
+      letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
+      (-).
+    Default: aws-quickstart
+    Description:
+      S3 bucket name for the Quick Start assets. Quick Start bucket name
+      can include numbers, lowercase letters, uppercase letters, and hyphens (-).
+      It cannot start or end with a hyphen (-).
+    Type: String
+  QSS3BucketRegion:
+    Default: 'us-east-1'
+    Description: 'The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.'
+    Type: String
+  QSS3KeyPrefix:
+    AllowedPattern: '^[0-9a-zA-Z-/]*$'
+    ConstraintDescription:
+      Quick Start key prefix can include numbers, lowercase letters,
+      uppercase letters, hyphens (-), and forward slash (/).
+    Default: quickstart-sap-hana/
+    Description:
+      S3 key prefix for the Quick Start assets. Quick Start key prefix
+      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
+      forward slash (/).
+    Type: String
 Conditions:
   PlacementGroupNull: !Equals
     - !Ref 'PlacementGroupName'
@@ -275,6 +302,7 @@ Conditions:
         - '0'
         - !Ref 'DedicatedHostId'
       - ''
+  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -339,6 +367,12 @@ Metadata:
         Parameters:
           - PrivateBucket
           - CustomStorageConfig
+      - Label:
+          default: AWS Quick Start configuration
+        Parameters:      
+          - QSS3BucketName
+          - QSS3BucketRegion
+          - QSS3KeyPrefix
     ParameterLabels:
       VPCCIDR:
         default: Enter CIDR block for Amazon VPC
@@ -411,6 +445,12 @@ Metadata:
         default: Enter SAP HANA Server timezone
       ApplicationCIDR:
         default: Enter CIDR block of your SAP Application Servers
+      QSS3BucketName:
+        default: Quick Start S3 Bucket Name
+      QSS3BucketRegion:
+        default: Quick Start S3 bucket region
+      QSS3KeyPrefix:
+        default: Quick Start S3 Key Prefix
 Mappings:
   AWSAMIRegionMap:
     AMI:
@@ -466,7 +506,11 @@ Resources:
   BaseNodes:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/aws-quickstart/quickstart-sap-hana/templates/SAP-HANA-BaseNodes.template
+      TemplateURL:
+        !Sub
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/SAP-HANA-BaseNodes.template'
+          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       Parameters:
         PrivSubCIDR: !Ref 'PrivSubCIDR'
         DMZCIDR: !Ref 'DMZCIDR'
@@ -517,7 +561,11 @@ Resources:
   BaseNetwork:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/aws-quickstart/quickstart-sap-hana/templates/SAP-HANA-BaseNetwork.template
+      TemplateURL:
+        !Sub
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/SAP-HANA-BaseNetwork.template'
+          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       Parameters:
         VPC: !Ref 'VPC'
         InternetGateway: !Ref 'InternetGateway'
