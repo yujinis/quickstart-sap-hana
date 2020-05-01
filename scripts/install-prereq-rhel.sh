@@ -258,6 +258,7 @@ install_prereq_rhel76() {
   #Install libatomic and compat-sap-c++-7 to support SAP HANA 2 SP4 and above. OSS Note 2593824
   yum -y install libatomic | tee -a ${HANA_LOG_FILE}
   yum -y install compat-sap-c++-7 | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-9 | tee -a ${HANA_LOG_FILE}
 }
 
 start_ntp() {

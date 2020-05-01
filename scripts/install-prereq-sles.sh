@@ -613,6 +613,8 @@ install_prereq_sles15sap() {
   # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
   zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+  zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
   # Install most current libatomic1 if available
   zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
   #Install unrar for media extraction
@@ -801,6 +803,8 @@ install_prereq_sles15sapbyos() {
   # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
   zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+  zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
   # Install most current libatomic1 if available
   zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
   # See OSS note 2788495
