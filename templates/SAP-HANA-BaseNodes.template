@@ -514,12 +514,17 @@ Conditions:
   PlacementGroupNull: !Equals
     - !Ref 'PlacementGroupName'
     - ''
-  UseEFS: !Equals
-    - !Ref 'AWSEFS'
+  UseEFS: !And
+  - !Equals
     - 'Yes'
-  NoUseEFS: !Equals
     - !Ref 'AWSEFS'
+  - !Condition 'TwoOrMoreNodes'
+  NoUseEFS: !Or
+  - !Equals
     - 'No'
+    - !Ref 'AWSEFS'
+  - !Not
+    - !Condition 'TwoOrMoreNodes'
   UseEncryption: !Equals
     - !Ref 'Encryption'
     - 'Yes'
@@ -1571,6 +1576,7 @@ Resources:
             - "Start-Process -FilePath msiexec -ArgumentList /i,  \"http://sdk-for-net.amazonwebservices.com/latest/AWSToolsAndSDKForNet.msi\"\
               , /passive -wait \n"
             - </powershell>
+
   HANAMasterInstance:
     Type: AWS::EC2::Instance
     Metadata:
@@ -1713,10 +1719,16 @@ Resources:
             - !Ref 'AWSEFS'
             - "\n"
             - sh /root/install/writeconfig.sh EFSshared=
-            - !Ref 'EFSshared'
+            - !If
+               - UseEFS
+               - !Ref 'EFSshared'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - sh /root/install/writeconfig.sh EFSbackup=
-            - !Ref 'EFSbackup'
+            - !If
+               - UseEFS
+               - !Ref 'EFSbackup'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - sh /root/install/writeconfig.sh no_proxy=localhost,127.0.0.1,169.254.169.254
             - "\n"
@@ -1819,6 +1831,7 @@ Resources:
     Type: AWS::EC2::PlacementGroup
     Properties:
       Strategy: cluster
+
   HANAWorkerInstance1:
     Type: AWS::EC2::Instance
     Condition: TwoOrMoreNodes
@@ -1898,10 +1911,16 @@ Resources:
             - !Ref 'AWSEFS'
             - "\n"
             - sh /root/install/writeconfig.sh EFSshared=
-            - !Ref 'EFSshared'
+            - !If
+               - UseEFS
+               - !Ref 'EFSshared'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - sh /root/install/writeconfig.sh EFSbackup=
-            - !Ref 'EFSbackup'
+            - !If
+               - UseEFS
+               - !Ref 'EFSbackup'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - export no_proxy=localhost,127.0.0.1,169.254.169.254
             - "\n"
@@ -1975,10 +1994,16 @@ Resources:
             - !Ref 'AWSEFS'
             - "\n"
             - sh /root/install/writeconfig.sh EFSshared=
-            - !Ref 'EFSshared'
+            - !If
+               - UseEFS
+               - !Ref 'EFSshared'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - sh /root/install/writeconfig.sh EFSbackup=
-            - !Ref 'EFSbackup'
+            - !If
+               - UseEFS
+               - !Ref 'EFSbackup'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - sh /root/install/writeconfig.sh no_proxy=localhost,127.0.0.1,169.254.169.254
             - "\n"
@@ -2197,10 +2222,16 @@ Resources:
             - !Ref 'AWSEFS'
             - "\n"
             - sh /root/install/writeconfig.sh EFSshared=
-            - !Ref 'EFSshared'
+            - !If
+               - UseEFS
+               - !Ref 'EFSshared'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - sh /root/install/writeconfig.sh EFSbackup=
-            - !Ref 'EFSbackup'
+            - !If
+               - UseEFS
+               - !Ref 'EFSbackup'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - sh /root/install/writeconfig.sh no_proxy=localhost,127.0.0.1,169.254.169.254
             - "\n"
@@ -2351,10 +2382,16 @@ Resources:
             - !Ref 'AWSEFS'
             - "\n"
             - sh /root/install/writeconfig.sh EFSshared=
-            - !Ref 'EFSshared'
+            - !If
+               - UseEFS
+               - !Ref 'EFSshared'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - sh /root/install/writeconfig.sh EFSbackup=
-            - !Ref 'EFSbackup'
+            - !If
+               - UseEFS
+               - !Ref 'EFSbackup'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - export no_proxy=localhost,127.0.0.1,169.254.169.254
             - "\n"
@@ -2428,10 +2465,16 @@ Resources:
             - !Ref 'AWSEFS'
             - "\n"
             - sh /root/install/writeconfig.sh EFSshared=
-            - !Ref 'EFSshared'
+            - !If
+               - UseEFS
+               - !Ref 'EFSshared'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - sh /root/install/writeconfig.sh EFSbackup=
-            - !Ref 'EFSbackup'
+            - !If
+               - UseEFS
+               - !Ref 'EFSbackup'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - sh /root/install/writeconfig.sh no_proxy=localhost,127.0.0.1,169.254.169.254
             - "\n"
@@ -2582,10 +2625,16 @@ Resources:
             - !Ref 'AWSEFS'
             - "\n"
             - sh /root/install/writeconfig.sh EFSshared=
-            - !Ref 'EFSshared'
+            - !If
+               - UseEFS
+               - !Ref 'EFSshared'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - sh /root/install/writeconfig.sh EFSbackup=
-            - !Ref 'EFSbackup'
+            - !If
+               - UseEFS
+               - !Ref 'EFSbackup'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - export no_proxy=localhost,127.0.0.1,169.254.169.254
             - "\n"
@@ -2659,10 +2708,16 @@ Resources:
             - !Ref 'AWSEFS'
             - "\n"
             - sh /root/install/writeconfig.sh EFSshared=
-            - !Ref 'EFSshared'
+            - !If
+               - UseEFS
+               - !Ref 'EFSshared'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - sh /root/install/writeconfig.sh EFSbackup=
-            - !Ref 'EFSbackup'
+            - !If
+               - UseEFS
+               - !Ref 'EFSbackup'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - sh /root/install/writeconfig.sh no_proxy=localhost,127.0.0.1,169.254.169.254
             - "\n"
@@ -2881,10 +2936,16 @@ Resources:
             - !Ref 'AWSEFS'
             - "\n"
             - sh /root/install/writeconfig.sh EFSshared=
-            - !Ref 'EFSshared'
+            - !If
+               - UseEFS
+               - !Ref 'EFSshared'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - sh /root/install/writeconfig.sh EFSbackup=
-            - !Ref 'EFSbackup'
+            - !If
+               - UseEFS
+               - !Ref 'EFSbackup'
+               - !Ref 'AWS::NoValue'
             - "\n"
             - sh /root/install/writeconfig.sh no_proxy=localhost,127.0.0.1,169.254.169.254
             - "\n"
@@ -3090,6 +3151,7 @@ Resources:
           Value: !Ref 'HANAWorkerInstance5'
   EFSshared:
     Type: AWS::EFS::FileSystem
+    Condition: UseEFS
     Properties:
       PerformanceMode: generalPurpose
       FileSystemTags:
@@ -3097,6 +3159,7 @@ Resources:
           Value: !Ref 'HANAMasterHostname'
   EFSbackup:
     Type: AWS::EFS::FileSystem
+    Condition: UseEFS
     Properties:
       PerformanceMode: generalPurpose
       FileSystemTags:
@@ -3104,6 +3167,8 @@ Resources:
           Value: !Ref 'HANAMasterHostname'
   EFSMTshared:
     Type: AWS::EFS::MountTarget
+    DependsOn: EFSshared
+    Condition: UseEFS
     Properties:
       FileSystemId: !Ref 'EFSshared'
       SubnetId: !Ref 'HANASubnet'
@@ -3111,6 +3176,8 @@ Resources:
         - !Ref 'HANASecurityGroup'
   EFSMTbackup:
     Type: AWS::EFS::MountTarget
+    DependsOn: EFSbackup
+    Condition: UseEFS
     Properties:
       FileSystemId: !Ref 'EFSbackup'
       SubnetId: !Ref 'HANASubnet'
