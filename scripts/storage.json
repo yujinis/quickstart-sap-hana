@@ -8,11 +8,11 @@
                       "gp2": {
                           "drives": [
                               {
-                                  "device": "/dev/sdf",
+                                  "device": "/dev/sdg",
                                   "size": "6144G"
                               },
                               {
-                                  "device": "/dev/sdg",
+                                  "device": "/dev/sdh",
                                   "size": "6144G"
                               }
                           ]
@@ -20,7 +20,7 @@
                       "st1": {
                           "drives": [
                               {
-                                  "device": "/dev/sdf",
+                                  "device": "/dev/sdg",
                                   "size": "12288G"
                               }
                           ]
@@ -30,11 +30,11 @@
                       "gp2": {
                           "drives": [
                               {
-                                  "device": "/dev/sdf",
+                                  "device": "/dev/sdg",
                                   "size": "8192G"
                               },
                               {
-                                  "device": "/dev/sdg",
+                                  "device": "/dev/sdh",
                                   "size": "8192G"
                               }
                           ]
@@ -42,7 +42,7 @@
                       "st1": {
                           "drives": [
                               {
-                                  "device": "/dev/sdf",
+                                  "device": "/dev/sdg",
                                   "size": "16384G"
                               }
                           ]
@@ -52,11 +52,11 @@
                       "gp2": {
                           "drives": [
                               {
-                                  "device": "/dev/sdf",
+                                  "device": "/dev/sdg",
                                   "size": "8192G"
                               },
                               {
-                                  "device": "/dev/sdg",
+                                  "device": "/dev/sdh",
                                   "size": "8192G"
                               }
                           ]
@@ -64,7 +64,7 @@
                       "st1": {
                           "drives": [
                               {
-                                  "device": "/dev/sdf",
+                                  "device": "/dev/sdg",
                                   "size": "16384G"
                               }
                           ]
@@ -1789,15 +1789,19 @@
                   "drives": [
                       {
                           "device": "/dev/sdb",
-                          "size": "2400G"
+                          "size": "1800G"
                       },
                       {
                           "device": "/dev/sdc",
-                          "size": "2400G"
+                          "size": "1800G"
                       },
                       {
                           "device": "/dev/sdd",
-                          "size": "2400G"
+                          "size": "1800G"
+                      },
+                      {
+                          "device": "/dev/sde",
+                          "size": "1800G"
                       }
                   ],
                   "stride": 256,
@@ -1814,18 +1818,23 @@
                   "drives": [
                       {
                           "device": "/dev/sdb",
-                          "piops": 3000,
-                          "size": "2400G"
+                          "piops": 2250,
+                          "size": "1800G"
                       },
                       {
                           "device": "/dev/sdc",
-                          "piops": 3000,
-                          "size": "2400G"
+                          "piops": 2250,
+                          "size": "1800G"
                       },
                       {
                           "device": "/dev/sdd",
-                          "piops": 3000,
-                          "size": "2400G"
+                          "piops": 2250,
+                          "size": "1800G"
+                      },
+                      {
+                          "device": "/dev/sde",
+                          "piops": 2250,
+                          "size": "1800G"
                       }
                   ],
                   "stride": 256,
@@ -1844,15 +1853,19 @@
                   "drives": [
                       {
                           "device": "/dev/sdb",
-                          "size": "3600G"
+                          "size": "2700G"
                       },
                       {
                           "device": "/dev/sdc",
-                          "size": "3600G"
+                          "size": "2700G"
                       },
                       {
                           "device": "/dev/sdd",
-                          "size": "3600G"
+                          "size": "2700G"
+                      },
+                      {
+                          "device": "/dev/sde",
+                          "size": "2700G"
                       }
                   ],
                   "stride": 256,
@@ -1869,18 +1882,23 @@
                   "drives": [
                       {
                           "device": "/dev/sdb",
-                          "piops": 3000,
-                          "size": "3600G"
+                          "piops": 2250,
+                          "size": "2700G"
                       },
                       {
                           "device": "/dev/sdc",
-                          "piops": 3000,
-                          "size": "3600G"
+                          "piops": 2250,
+                          "size": "2700G"
                       },
                       {
                           "device": "/dev/sdd",
-                          "piops": 3000,
-                          "size": "3600G"
+                          "piops": 2250,
+                          "size": "2700G"
+                      },
+                      {
+                          "device": "/dev/sde",
+                          "piops": 2250,
+                          "size": "2700G"
                       }
                   ],
                   "stride": 256,
@@ -1899,15 +1917,19 @@
                   "drives": [
                       {
                           "device": "/dev/sdb",
-                          "size": "4800G"
+                          "size": "3600G"
                       },
                       {
                           "device": "/dev/sdc",
-                          "size": "4800G"
+                          "size": "3600G"
                       },
                       {
                           "device": "/dev/sdd",
-                          "size": "4800G"
+                          "size": "3600G"
+                      },
+                      {
+                          "device": "/dev/sde",
+                          "size": "3600G"
                       }
                   ],
                   "stride": 256,
@@ -1924,18 +1946,23 @@
                   "drives": [
                       {
                           "device": "/dev/sdb",
-                          "piops": 3000,
-                          "size": "4800G"
+                          "piops": 2250,
+                          "size": "3600G"
                       },
                       {
                           "device": "/dev/sdc",
-                          "piops": 3000,
-                          "size": "4800G"
+                          "piops": 2250,
+                          "size": "3600G"
                       },
                       {
                           "device": "/dev/sdd",
-                          "piops": 3000,
-                          "size": "4800G"
+                          "piops": 2250,
+                          "size": "3600G"
+                      },
+                      {
+                          "device": "/dev/sde",
+                          "piops": 2250,
+                          "size": "3600G"
                       }
                   ],
                   "stride": 256,
@@ -2951,11 +2978,11 @@
               "gp2": {
                   "drives": [
                       {
-                          "device": "/dev/sdh",
+                          "device": "/dev/sdi",
                           "size": "300G"
                       },
                       {
-                          "device": "/dev/sdi",
+                          "device": "/dev/sdj",
                           "size": "300G"
                       }
                   ],
@@ -2972,7 +2999,7 @@
               "io1": {
                   "drives": [
                       {
-                          "device": "/dev/sdh",
+                          "device": "/dev/sdi",
                           "piops": 2000,
                           "size": "525G"
                       }
@@ -2992,11 +3019,11 @@
               "gp2": {
                   "drives": [
                       {
-                          "device": "/dev/sdh",
+                          "device": "/dev/sdi",
                           "size": "300G"
                       },
                       {
-                          "device": "/dev/sdi",
+                          "device": "/dev/sdj",
                           "size": "300G"
                       }
                   ],
@@ -3013,7 +3040,7 @@
               "io1": {
                   "drives": [
                       {
-                          "device": "/dev/sdh",
+                          "device": "/dev/sdi",
                           "piops": 2000,
                           "size": "525G"
                       }
@@ -3033,11 +3060,11 @@
               "gp2": {
                   "drives": [
                       {
-                          "device": "/dev/sdh",
+                          "device": "/dev/sdi",
                           "size": "300G"
                       },
                       {
-                          "device": "/dev/sdi",
+                          "device": "/dev/sdj",
                           "size": "300G"
                       }
                   ],
@@ -3054,7 +3081,7 @@
               "io1": {
                   "drives": [
                       {
-                          "device": "/dev/sdh",
+                          "device": "/dev/sdi",
                           "piops": 2000,
                           "size": "525G"
                       }
@@ -3898,7 +3925,7 @@
               "gp2": {
                   "drives": [
                       {
-                          "device": "/dev/sde",
+                          "device": "/dev/sdf",
                           "size": "1024G"
                       }
                   ]
@@ -3908,7 +3935,7 @@
               "gp2": {
                   "drives": [
                       {
-                          "device": "/dev/sde",
+                          "device": "/dev/sdf",
                           "size": "1024G"
                       }
                   ]
@@ -3918,7 +3945,7 @@
               "gp2": {
                   "drives": [
                       {
-                          "device": "/dev/sde",
+                          "device": "/dev/sdf",
                           "size": "1024G"
                       }
                   ]
