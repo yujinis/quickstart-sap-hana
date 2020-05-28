@@ -197,7 +197,9 @@ Parameters:
       - r4.2xlarge
       - r5.2xlarge
       - r5.4xlarge
+      - r5.8xlarge
       - r5.12xlarge
+      - r5.16xlarge
       - r5.24xlarge
       - r5.metal
       - x1.16xlarge
