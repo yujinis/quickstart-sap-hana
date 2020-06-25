@@ -452,7 +452,51 @@
                             ]
                         }
                     },
+                    "r5.8xlarge": {
+                        "gp2": {
+                            "drives": [
+                                {
+                                    "device": "/dev/sdf",
+                                    "size": "512G"
+                                },
+                                {
+                                    "device": "/dev/sdg",
+                                    "size": "512G"
+                                }
+                            ]
+                        },
+                        "st1": {
+                            "drives": [
+                                {
+                                    "device": "/dev/sdf",
+                                    "size": "1024G"
+                                }
+                            ]
+                        }
+                    },
                     "r5.12xlarge": {
+                        "gp2": {
+                            "drives": [
+                                {
+                                    "device": "/dev/sdf",
+                                    "size": "512G"
+                                },
+                                {
+                                    "device": "/dev/sdg",
+                                    "size": "512G"
+                                }
+                            ]
+                        },
+                        "st1": {
+                            "drives": [
+                                {
+                                    "device": "/dev/sdf",
+                                    "size": "1024G"
+                                }
+                            ]
+                        }
+                    },
+                    "r5.16xlarge": {
                         "gp2": {
                             "drives": [
                                 {
@@ -2835,6 +2879,51 @@
                     "volume_group": "vghanadata"
                 }
             },
+            "r5.8xlarge": {
+                "gp2": {
+                    "drives": [
+                        {
+                            "device": "/dev/sdb",
+                            "size": "225G"
+                        },
+                        {
+                            "device": "/dev/sdc",
+                            "size": "225G"
+                        },
+                        {
+                            "device": "/dev/sdd",
+                            "size": "225G"
+                        }
+                    ],
+                    "stride": 256,
+                    "stripe": [
+                        {
+                            "drive": "/hana/data",
+                            "logical_volume": "lvhanadata",
+                            "size": "674G"
+                        }
+                    ],
+                    "volume_group": "vghanadata"
+                },
+                "io1": {
+                    "drives": [
+                        {
+                            "device": "/dev/sdb",
+                            "piops": 7500,
+                            "size": "300G"
+                        }
+                    ],
+                    "stride": 256,
+                    "stripe": [
+                        {
+                            "drive": "/hana/data",
+                            "logical_volume": "lvhanadata",
+                            "size": "299G"
+                        }
+                    ],
+                    "volume_group": "vghanadata"
+                }
+            },
             "r5.12xlarge": {
                 "gp2": {
                     "drives": [
@@ -2875,6 +2964,51 @@
                             "drive": "/hana/data",
                             "logical_volume": "lvhanadata",
                             "size": "585G"
+                        }
+                    ],
+                    "volume_group": "vghanadata"
+                }
+            },
+            "r5.16xlarge": {
+                "gp2": {
+                    "drives": [
+                        {
+                            "device": "/dev/sdb",
+                            "size": "225G"
+                        },
+                        {
+                            "device": "/dev/sdc",
+                            "size": "225G"
+                        },
+                        {
+                            "device": "/dev/sdd",
+                            "size": "225G"
+                        }
+                    ],
+                    "stride": 256,
+                    "stripe": [
+                        {
+                            "drive": "/hana/data",
+                            "logical_volume": "lvhanadata",
+                            "size": "674G"
+                        }
+                    ],
+                    "volume_group": "vghanadata"
+                },
+                "io1": {
+                    "drives": [
+                        {
+                            "device": "/dev/sdb",
+                            "piops": 7500,
+                            "size": "600G"
+                        }
+                    ],
+                    "stride": 256,
+                    "stripe": [
+                        {
+                            "drive": "/hana/data",
+                            "logical_volume": "lvhanadata",
+                            "size": "599G"
                         }
                     ],
                     "volume_group": "vghanadata"
@@ -3794,6 +3928,47 @@
                     "volume_group": "vghanalog"
                 }
             },
+            "r5.8xlarge": {
+                "gp2": {
+                    "drives": [
+                        {
+                            "device": "/dev/sdh",
+                            "size": "300G"
+                        },
+                        {
+                            "device": "/dev/sdi",
+                            "size": "300G"
+                        }
+                    ],
+                    "stride": 256,
+                    "stripe": [
+                        {
+                            "drive": "/hana/log",
+                            "logical_volume": "lvhanalog",
+                            "size": "599G"
+                        }
+                    ],
+                    "volume_group": "vghanalog"
+                },
+                "io1": {
+                    "drives": [
+                        {
+                            "device": "/dev/sdh",
+                            "piops": 2000,
+                            "size": "260G"
+                        }
+                    ],
+                    "stride": 256,
+                    "stripe": [
+                        {
+                            "drive": "/hana/log",
+                            "logical_volume": "lvhanalog",
+                            "size": "259G"
+                        }
+                    ],
+                    "volume_group": "vghanalog"
+                }
+            },
             "r5.12xlarge": {
                 "gp2": {
                     "drives": [
@@ -3830,6 +4005,47 @@
                             "drive": "/hana/log",
                             "logical_volume": "lvhanalog",
                             "size": "256G"
+                        }
+                    ],
+                    "volume_group": "vghanalog"
+                }
+            },
+            "r5.16xlarge": {
+                "gp2": {
+                    "drives": [
+                        {
+                            "device": "/dev/sdh",
+                            "size": "300G"
+                        },
+                        {
+                            "device": "/dev/sdi",
+                            "size": "300G"
+                        }
+                    ],
+                    "stride": 256,
+                    "stripe": [
+                        {
+                            "drive": "/hana/log",
+                            "logical_volume": "lvhanalog",
+                            "size": "599G"
+                        }
+                    ],
+                    "volume_group": "vghanalog"
+                },
+                "io1": {
+                    "drives": [
+                        {
+                            "device": "/dev/sdh",
+                            "piops": 2000,
+                            "size": "260G"
+                        }
+                    ],
+                    "stride": 256,
+                    "stripe": [
+                        {
+                            "drive": "/hana/log",
+                            "logical_volume": "lvhanalog",
+                            "size": "259G"
                         }
                     ],
                     "volume_group": "vghanalog"
@@ -4121,7 +4337,27 @@
                     ]
                 }
             },
+            "r5.8xlarge": {
+                "gp2": {
+                    "drives": [
+                        {
+                            "device": "/dev/sde",
+                            "size": "300G"
+                        }
+                    ]
+                }
+            },
             "r5.12xlarge": {
+                "gp2": {
+                    "drives": [
+                        {
+                            "device": "/dev/sde",
+                            "size": "512G"
+                        }
+                    ]
+                }
+            },
+            "r5.16xlarge": {
                 "gp2": {
                     "drives": [
                         {
