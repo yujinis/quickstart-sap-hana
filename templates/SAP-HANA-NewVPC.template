@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: (0007) Deploy AWS infrastructure and SAP HANA on AWS
+Description: (qs-1qup6rakj) Deploy AWS infrastructure and SAP HANA on AWS
 Parameters:
   VPCCIDR:
     Description: CIDR block for the Amazon VPC to create for SAP HANA deployment

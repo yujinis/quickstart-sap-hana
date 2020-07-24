@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: (0007) AWS Infrastructure Deployment for SAP HANA
+Description: (qs-1qup6raju) AWS Infrastructure Deployment for SAP HANA
 Parameters:
   VPC:
     Description: VPC id where HANA nodes will be deployed.

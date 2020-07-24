@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: (0008) Deploy SAP HANA on AWS
+Description: (qs-1qup6rak7) Deploy SAP HANA on AWS
 Parameters:
   VPCID:
     Description: The existing Amazon VPC where you want to deploy SAP HANA.
