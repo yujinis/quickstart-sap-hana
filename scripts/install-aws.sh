@@ -17,17 +17,16 @@ log() {
 
 log `date` BEGIN install-aws
 
-echo -n "Looking for python binary...."
-PYTHON_BIN=$(which python 2>&1 > /dev/null) 
+echo -n "Looking for python binary...." | tee -a ${HANA_LOG_FILE} 
+PYTHON_BIN=$(which python3) 
 
-if [ $? == 0 ]; then
+if [ ! -z ${PYTHON_BIN} ]; then
+   echo "export PYTHON_BIN=${PYTHON_BIN}" >> ${SCRIPT_DIR}/config.sh
+   echo "...found python in ${PYTHON_BIN}" | tee -a ${HANA_LOG_FILE} 
+else 
    PYTHON_BIN=$(which python)
    echo "export PYTHON_BIN=${PYTHON_BIN}" >> ${SCRIPT_DIR}/config.sh
-   echo "...found python in ${PYTHON_BIN}"
-else 
-   PYTHON_BIN=$(which python3)
-   echo "export PYTHON_BIN=${PYTHON_BIN}" >> ${SCRIPT_DIR}/config.sh
-   echo "...found python in ${PYTHON_BIN}"
+   echo "...found python in ${PYTHON_BIN}" | tee -a ${HANA_LOG_FILE}
 fi
 
 wget https://s3.amazonaws.com/aws-cli/awscli-bundle.zip | tee -a ${HANA_LOG_FILE}

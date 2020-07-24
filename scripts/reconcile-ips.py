@@ -71,7 +71,7 @@ def main():
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
     (output, err) = p.communicate()
     p_status = p.wait()
-    ip_tables = json.loads(output)
+    ip_tables = json.loads(output.decode())
 
     hostname_file = "/etc/hosts"
     for table in ip_tables['Items']:

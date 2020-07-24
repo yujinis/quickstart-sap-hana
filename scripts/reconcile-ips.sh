@@ -40,7 +40,7 @@ then
 fi
 
 echo "" >> /etc/hosts
-/usr/local/aws/bin/python /root/install/reconcile-ips.py -c ${nWorkers}
+${PYTHON_BIN} /root/install/reconcile-ips.py -c ${nWorkers}
 echo "" >> /etc/hosts
 
 log "Exit reconcile-ips.sh "

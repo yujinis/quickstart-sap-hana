@@ -1881,8 +1881,8 @@ Resources:
             - sh /root/install/writeconfig.sh REGION=
             - !Ref 'AWS::Region'
             - "\n"
-            - "sh /root/install/install-aws.sh\n"
             - "sh /root/install/install-prereq.sh\n"
+            - "sh /root/install/install-aws.sh\n"
             - "#sh /root/install/signal-complete.sh \n"
             - "sh /root/install/cluster-watch-engine.sh -c \n"
             - 'sh /root/install/cluster-watch-engine.sh -i '
