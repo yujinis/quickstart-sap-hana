@@ -139,16 +139,22 @@ Parameters:
       - SuSELinux12SP1
       - SuSELinux12SP3
       - SuSELinux12SP4
+      - SuSELinux12SP5
       - SuSELinux15
+      - SuSELinux15SP1
       - SuSELinux12SP2ForSAP
       - SuSELinux12SP3ForSAP
       - SuSELinux12SP4ForSAP
+      - SuSELinux12SP5ForSAP
       - SuSELinux15ForSAP
+      - SuSELinux15SP1ForSAP
       - SuSELinux12SP1ForSAP-BYOS
       - SuSELinux12SP2ForSAP-BYOS
       - SuSELinux12SP3ForSAP-BYOS
       - SuSELinux12SP4ForSAP-BYOS
+      - SuSELinux12SP5ForSAP-BYOS
       - SuSELinux15ForSAP-BYOS
+      - SuSELinux15SP1ForSAP-BYOS
   SLESBYOSRegCode:
     Type: String
     Default: ''
@@ -288,9 +294,13 @@ Metadata:
       SLES12SP4SAPHVM:
         name: '*-8f7bb679-fb90-4446-aa80-9b6cfd834710-*'
         owner-alias: aws-marketplace
+      SLES12SP5SAPHVM:
+        name: '*--487d036f-ab18-4fbd-8264-f714c004b0b1-*'
       SLES15SAPHVM:
         name: '*-6a4bc5af-a084-4f96-8402-5cd249e9091d-*'
         owner-alias: aws-marketplace
+      SLES15SP1SAPHVM:
+        name: '*-36451a0a-c7b9-4ee2-bb36-1192921c6337-*'
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:
@@ -569,16 +579,24 @@ Mappings:
       Code: SLES12SP3HVM
     SuSELinux12SP4:
       Code: SLES12SP4HVM
+    SuSELinux12SP5:
+      Code: SLES12SP5HVM
     SuSELinux15:
       Code: SLES15HVM
+    SuSELinux15SP1:
+      Code: SLES15SP1HVM
     SuSELinux12SP2ForSAP:
       Code: SLES12SP2SAPHVM
     SuSELinux12SP3ForSAP:
       Code: SLES12SP3SAPHVM
     SuSELinux12SP4ForSAP:
       Code: SLES12SP4SAPHVM
+    SuSELinux12SP5ForSAP:
+      Code: SLES12SP5SAPHVM
     SuSELinux15ForSAP:
       Code: SLES15SAPHVM
+    SuSELinux15SP1ForSAP:
+      Code: SLES15SP1SAPHVM
     SuSELinux12SP1ForSAP-BYOS:
       Code: SLES12SP1SAPBYOSHVM
     SuSELinux12SP2ForSAP-BYOS:
@@ -587,8 +605,12 @@ Mappings:
       Code: SLES12SP3SAPBYOSHVM
     SuSELinux12SP4ForSAP-BYOS:
       Code: SLES12SP4SAPBYOSHVM
+    SuSELinux12SP5ForSAP-BYOS:
+      Code: SLES12SP5SAPBYOSHVM
     SuSELinux15ForSAP-BYOS:
       Code: SLES15SAPBYOSHVM
+    SuSELinux15SP1ForSAP-BYOS:
+      Code: SLES15SP1SAPBYOSHVM
   AWSAMIRegionMap:
     AMI:
       RHEL75SAPHVM: SAP-7.5_HVM_GA-20180911-x86_64-0-Hourly2-GP2-b676039c-a4f8-4be7-9866-c804b1ade684-ami-01e5a531ae8d3d976.4
@@ -600,16 +622,22 @@ Mappings:
       SLES12SP2HVM: suse-sles-12-sp2-v20170620-hvm-ssd-x86_64
       SLES12SP3HVM: suse-sles-12-sp3-v20181004-hvm-ssd-x86_64
       SLES12SP4HVM: suse-sles-12-sp4-v20190314-hvm-ssd-x86_64
+      SLES12SP5HVM: suse-sles-12-sp5-v20200527-hvm-ssd-x86_64
       SLES15HVM: suse-sles-15-v20180806-hvm-ssd-x86_64
+      SLES15SP1HVM: suse-sles-15-sp1-v20200226-hvm-ssd-x86_64
       SLES12SP2SAPHVM: suse-sles-sap-12-sp2-v20180706-hvm-ssd-x86_64-e3458d64-5c36-4577-bd98-0ee19e3eaeec-ami-3ac5ea45.4
       SLES12SP3SAPHVM: suse-sles-sap-12-sp3-v20180814-hvm-ssd-x86_64-da7aa9c3-97db-4573-89a6-7fe7348d90b0-ami-0df5b06332b816a8e.4
       SLES12SP4SAPHVM: suse-sles-sap-12-sp4-v20181212-hvm-ssd-x86_64-8f7bb679-fb90-4446-aa80-9b6cfd834710-ami-015bf44384c484ccb.4
+      SLES12SP5SAPHVM: suse-sles-sap-12-sp5-v202006010-hvm-ssd-x86_64-487d036f-ab18-4fbd-8264-f714c004b0b1-ami-0fdfc70d53ae63cbe.4
       SLES15SAPHVM: suse-sles-sap-15-v20180806-hvm-ssd-x86_64-6a4bc5af-a084-4f96-8402-5cd249e9091d-ami-06aee2e6db735d4f4.4
+      SLES15SP1SAPHVM: suse-sles-sap-15-sp1-v20200527-hvm-ssd-x86_64-36451a0a-c7b9-4ee2-bb36-1192921c6337-ami-02db89093d1dc48ca.4
       SLES12SP1SAPBYOSHVM: suse-sles-sap-12-sp1-byos-v20170123-hvm-ssd-x86_64
       SLES12SP2SAPBYOSHVM: suse-sles-sap-12-sp2-byos-v20180816-hvm-ssd-x86_64
       SLES12SP3SAPBYOSHVM: suse-sles-sap-12-sp3-byos-v20180814-hvm-ssd-x86_64
       SLES12SP4SAPBYOSHVM: suse-sles-sap-12-sp4-byos-v20190314-hvm-ssd-x86_64
+      SLES12SP5SAPBYOSHVM: suse-sles-sap-12-sp5-byos-v20200527-hvm-ssd-x86_64
       SLES15SAPBYOSHVM: suse-sles-sap-15-byos-v20180816-hvm-ssd-x86_64
+      SLES15SP1SAPBYOSHVM: suse-sles-sap-15-sp1-byos-v20200506-hvm-ssd-x86_64
     ap-northeast-1:
       RHEL75SAPHVM: ami-0ce47f39a0a21f61e
       RHEL74SAPHAUSHVM: ami-0033f0d7d626f014f
@@ -627,9 +655,15 @@ Mappings:
       SLES12SP4HVM: ami-01f9388175dab7707
       SLES12SP4SAPBYOSHVM: ami-0f23448ff16bda87c
       SLES12SP4SAPHVM: ami-08b12d52001226654
+      SLES12SP5HVM: ami-04882bf72ff913721
+      SLES12SP5SAPHVM: ami-0ce7ae6d6cbed7cde
+      SLES12SP5SAPBYOSHVM: ami-03758691846e8fe66
       SLES15HVM: ami-056ac8ad44e6a7e1f
       SLES15SAPHVM: ami-0174751ba72376df1
       SLES15SAPBYOSHVM: ami-0a283a879655ea8ad
+      SLES15SP1HVM: ami-0dae5fda3ab8726c3
+      SLES15SP1SAPHVM: ami-0fe3654624dabaeba
+      SLES15SP1SAPBYOSHVM: ami-01e60bcfb844303c6
     ap-northeast-2:
       RHEL75SAPHVM: ami-06db50be1842d6b9a
       RHEL74SAPHAUSHVM: ami-0450ac5a5b079fa41
@@ -647,9 +681,15 @@ Mappings:
       SLES12SP4HVM: ami-05114ac18a716bc1c
       SLES12SP4SAPBYOSHVM: ami-028abd488e2c2f400
       SLES12SP4SAPHVM: ami-08ec16a7528db036b
+      SLES12SP5HVM: ami-0a5e09b6782ac752d
+      SLES12SP5SAPHVM: ami-05e237378438ccadd
+      SLES12SP5SAPBYOSHVM: ami-0a16fdb6a898eabb8
       SLES15HVM: ami-0f81fff879bafe6b8
       SLES15SAPHVM: ami-025bc5b179c7689f8
       SLES15SAPBYOSHVM: ami-0cc04512ca5fb8d7c
+      SLES15SP1HVM: ami-0bcca7befe1b4317b
+      SLES15SP1SAPHVM: ami-0fa5c709ff8645343
+      SLES15SP1SAPBYOSHVM: ami-0f590b27849da71ef
     ap-south-1:
       RHEL75SAPHVM: ami-0afdd099cb4cacadf
       RHEL74SAPHAUSHVM: ami-0167ffd4ebf2c034a
@@ -667,9 +707,15 @@ Mappings:
       SLES12SP4HVM: ami-0e2520e97af25d4d2
       SLES12SP4SAPBYOSHVM: ami-05651b45e99d63d02
       SLES12SP4SAPHVM: ami-0e6f4e89109d8243d
+      SLES12SP5HVM: ami-0d809080c3ef9dda5
+      SLES12SP5SAPHVM: ami-01dbad3ed7db1157d
+      SLES12SP5SAPBYOSHVM: ami-043dc53cb98cee1db
       SLES15HVM: ami-01be89269d32f2a16
       SLES15SAPHVM: ami-01a38e853e458e7e4
       SLES15SAPBYOSHVM: ami-0d5612595295301aa
+      SLES15SP1HVM: ami-065edd4e2270fb2e1
+      SLES15SP1SAPHVM: ami-0bf7149998ecf935d
+      SLES15SP1SAPBYOSHVM: ami-017ca584131546f4b
     ap-southeast-1:
       RHEL75SAPHVM: ami-08fc0673d9d83037a
       RHEL74SAPHAUSHVM: ami-037dc0ec600ed1888
@@ -687,9 +733,15 @@ Mappings:
       SLES12SP4HVM: ami-05a7bd74a593452d7
       SLES12SP4SAPBYOSHVM: ami-07bae09461b7a3942
       SLES12SP4SAPHVM: ami-01fc893705c4e053e
+      SLES12SP5HVM: ami-0cc1236e3867389b2
+      SLES12SP5SAPHVM: ami-017d3ae7ad14f9270
+      SLES12SP5SAPBYOSHVM: ami-0c805c27c1f65cb61
       SLES15HVM: ami-070356c21596ddc67
       SLES15SAPHVM: ami-0b312f69647b63e0e
       SLES15SAPBYOSHVM: ami-0701f0c9a5e645fe6
+      SLES15SP1HVM: ami-0b7f7c934cfe30c63
+      SLES15SP1SAPHVM: ami-02b65c7b1e10e1f36
+      SLES15SP1SAPBYOSHVM: ami-0e60271c45271e4c5
     ap-southeast-2:
       RHEL75SAPHVM: ami-0a8af8e94f35319ba
       RHEL74SAPHAUSHVM: ami-0c5b5357081c68218
@@ -707,9 +759,15 @@ Mappings:
       SLES12SP4HVM: ami-0086939d81dda5418
       SLES12SP4SAPBYOSHVM: ami-0de01b6abc06547bb
       SLES12SP4SAPHVM: ami-09a3413dab4ad515e
+      SLES12SP5HVM: ami-05a756a873b7a537c
+      SLES12SP5SAPHVM: ami-0428ede8cab671bed
+      SLES12SP5SAPBYOSHVM: ami-0a423a9c5e838c4e5
       SLES15HVM: ami-0c4245381c67efb39
       SLES15SAPHVM: ami-0c995271948cbb736
       SLES15SAPBYOSHVM: ami-0f5b781af42cbfa1e
+      SLES15SP1HVM: ami-0d6f00758277a28f7
+      SLES15SP1SAPHVM: ami-0e7675431bf1b7060
+      SLES15SP1SAPBYOSHVM: ami-064ece640fbaacd64
     ca-central-1:
       RHEL75SAPHVM: ami-010ef109ec0f43d6d
       RHEL74SAPHAUSHVM: ami-06e94c1c4cd754fe5
@@ -726,9 +784,15 @@ Mappings:
       SLES12SP4HVM: ami-00ff1fa0fb4b09437
       SLES12SP4SAPBYOSHVM: ami-07735575a65d9748f
       SLES12SP4SAPHVM: ami-0c1765e15fc9f78cc
+      SLES12SP5HVM: ami-0a6ae1bd5ccd258ac
+      SLES12SP5SAPHVM: ami-010d3ac6f6bf19a0f
+      SLES12SP5SAPBYOSHVM: ami-0ace6ea96fdf61199
       SLES15HVM: ami-0c97d9b588207dad6
       SLES15SAPHVM: ami-07d033739f020a039
       SLES15SAPBYOSHVM: ami-08eec3db50798a295
+      SLES15SP1HVM: ami-06ab9a53ab05446fa
+      SLES15SP1SAPHVM: ami-0859859ca24c244d3
+      SLES15SP1SAPBYOSHVM: ami-089a6dc2cfe68e618
     eu-central-1:
       RHEL75SAPHVM: ami-0841ec948df565271
       RHEL74SAPHAUSHVM: ami-0a38565bcb3243da0
@@ -746,9 +810,15 @@ Mappings:
       SLES12SP4HVM: ami-00f695136e33f2fe0
       SLES12SP4SAPBYOSHVM: ami-0e6f5d8c7423fbf99
       SLES12SP4SAPHVM: ami-0ad0e6f64464f6714
+      SLES12SP5HVM: ami-072821c76a98d748a
+      SLES12SP5SAPHVM: ami-044c1a837095ba80c
+      SLES12SP5SAPBYOSHVM: ami-065c2a26d028f22e0
       SLES15HVM: ami-05dfd265ea534a3e9
       SLES15SAPHVM: ami-0823a4f2cd6f5ff6c
       SLES15SAPBYOSHVM: ami-0c3196786bb2ef35a
+      SLES15SP1HVM: ami-0c99be8a286251d31
+      SLES15SP1SAPHVM: ami-01b462b77531c0987
+      SLES15SP1SAPBYOSHVM: ami-027b3d89ee49978c6
     eu-west-1:
       RHEL75SAPHVM: ami-04a014a7d626b3fd8
       RHEL74SAPHAUSHVM: ami-0af3e97778546f34b
@@ -766,9 +836,15 @@ Mappings:
       SLES12SP4HVM: ami-0b27edba737a4a44a
       SLES12SP4SAPBYOSHVM: ami-0a850f691a934ad5e
       SLES12SP4SAPHVM: ami-0fd5f466cb98894a7
+      SLES12SP5HVM: ami-0d34987ebe4d9338c
+      SLES12SP5SAPHVM: ami-0c58c824ffa44e4f9
+      SLES12SP5SAPBYOSHVM: ami-076c2a24f542345e6      
       SLES15HVM: ami-0a58a1b152ba55f1d
       SLES15SAPHVM: ami-0fda5e832418d2123
       SLES15SAPBYOSHVM: ami-032a80d78e21d81a3
+      SLES15SP1HVM: ami-0c7c799aac480ea77
+      SLES15SP1SAPHVM: ami-017324f2c7211b9e2
+      SLES15SP1SAPBYOSHVM: ami-017953df5fa38a769
     eu-west-2:
       RHEL75SAPHVM: ami-070b8ef548695f653
       RHEL74SAPHAUSHVM: ami-005b4b0f0decc3229
@@ -785,9 +861,15 @@ Mappings:
       SLES12SP4HVM: ami-01016d5a2f759e80e
       SLES12SP4SAPBYOSHVM: ami-0ac859e29f5094204
       SLES12SP4SAPHVM: ami-0ff4cabd1259cddfd
+      SLES12SP5HVM: ami-0b2c68aa6deafd9ec
+      SLES12SP5SAPHVM: ami-0b1b77dd8dd41fda7
+      SLES12SP5SAPBYOSHVM: ami-084e1e5e22e50521b
       SLES15HVM: ami-01497522185aaa4ee
       SLES15SAPHVM: ami-060b2e1e236b73f00
       SLES15SAPBYOSHVM: ami-06f2df89214f6ead9
+      SLES15SP1HVM: ami-01f3fa4b1427a8522
+      SLES15SP1SAPHVM: ami-09dc593a5b487dcac
+      SLES15SP1SAPBYOSHVM: ami-08a6a902319ad3554
     eu-west-3:
       RHEL75SAPHVM: ami-0b9d6c1ae0e94e8a9
       RHEL74SAPHAUSHVM: ami-01f114d111cc45831
@@ -803,9 +885,15 @@ Mappings:
       SLES12SP4HVM: ami-077db4bb21fe102b3
       SLES12SP4SAPBYOSHVM: ami-0c63b2bb6afc549b4
       SLES12SP4SAPHVM: ami-0a004ab2ecfdfb1bc
+      SLES12SP5HVM: ami-04bd6584a0047f478
+      SLES12SP5SAPHVM: ami-01050f872bc27e2b6
+      SLES12SP5SAPBYOSHVM: ami-070e7f0d6a08ef9cc
       SLES15HVM: ami-0f238bd4c6fdbefb0
       SLES15SAPHVM: ami-0a10a689c47a8a6af
       SLES15SAPBYOSHVM: ami-0f842e919e4e4eb6a
+      SLES15SP1HVM: ami-04451e7a9fa8ac139
+      SLES15SP1SAPHVM: ami-0e9fe8488f9dd3f83
+      SLES15SP1SAPBYOSHVM: ami-02dfcee559c90116e
     sa-east-1:
       RHEL75SAPHVM: ami-0a9ee704defec0845
       RHEL74SAPHAUSHVM: ami-04450cf66c6bf5f42
@@ -823,9 +911,15 @@ Mappings:
       SLES12SP4HVM: ami-022eaa5bbc1e2f47a
       SLES12SP4SAPBYOSHVM: ami-0451db96691925d3b
       SLES12SP4SAPHVM: ami-0137ba6d20f42569d
+      SLES12SP5HVM: ami-0b8d9a20d96664d17
+      SLES12SP5SAPHVM: ami-0936d0a1adb5d786b
+      SLES12SP5SAPBYOSHVM: ami-042276164a8c8400f
       SLES15HVM: ami-0772af912976aa692
       SLES15SAPHVM: ami-0867633aaf95b8b45
       SLES15SAPBYOSHVM: ami-0a374c04d3223b56d
+      SLES15SP1HVM: ami-0d760167d68cf77ba
+      SLES15SP1SAPHVM: ami-036a793b58bf4fc45
+      SLES15SP1SAPBYOSHVM: ami-05054daf44015504d
     us-east-1:
       RHEL75SAPHVM: ami-05cd8f1730c8df7dc
       RHEL74SAPHAUSHVM: ami-0f458a41a777ef497
@@ -843,9 +937,15 @@ Mappings:
       SLES12SP4HVM: ami-0787571b4033204ad
       SLES12SP4SAPBYOSHVM: ami-0f9b20b9789585aa4
       SLES12SP4SAPHVM: ami-057832816bd4496b3
+      SLES12SP5HVM: ami-01c56f7583006a128
+      SLES12SP5SAPHVM: ami-060591f82d1d72b56
+      SLES12SP5SAPBYOSHVM: ami-0cf0aefaf862fe6ec
       SLES15HVM: ami-0b1764f3d7d2e2316
       SLES15SAPHVM: ami-034a4657781cac699
       SLES15SAPBYOSHVM: ami-0b335002243e5a9ff
+      SLES15SP1HVM: ami-0b326695e023b93d5
+      SLES15SP1SAPHVM: ami-0f573d7473ead14cb
+      SLES15SP1SAPBYOSHVM: ami-02441223112f6ae2a
     us-east-2:
       RHEL75SAPHVM: ami-0b1439383ea0d0c87
       RHEL74SAPHAUSHVM: ami-0cfab53d572d62388
@@ -863,9 +963,15 @@ Mappings:
       SLES12SP4HVM: ami-0f24364ccc4040c21
       SLES12SP4SAPBYOSHVM: ami-0b4e01a990b03a9ae
       SLES12SP4SAPHVM: ami-0458e523e4d3498f8
+      SLES12SP5HVM: ami-0f84a134e8f9d527b
+      SLES12SP5SAPHVM: ami-060a75c15e9a00f12
+      SLES12SP5SAPBYOSHVM: ami-0a65b6c15a3772fe6
       SLES15HVM: ami-05ea824317ffc0c20
       SLES15SAPHVM: ami-0ad6708faee9090ba
       SLES15SAPBYOSHVM: ami-00ee7014fa39c34cd
+      SLES15SP1HVM: ami-0efc9a15a1fd61f97
+      SLES15SP1SAPHVM: ami-0ac9e1036afa81c8f
+      SLES15SP1SAPBYOSHVM: ami-017f2c9934036a1c1
     us-west-1:
       RHEL75SAPHVM: ami-015c680b92b8f8e04
       RHEL74SAPHAUSHVM: ami-0bce690da8c3f9573
@@ -883,9 +989,15 @@ Mappings:
       SLES12SP4HVM: ami-0afb3187a37661b18
       SLES12SP4SAPBYOSHVM: ami-04e84846cf5b2eceb
       SLES12SP4SAPHVM: ami-0d51a3027d6c22a27
+      SLES12SP5HVM: ami-0bbad4c23091f92c2
+      SLES12SP5SAPHVM: ami-08b5654aeff747ab4
+      SLES12SP5SAPBYOSHVM: ami-0f5f3c7b6f1539680
       SLES15HVM: ami-00e34a7624e5a7107
       SLES15SAPHVM: ami-0867f45fee8435a19
       SLES15SAPBYOSHVM: ami-039fb1d14e2287565
+      SLES15SP1HVM: ami-03e34490092993986
+      SLES15SP1SAPHVM: ami-008f4b7a6fa1b739a
+      SLES15SP1SAPBYOSHVM: ami-03d16b4fbe4d9898a
     us-west-2:
       RHEL75SAPHVM: ami-07894ab0a4a5e8612
       RHEL74SAPHAUSHVM: ami-050890ecc1851620c
@@ -903,9 +1015,15 @@ Mappings:
       SLES12SP4HVM: ami-0a3c873f21d686544
       SLES12SP4SAPBYOSHVM: ami-042663489704d9c3f
       SLES12SP4SAPHVM: ami-0d28ddb801d9589f0
+      SLES12SP5HVM: ami-088a78f435ef7f78a
+      SLES12SP5SAPHVM: ami-09ba150453de3da6e
+      SLES12SP5SAPBYOSHVM: ami-041ee54df25d7acc4
       SLES15HVM: ami-0f1e3b3fb0fec0361
       SLES15SAPHVM: ami-0ca00995da6bbdea0
       SLES15SAPBYOSHVM: ami-08c05da8c43e5091a
+      SLES15SP1HVM: ami-0ccefbfd6cd77b0a2
+      SLES15SP1SAPHVM: ami-03f140f3bd4d8fd84
+      SLES15SP1SAPBYOSHVM: ami-0f13e69c5ded1ffdf
 Outputs:
   HANAMasterInstanceIP:
     Description: HANA Master Node IP Address
@@ -1763,8 +1881,8 @@ Resources:
             - sh /root/install/writeconfig.sh REGION=
             - !Ref 'AWS::Region'
             - "\n"
-            - "sh /root/install/install-aws.sh\n"
             - "sh /root/install/install-prereq.sh\n"
+            - "sh /root/install/install-aws.sh\n"
             - "#sh /root/install/signal-complete.sh \n"
             - "sh /root/install/cluster-watch-engine.sh -c \n"
             - 'sh /root/install/cluster-watch-engine.sh -i '

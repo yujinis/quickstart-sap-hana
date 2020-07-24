@@ -1,3 +1,4 @@
+from __future__ import print_function
 import argparse
 import os
 import pprint
@@ -55,13 +56,13 @@ def get_mystack_params():
     return input
 
 def download_s3(s3path,odir):
-    print 'Will download ' + s3path + ' To ' + odir
+    print('Will download ' + s3path + ' To ' + odir)
     cmd = aws_cmd
     cmd = cmd + ' s3 cp --recursive ' + s3path
     cmd = cmd + ' ' + odir
     if not os.path.exists(odir):
         os.makedirs(odir)
-    print 'Executing ' + cmd
+    print('Executing ' + cmd)
     output = exe_cmd(cmd)
     cmd = 'chmod 755 ' + odir + '/*.exe'
     output = exe_cmd(cmd)
@@ -71,7 +72,7 @@ def download_s3(s3path,odir):
 
 def stripe_hanashared_vol(drives):
     ##9.Created a new logical volume called lvhanaback with 2 stripes (Master Only)
-    print 'Creating logical volumes for HANA Shared '
+    print('Creating logical volumes for HANA Shared ')
     size = 0
     for d in drives:
         # d['size'] = 488G etc
@@ -88,13 +89,13 @@ def stripe_hanashared_vol(drives):
     #cmd = cmd + ' -i ' + str(len(drives))
     #cmd = cmd + ' -I 256 ' + ' -L ' + sizeG + ' vghanashared'
     exe_cmd(cmd)
-    print cmd
+    print(cmd)
 
 # Note: We leave 1GB buffer
 
 def stripe_backup_vol(drives):
     ##9.Created a new logical volume called lvhanaback with 2 stripes (Master Only)
-    print 'Creating logical volumes '
+    print('Creating logical volumes ')
     size = 0
     for d in drives:
         # d['size'] = 488G etc
@@ -106,7 +107,7 @@ def stripe_backup_vol(drives):
     cmd = cmd + ' -i ' + str(len(drives))
     cmd = cmd + ' -I 256 ' + ' -L ' + sizeG + ' vghanaback'
     exe_cmd(cmd)
-    print cmd
+    print(cmd)
 
 
 #lvcreate -n lvhanadata -i 3 -I 256  -L ${mydataSize} vghana
@@ -114,7 +115,7 @@ def stripe_backup_vol(drives):
 #lvcreate -n lvhanalog  -i 3 -I 256 -L ${mylogSize} vghana
 
 def stripe_hanadata_vol(stripe,count):
-    print 'Creating HANA data logical volumes '
+    print('Creating HANA data logical volumes ')
     size = 0
     for d in stripe:
         # d['size'] = 488G etc
@@ -124,10 +125,10 @@ def stripe_hanadata_vol(stripe,count):
         cmd = cmd + ' -i ' + str(count)
         cmd = cmd + ' -I 256 ' + ' -L ' + sizeG + ' vghanadata'
         exe_cmd(cmd)
-        print cmd
+        print(cmd)
 
 def stripe_hanalog_vol(stripe,count):
-    print 'Creating HANA log logical volumes '
+    print('Creating HANA log logical volumes ')
     size = 0
     for d in stripe:
         # d['size'] = 488G etc
@@ -137,7 +138,7 @@ def stripe_hanalog_vol(stripe,count):
         cmd = cmd + ' -i ' + str(count)
         cmd = cmd + ' -I 256 ' + ' -L ' + sizeG + ' vghanalog'
         exe_cmd(cmd)
-        print cmd
+        print(cmd)
 
 def short2long_drive(d):
 	return d.replace('/dev/s','/dev/xv')
@@ -151,41 +152,41 @@ def create_backup_volgrp(drives):
         else:
             cmd = cmd + ' ' + short2long_drive(d['device'])
     exe_cmd(cmd)
-    print cmd
+    print(cmd)
 
 def create_hanashared_volgrp(drives):
     cmd = 'vgcreate vghanashared '
     for d in drives:
-    	dev = d['device']
+        dev = d['device']
         if 'nvme' in dev:
             cmd = cmd + ' ' + d['device']
         else:
             cmd = cmd + ' ' + short2long_drive(d['device'])
     exe_cmd(cmd)
-    print cmd
+    print(cmd)
 
 
 def create_hanadata_volgrp(drives):
     cmd = 'vgcreate vghanadata '
     for d in drives:
-    	dev = d['device']
+        dev = d['device']
         if 'nvme' in dev:
             cmd = cmd + ' ' + d['device']
         else:
             cmd = cmd + ' ' + short2long_drive(d['device'])
     exe_cmd(cmd)
-    print cmd
+    print(cmd)
 
 def create_hanalog_volgrp(drives):
     cmd = 'vgcreate vghanalog '
     for d in drives:
-    	dev = d['device']
+        dev = d['device']
         if 'nvme' in dev:
             cmd = cmd + ' ' + d['device']
         else:
             cmd = cmd + ' ' + short2long_drive(d['device'])
     exe_cmd(cmd)
-    print cmd
+    print(cmd)
 
 def init_drive(device):
     if 'nvme' in device:
@@ -194,7 +195,7 @@ def init_drive(device):
         cmd = 'pvcreate ' + device
         cmd = cmd.replace('/dev/sd','/dev/xvd')
     exe_cmd(cmd)
-    print cmd
+    print(cmd)
 
 
 def create_attach_ebs(device,io_type,size,tag,piops = None):
@@ -202,7 +203,7 @@ def create_attach_ebs(device,io_type,size,tag,piops = None):
         cmd = ebs_attach_cmd
         cmd = cmd + ':'.join([size,io_type,device,tag])
         exe_cmd(cmd)
-        print cmd
+        print(cmd)
         if os.path.isfile(nvme_device_id):
             device = open(nvme_device_id, 'r').read().rstrip()
         init_drive(device)
@@ -210,7 +211,7 @@ def create_attach_ebs(device,io_type,size,tag,piops = None):
         cmd = ebs_attach_cmd
         cmd = cmd + ':'.join([size,io_type,str(piops),device,tag])
         exe_cmd(cmd)
-        print cmd
+        print(cmd)
         if os.path.isfile(nvme_device_id):
             device = open(nvme_device_id, 'r').read().rstrip()
         init_drive(device)
@@ -220,12 +221,12 @@ def create_attach_single_ebs(device,io_type,size,tag,piops = None):
         cmd = ebs_attach_cmd
         cmd = cmd + ':'.join([size,io_type,device,tag])
         exe_cmd(cmd)
-        print cmd
+        print(cmd)
     else:
         cmd = ebs_attach_cmd
         cmd = cmd + ':'.join([size,io_type,str(piops),device,tag])
         exe_cmd(cmd)
-        print cmd
+        print(cmd)
 
 
 def get_backup_drives(config_json,hostcount,instance_type,storage_type):
@@ -233,7 +234,7 @@ def get_backup_drives(config_json,hostcount,instance_type,storage_type):
     for idx,val in enumerate(config_json['backup']):
         if val['hostcount'] == hostcount:
             return val['storage']['master'][instance_type][storage_type]['drives']
-    print 'ERROR: Unable to find get_backup_storage'
+    print('ERROR: Unable to find get_backup_storage')
     return result
 
 
@@ -263,22 +264,22 @@ def main():
 
 
     if not os.path.isfile(config):
-        print 'Storage config file ' + config + ' Invalid!'
-        print 'ERROR: Cannot build storage'
+        print('Storage config file ' + config + ' Invalid!')
+        print('ERROR: Cannot build storage')
         return
 
     if ismaster != 1 and which == 'backup':
-        print 'Backup storage valid only on HANA master'
-        print 'WARNING: Did not build backup storage on worker'
+        print('Backup storage valid only on HANA master')
+        print('WARNING: Did not build backup storage on worker')
         return
 
     if ismaster != 1 and which == 'shared':
-        print 'Shared storage valid only on HANA master'
-        print 'WARNING: Did not build shared storage on worker'
+        print('Shared storage valid only on HANA master')
+        print('WARNING: Did not build shared storage on worker')
         return
     if ismaster != 1 and which == 'media':
-        print 'Media storage valid only on HANA master'
-        print 'WARNING: Did not build shared storage on worker'
+        print('Media storage valid only on HANA master')
+        print('WARNING: Did not build shared storage on worker')
         return
 
     with open(config) as f:
@@ -357,7 +358,7 @@ def main():
                     device = drives[0]['device'].replace('/dev/s','/dev/xv')
                 mkfs_cmd = ' mkfs.xfs -f ' + device + ' -L HANA_SHARE '
                 exe_cmd(mkfs_cmd)
-                print mkfs_cmd
+                print(mkfs_cmd)
         else:
             for d in drives:
                 device = d['device']
@@ -395,7 +396,7 @@ def main():
                 device = drives[0]['device'].replace('/dev/s','/dev/xv')
         mkfs_cmd = 'mkfs.xfs -f ' + device + ' -L USR_SAP '
         exe_cmd(mkfs_cmd)
-        print mkfs_cmd
+        print(mkfs_cmd)
         return
 
     if which == 'media':
@@ -416,7 +417,7 @@ def main():
                 device = drives[0]['device'].replace('/dev/s','/dev/xv')
         mkfs_cmd = 'mkfs.xfs -f ' + device + ' -L HANA_MEDIA '
         exe_cmd(mkfs_cmd)
-        print mkfs_cmd
+        print(mkfs_cmd)
         return
 
 

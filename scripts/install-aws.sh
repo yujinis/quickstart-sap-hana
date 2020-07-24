@@ -17,11 +17,23 @@ log() {
 
 log `date` BEGIN install-aws
 
+echo -n "Looking for python binary...." | tee -a ${HANA_LOG_FILE} 
+PYTHON_BIN=$(which python3) 
+
+if [ ! -z ${PYTHON_BIN} ]; then
+   echo "export PYTHON_BIN=${PYTHON_BIN}" >> ${SCRIPT_DIR}/config.sh
+   echo "...found python in ${PYTHON_BIN}" | tee -a ${HANA_LOG_FILE} 
+else 
+   PYTHON_BIN=$(which python)
+   echo "export PYTHON_BIN=${PYTHON_BIN}" >> ${SCRIPT_DIR}/config.sh
+   echo "...found python in ${PYTHON_BIN}" | tee -a ${HANA_LOG_FILE}
+fi
+
 wget https://s3.amazonaws.com/aws-cli/awscli-bundle.zip | tee -a ${HANA_LOG_FILE}
 zypper -n install unzip
 unzip awscli-bundle.zip | tee -a ${HANA_LOG_FILE}
 #sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws | tee -a ${HANA_LOG_FILE}
-/root/install/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws | tee -a ${HANA_LOG_FILE}
+${PYTHON_BIN} /root/install/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws | tee -a ${HANA_LOG_FILE}
 
 
 # ------------------------------------------------------------------
@@ -45,7 +57,7 @@ if [ -z "${HANA_LOG_FILE}" ] ; then
 fi
 
 log 'Dowloading AdvancedOptions JSON Start'
-python ${SCRIPT_DIR}/get_advancedoptions.py  -o ${SCRIPT_DIR} >> ${HANA_LOG_FILE}
+${PYTHON_BIN} ${SCRIPT_DIR}/get_advancedoptions.py  -o ${SCRIPT_DIR} >> ${HANA_LOG_FILE}
 log 'Dowloading AdvancedOptions JSON End'
 
 

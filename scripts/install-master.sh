@@ -37,6 +37,10 @@ export USE_NEW_STORAGE=1
 #          Choose default log file
 # ------------------------------------------------------------------
 
+log() {
+	echo $* 2>&1 | tee -a ${HANA_LOG_FILE}
+}
+
 if [ -z "${HANA_LOG_FILE}" ] ; then
     HANA_LOG_FILE=${SCRIPT_DIR}/install.log
 fi
@@ -47,10 +51,6 @@ do
   log "Cleaning secrets info from $f"
   sed -i '/install-master/d' $f
 done
-
-log() {
-	echo $* 2>&1 | tee -a ${HANA_LOG_FILE}
-}
 
 update_status () {
    local status="$1"
@@ -165,38 +165,38 @@ STORAGE_SCRIPT=/root/install/storage_builder_generated_master.sh
 if [ ${AWSEFS} == 'No' ] || [ ${HostCount} -eq 1 ]
 then
     log `date` "Provisioning and configuring EBS Volumes for HANA Backup"
-    python /root/install/build_storage.py  -config /root/install/storage.json  \
+    ${PYTHON_BIN} /root/install/build_storage.py  -config /root/install/storage.json  \
 	    				     -ismaster ${IsMasterNode} \
 		    			     -hostcount ${HostCount} -which backup \
 			    		     -instance_type ${MyInstanceType} -storage_type ${BACKUP_VOL} \
 				    	     > ${STORAGE_SCRIPT}
     log `date` "Provisioning and configuring EBS Volumes for HANA Shared"
-    python /root/install/build_storage.py  -config /root/install/storage.json  \
+    ${PYTHON_BIN} /root/install/build_storage.py  -config /root/install/storage.json  \
 	    				     -ismaster ${IsMasterNode} \
 		    			     -hostcount ${HostCount} -which shared \
 			    		     -instance_type ${MyInstanceType} -storage_type ${SHARED_VOL} \
 				    	     >> ${STORAGE_SCRIPT}
 fi
 log `date` "Provisioning and configuring EBS Volumes for HANA Data"
-python /root/install/build_storage.py  -config /root/install/storage.json  \
+${PYTHON_BIN} /root/install/build_storage.py  -config /root/install/storage.json  \
 							 -ismaster ${IsMasterNode} \
 							 -hostcount ${HostCount} -which hana_data \
 							 -instance_type ${MyInstanceType} -storage_type ${MyHanaDataVolumeType} \
 							 >> ${STORAGE_SCRIPT}
 log `date` "Provisioning and configuring EBS Volumes for HANA Log"
-python /root/install/build_storage.py  -config /root/install/storage.json  \
+${PYTHON_BIN} /root/install/build_storage.py  -config /root/install/storage.json  \
 							 -ismaster ${IsMasterNode} \
 							 -hostcount ${HostCount} -which hana_log \
 							 -instance_type ${MyInstanceType} -storage_type ${MyHanaLogVolumeType} \
 							 >> ${STORAGE_SCRIPT}
 log `date` "Provisioning and configuring EBS Volumes for USR-SAP"
-python /root/install/build_storage.py  -config /root/install/storage.json  \
+${PYTHON_BIN} /root/install/build_storage.py  -config /root/install/storage.json  \
 	       				     -ismaster ${IsMasterNode} \
 		    			     -hostcount ${HostCount} -which usr_sap \
 			    		     -instance_type ${MyInstanceType} -storage_type ${USR_SAP_VOL} \
 				    	     >> ${STORAGE_SCRIPT}
 log `date` "Provisioning and configuring EBS Volumes for HANA Media"
-python /root/install/build_storage.py  -config /root/install/storage.json  \
+${PYTHON_BIN} /root/install/build_storage.py  -config /root/install/storage.json  \
 							 -ismaster ${IsMasterNode} \
 							 -hostcount ${HostCount} -which media \
 							 -instance_type ${MyInstanceType} -storage_type ${HANA_MEDIA_VOL} \
@@ -412,7 +412,7 @@ then
 else
 	log `date` "Downloading SAP HANA Media from S3: START"
 	# Download media
-	python ${SCRIPT_DIR}/download_media.py  -o /media/
+	${PYTHON_BIN} ${SCRIPT_DIR}/download_media.py  -o /media/
 	log `date` "Downloading SAP HANA Media from S3: END"
 	# extract media
 
