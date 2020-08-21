@@ -37,6 +37,14 @@ isRHEL7() {
   fi
 }
 
+isRHEL8() {
+  if [[ "$MyOS" =~ "RHEL8" ]]; then
+    echo 1
+  else
+    echo 0
+  fi
+}
+
 isSLES11SP4() {
     if [ "$MyOS" == "SLES11SP4HVM" ]; then
       echo 1

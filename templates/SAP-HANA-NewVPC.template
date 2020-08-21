@@ -128,6 +128,7 @@ Parameters:
       - RedHatLinux74ForSAP-With-HA-US
       - RedHatLinux75ForSAP-With-HA-US
       - RedHatLinux76ForSAP-With-HA-US
+      - RedHatLinux81ForSAP-With-HA-US
       - SuSELinux11SP4
       - SuSELinux12SP1
       - SuSELinux12SP3
