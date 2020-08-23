@@ -119,17 +119,17 @@ fi
 
 log `date` "Building storage script to provision and configure EBS volumes for SAP HANA"
 STORAGE_SCRIPT=/root/install/storage_builder_generated_worker.sh
-python /root/install/build_storage.py  -config /root/install/storage.json  \
+${PYTHON_BIN} /root/install/build_storage.py  -config /root/install/storage.json  \
 					     -ismaster ${IsMasterNode} \
 					     -hostcount ${HostCount} -which hana_data \
 					     -instance_type ${MyInstanceType} -storage_type ${MyHanaDataVolumeType} \
 					     >> ${STORAGE_SCRIPT}
-python /root/install/build_storage.py  -config /root/install/storage.json  \
+${PYTHON_BIN} /root/install/build_storage.py  -config /root/install/storage.json  \
 					     -ismaster ${IsMasterNode} \
 					     -hostcount ${HostCount} -which hana_log \
 					     -instance_type ${MyInstanceType} -storage_type ${MyHanaLogVolumeType} \
 					     >> ${STORAGE_SCRIPT}
-python /root/install/build_storage.py  -config /root/install/storage.json  \
+${PYTHON_BIN} /root/install/build_storage.py  -config /root/install/storage.json  \
 					     -ismaster ${IsMasterNode} \
 					     -hostcount ${HostCount} -which usr_sap \
 					     -instance_type ${MyInstanceType} -storage_type ${USR_SAP_VOL} \
@@ -309,9 +309,9 @@ then
     MntOpt=",delaylog"
 fi
 #	echo "/dev/xvds			   /usr/sap       xfs nobarrier,noatime,nodiratime,logbsize=256k,delaylog 0 0" >> /etc/fstab
-echo "/dev/disk/by-label/USR_SAP /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
-echo "/dev/mapper/vghanadata-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
-echo "/dev/mapper/vghanalog-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
+echo "/dev/disk/by-label/USR_SAP /usr/sap   xfs noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
+echo "/dev/mapper/vghanadata-lvhanadata     /hana/data     xfs noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
+echo "/dev/mapper/vghanalog-lvhanalog      /hana/log      xfs noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
 
 log `date` "mounting filesystems"
 mount -a
