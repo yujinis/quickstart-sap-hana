@@ -701,6 +701,9 @@ install_prereq_sles12sp3sap() {
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+  zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
   
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
@@ -732,6 +735,9 @@ install_prereq_sles12sp4sap() {
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+  zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
   
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
@@ -764,6 +770,9 @@ install_prereq_sles12sp5sap() {
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+  zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
   
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
@@ -949,6 +958,9 @@ install_prereq_sles12sp3sapbyos() {
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+  zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
   
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
@@ -979,6 +991,9 @@ install_prereq_sles12sp4sapbyos() {
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+  zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
   
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
@@ -1009,6 +1024,9 @@ install_prereq_sles12sp5sapbyos() {
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+  zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
   
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
