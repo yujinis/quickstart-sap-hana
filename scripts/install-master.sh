@@ -380,10 +380,10 @@ if  ( [ "$MyOS" = "SLES11SP4HVM" ] || [ "$MyOS" = "RHEL66SAPHVM" ] || [ "$MyOS" 
 then
     MntOpt=",delaylog"
 fi
-echo "/dev/disk/by-label/USR_SAP /usr/sap   xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
-echo "/dev/disk/by-label/HANA_MEDIA /media   xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0"  >> /etc/fstab
-echo "/dev/mapper/vghanadata-lvhanadata     /hana/data     xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
-echo "/dev/mapper/vghanalog-lvhanalog      /hana/log      xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
+echo "/dev/disk/by-label/USR_SAP /usr/sap   xfs noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
+echo "/dev/disk/by-label/HANA_MEDIA /media   xfs noatime,nodiratime,logbsize=256k${MntOpt} 0 0"  >> /etc/fstab
+echo "/dev/mapper/vghanadata-lvhanadata     /hana/data     xfs noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
+echo "/dev/mapper/vghanalog-lvhanalog      /hana/log      xfs noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
 if [ ${AWSEFS} == 'Yes' ] && [ ${HostCount} -gt 1 ]
 then
     log `date` "Provisioning and configuring Amazon EFS for HANA Shared and Backup"
@@ -392,8 +392,8 @@ then
     echo ""$EFS_MP_shared"  "/hana/shared"  nfs nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 0 0"  >> /etc/fstab
     echo ""$EFS_MP_backup"  "/backup"  nfs nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 0 0"  >> /etc/fstab
 else
-    echo "/dev/disk/by-label/HANA_SHARE /hana/shared   xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
-    echo "/dev/mapper/vghanaback-lvhanaback     /backup        xfs nobarrier,noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
+    echo "/dev/disk/by-label/HANA_SHARE /hana/shared   xfs noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
+    echo "/dev/mapper/vghanaback-lvhanaback     /backup        xfs noatime,nodiratime,logbsize=256k${MntOpt} 0 0" >> /etc/fstab
 fi
 
 ##10. Updated the fstab entry for /backup (Master only)
@@ -443,17 +443,26 @@ if (( $(isSLES) == 1 )); then
     log `date` "Installing and configuring NFS Server"
     zypper --non-interactive install nfs-kernel-server
 fi
-sed -i '/STATD_PORT=/ c\STATD_PORT="4000"' /etc/sysconfig/nfs
-sed -i '/LOCKD_TCPPORT=/ c\LOCKD_TCPPORT="4001"' /etc/sysconfig/nfs
-sed -i '/LOCKD_UDPPORT=/ c\LOCKD_UDPPORT="4001"' /etc/sysconfig/nfs
-sed -i '/MOUNTD_PORT=/ c\MOUNTD_PORT="4002"' /etc/sysconfig/nfs
+
 if (( $(isSLES) == 1 )); then
+    sed -i '/STATD_PORT=/ c\STATD_PORT="4000"' /etc/sysconfig/nfs
+    sed -i '/LOCKD_TCPPORT=/ c\LOCKD_TCPPORT="4001"' /etc/sysconfig/nfs
+    sed -i '/LOCKD_UDPPORT=/ c\LOCKD_UDPPORT="4001"' /etc/sysconfig/nfs
+    sed -i '/MOUNTD_PORT=/ c\MOUNTD_PORT="4002"' /etc/sysconfig/nfs
     service nfsserver start
     chkconfig nfsserver on
-else
+elif (( $(isRHEL8) == 1 )); then
+    systemctl enable nfs-server
+    systemctl start nfs-server
+elif (( $(isRHEL) == 1 )); then
+    sed -i '/STATD_PORT=/ c\STATD_PORT="4000"' /etc/sysconfig/nfs
+    sed -i '/LOCKD_TCPPORT=/ c\LOCKD_TCPPORT="4001"' /etc/sysconfig/nfs
+    sed -i '/LOCKD_UDPPORT=/ c\LOCKD_UDPPORT="4001"' /etc/sysconfig/nfs
+    sed -i '/MOUNTD_PORT=/ c\MOUNTD_PORT="4002"' /etc/sysconfig/nfs
     service nfs restart
     chkconfig nfs on
 fi
+
 if [ ${AWSEFS} == 'No' ]
 then
     echo "#Share global HANA shares" >> /etc/exports

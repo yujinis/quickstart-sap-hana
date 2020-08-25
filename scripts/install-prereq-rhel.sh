@@ -140,13 +140,18 @@ disable_dhcp() {
 start_fs() {
 
 
-  if [ $(isRHEL7) == 1 ]
-  then
+  if [[ $(isRHEL7) == 1 ]]; then
     log "`date` Enabling Autofs and NFS for RHEL 7.x"
     systemctl enable nfs | tee -a ${HANA_LOG_FILE}
     systemctl start nfs | tee -a ${HANA_LOG_FILE}
     systemctl enable autofs | tee -a ${HANA_LOG_FILE}
     systemctl start autofs | tee -a ${HANA_LOG_FILE}
+  elif [[ $(isRHEL8) == 1 ]]; then
+     log "`date` Enabling Autofs and NFS for RHEL 8.x"
+     systemctl enable nfs-server | tee -a ${HANA_LOG_FILE}
+     systemctl start nfs-server | tee -a ${HANA_LOG_FILE}
+     systemctl enable autofs | tee -a ${HANA_LOG_FILE}
+     systemctl start autofs | tee -a ${HANA_LOG_FILE}
   elif [[ $(isRHEL6) == 1 ]]; then
    #statements
     log "`date` Enabling Autofs for RHEL 6.x"
@@ -261,6 +266,46 @@ install_prereq_rhel76() {
   yum -y install compat-sap-c++-9 | tee -a ${HANA_LOG_FILE}
 }
 
+install_prereq_rhel81() {
+  log "`date` Installing packages required for RHEL 8.2"
+  install_enable_ssm_agent
+  yum -y install python3 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install unzip 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-9 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install xfsprogs 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install autofs 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install gcc 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install nvme-cli 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install tuned-profiles-sap-hana 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install libatomic 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install libaio 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install libtool-ltdl 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install lvm2 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install nfs-utils 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install sysstat 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install kernel 2>&1 | tee -a ${HANA_LOG_FILE}
+}
+
+install_prereq_rhel82() {
+  log "`date` Installing packages required for RHEL 8.2"
+  install_enable_ssm_agent
+  yum -y install python3 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install unzip 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-9 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install xfsprogs 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install autofs 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install gcc 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install nvme-cli 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install tuned-profiles-sap-hana 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install libatomic 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install libaio 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install libtool-ltdl 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install lvm2 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install nfs-utils 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install sysstat 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install kernel 2>&1 | tee -a ${HANA_LOG_FILE}
+}
+
 start_ntp() {
     # ------------------------------------------------------------------
     #          Configure and Start ntp server
@@ -312,14 +357,14 @@ start_oss_configs() {
 
     instance_type=$(curl http://169.254.169.254/latest/meta-data/instance-type 2> /dev/null)
     case $instance_type in
-      r4.8xlarge|r4.16xlarge|x1.16xlarge|x1.32xlarge|x1e.32xlarge )
+       r4.8xlarge|r4.16xlarge|x1.16xlarge|x1.32xlarge|x1e.32xlarge|r5.metal|u-6tb1.metal|u-9tb1.metal|u-12tb1.metal )
           log "`date` Configuring c-state and p-state"
           cpupower frequency-set -g performance > /dev/null
           cpupower idle-set -d 6 > /dev/null; cpupower idle-set -d 5 > /dev/null
           cpupower idle-set -d 4 > /dev/null; cpupower idle-set -d 3 > /dev/null
           cpupower idle-set -d 2 > /dev/null
 	        echo "cpupower frequency-set -g performance" >> /etc/init.d/boot.local
-          echo "cpupower idle-set -d 6 > /dev/null; cpupower idle-set -d 5 > /dev/null" >> /etc/init.d/boot.local
+            echo "cpupower idle-set -d 6 > /dev/null; cpupower idle-set -d 5 > /dev/null" >> /etc/init.d/boot.local
      	    echo "cpupower idle-set -d 4 > /dev/null; cpupower idle-set -d 3 > /dev/null" >> /etc/init.d/boot.local
      	    echo "cpupower idle-set -d 2 > /dev/null" >> /etc/init.d/boot.local ;;
       *)
@@ -388,6 +433,83 @@ start_oss_configs_rhel76() {
 
 }
 
+start_oss_configs_rhel81() {
+
+    #This section is from OSS #2777782 - SAP HANA DB: Recommended OS settings for RHEL 8
+    log "`date` - Apply saptune HANA profile"
+    systemctl start tuned  | tee -a ${HANA_LOG_FILE}
+    systemctl enable tuned | tee -a ${HANA_LOG_FILE}
+    tuned-adm profile sap-hana | tee -a ${HANA_LOG_FILE}
+    tuned-adm active | tee -a ${HANA_LOG_FILE}
+    systemctl stop abrtd
+    systemctl disable abrtd
+    systemctl stop abrt-ccpp
+    systemctl disable abrt-ccpp
+    systemctl stop kdump
+    systemctl disable kdump
+    systemctl stop numad
+    systemctl disable numad
+    systemctl enable chronyd
+    systemctl start chronyd
+    #
+    sysctl -w kernel.pid_max=4194304
+    sysctl -w net.core.somaxconn=4096
+    sysctl -w net.ipv4.tcp_max_syn_backlog=8192
+    sysctl -w net.ipv4.tcp_slow_start_after_idle=0
+    echo "kernel.pid_max=4194304" >> /etc/sysctl.d/sap.conf 
+    echo "net.core.somaxconn=4096" >> /etc/sysctl.d/sap.conf 
+    echo "net.ipv4.tcp_max_syn_backlog=8192" >> /etc/sysctl.d/sap.conf 
+    echo "net.ipv4.tcp_slow_start_after_idle=0" >>  /etc/sysctl.d/sap.conf 
+    #
+    echo "tsc" > /sys/devices/system/clocksource/*/current_clocksource
+    #
+    sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+    sed -i 's/SELINUX=permissive/SELINUX=disabled/g' /etc/selinux/config
+    #
+    cp -p /etc/default/grub /etc/default/grub.quickstart.save
+    sed -i 's/GRUB_CMDLINE_LINUX="[^"]*/& numa_balancing=disable transparent_hugepage=never intel_idle.max_cstate=1 processor.max_cstate=1/' /etc/default/grub
+    cp -p /boot/grub2/grub.cfg /boot/grub2/grub.cfg.quickstart.save
+    grub2-mkconfig -o /boot/grub2/grub.cfg
+}
+
+start_oss_configs_rhel82() {
+
+    #This section is from OSS #2777782 - SAP HANA DB: Recommended OS settings for RHEL 8
+    log "`date` - Apply saptune HANA profile"
+    systemctl start tuned  | tee -a ${HANA_LOG_FILE}
+    systemctl enable tuned | tee -a ${HANA_LOG_FILE}
+    tuned-adm profile sap-hana | tee -a ${HANA_LOG_FILE}
+    tuned-adm active | tee -a ${HANA_LOG_FILE}
+    systemctl stop abrtd
+    systemctl disable abrtd
+    systemctl stop abrt-ccpp
+    systemctl disable abrt-ccpp
+    systemctl stop kdump
+    systemctl disable kdump
+    systemctl stop numad
+    systemctl disable numad
+    systemctl enable chronyd
+    systemctl start chronyd
+    #
+    sysctl -w kernel.pid_max=4194304
+    sysctl -w net.core.somaxconn=4096
+    sysctl -w net.ipv4.tcp_max_syn_backlog=8192
+    sysctl -w net.ipv4.tcp_slow_start_after_idle=0
+    echo "kernel.pid_max=4194304" >> /etc/sysctl.d/sap.conf
+    echo "net.core.somaxconn=4096" >> /etc/sysctl.d/sap.conf 
+    echo "net.ipv4.tcp_max_syn_backlog=8192" >> /etc/sysctl.d/sap.conf 
+    echo "net.ipv4.tcp_slow_start_after_idle=0" >>  /etc/sysctl.d/sap.conf 
+    echo "tsc" > /sys/devices/system/clocksource/*/current_clocksource
+    #
+    sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+    sed -i 's/SELINUX=permissive/SELINUX=disabled/g' /etc/selinux/config
+    #
+    cp -p /etc/default/grub /etc/default/grub.quickstart.save
+    sed -i 's/GRUB_CMDLINE_LINUX="[^"]*/& numa_balancing=disable transparent_hugepage=never intel_idle.max_cstate=1 processor.max_cstate=1/' /etc/default/grub
+    cp -p /boot/grub2/grub.cfg /boot/grub2/grub.cfg.quickstart.save
+    grub2-mkconfig -o /boot/grub2/grub.cfg
+}
+
 download_unrar() {
 
   log "`date` Downloading unrar from rarlab to extract HANA media"
@@ -412,6 +534,41 @@ lockversion () {
   yum versionlock redhat-release-server kernel kernel-headers | tee -a ${HANA_LOG_FILE}
   yum versionlock list | tee -a ${HANA_LOG_FILE}
 
+}
+
+install_enable_ssm_agent() {
+  # Install and enable amazon-ssm-agent
+  yum -y install ${RHEL_SSM_RPM} | tee -a ${HANA_LOG_FILE}
+  systemctl enable amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+  systemctl start amazon-ssm-agent | tee -a ${HANA_LOG_FILE}
+}
+
+set_rhel8x_motd() {
+  # Configure /etc/motd for RHEL 8.x systems
+  cat > /etc/motd.d/01-quickstart-warning << 'EOF'
+%---------------------------------------------------------------------%
+%       ___      _____    ___       _    _   ___ _            _       %
+%      /_\ \    / / __|  / _ \ _  _(_)__| |_/ __| |_ __ _ _ _| |_     %
+%     / _ \ \/\/ /\__ \ | (_) | || | / _| / \__ |  _/ _` | '_|  _|    %
+%    /_/ \_\_/\_/ |___/  \__\_\\_,_|_\__|_\_|___/\__\__,_|_|  \__|    %
+%---------------------------------------------------------------------%
+%                                                                     %
+EOF
+echo -n '%    ' >> /etc/motd.d/01-quickstart-warning
+echo -ne '\033[00;31mIMPORTANT INFORMATION ABOUT YOUR SYSTEM\033[0m' >> /etc/motd.d/01-quickstart-warning
+echo '                          %' >> /etc/motd.d/01-quickstart-warning
+cat >> /etc/motd.d/01-quickstart-warning << 'EOF'
+%    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                          %
+%    This EC2 instance was configured through AWS SAP HANA QuickStart %
+%    in order to activate all optimizations a reboot is required      %
+%                                                                     %
+%     To reboot this system execute:                                  %
+%               # sudo reboot                                         %
+%                                                                     %
+%     To remove this message:                                         %
+%               # sudo rm /etc/motd.d/01-quickstart-warning           %
+%---------------------------------------------------------------------%
+EOF
 }
 
 #***END Functions***
@@ -529,7 +686,7 @@ case "$MyOS" in
 #   lockversion - Version lock not required for HA & EUS AMIs
     log "`date` End - Executing RHEL 7.5 with HA and US related pre-requisites" ;;
   RHEL76SAPHAUSHVM )
-    log "`date` Start - Executing RHEL 7.5 with HA and US related pre-requisites"
+    log "`date` Start - Executing RHEL 7.6 with HA and US related pre-requisites"
     install_prereq_rhel76
     start_oss_configs_rhel76
     preserve_hostname
@@ -539,6 +696,24 @@ case "$MyOS" in
     download_unrar
 #   lockversion - Version lock not required for HA & EUS AMIs
     log "`date` End - Executing RHEL 7.6 with HA and US related pre-requisites" ;;
+  RHEL81SAPHAUSHVM )
+    log "`date` Start - Executing RHEL 8.1 with HA and US related pre-requisites"
+    install_prereq_rhel81
+    start_oss_configs_rhel81
+    preserve_hostname
+    start_fs
+    download_unrar
+    set_rhel8x_motd
+    log "`date` End - Executing RHEL 8.1 with HA and US related pre-requisites" ;;
+  RHEL82SAPHAUSHVM )
+    log "`date` Start - Executing RHEL 8.2 with HA and US related pre-requisites"
+    install_prereq_rhel82
+    start_oss_configs_rhel82
+    preserve_hostname
+    start_fs
+    download_unrar
+    set_rhel8x_motd
+    log "`date` End - Executing RHEL 8.2 with HA and US related pre-requisites" ;;
   RHEL75SAPHVM )
     log "`date` Start - Executing RHEL 7.5 related pre-requisites"
     install_prereq_rhel75
