@@ -461,7 +461,7 @@ start_oss_configs_rhel81() {
     echo "net.ipv4.tcp_max_syn_backlog=8192" >> /etc/sysctl.d/sap.conf 
     echo "net.ipv4.tcp_slow_start_after_idle=0" >>  /etc/sysctl.d/sap.conf 
     #
-    echo "tsc" > /sys/devices/system/clocksource/*/current_clocksource
+    echo "tsc" > /sys/devices/system/clocksource/clocksource0/current_clocksource
     #
     sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
     sed -i 's/SELINUX=permissive/SELINUX=disabled/g' /etc/selinux/config
@@ -499,7 +499,7 @@ start_oss_configs_rhel82() {
     echo "net.core.somaxconn=4096" >> /etc/sysctl.d/sap.conf 
     echo "net.ipv4.tcp_max_syn_backlog=8192" >> /etc/sysctl.d/sap.conf 
     echo "net.ipv4.tcp_slow_start_after_idle=0" >>  /etc/sysctl.d/sap.conf 
-    echo "tsc" > /sys/devices/system/clocksource/*/current_clocksource
+    echo "tsc" > /sys/devices/system/clocksource/clocksource0/current_clocksource
     #
     sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
     sed -i 's/SELINUX=permissive/SELINUX=disabled/g' /etc/selinux/config
@@ -521,7 +521,7 @@ download_unrar() {
 
 set_clocksource_rhel7x () {
   log "`date` Setting clocksource to TSC"
-  echo "tsc" > /sys/devices/system/clocksource/*/current_clocksource
+  echo "tsc" > /sys/devices/system/clocksource/clocksource0/current_clocksource
   cp /etc/default/grub /etc/default/grub.backup
   sed -i '/GRUB_CMDLINE_LINUX/ s|"| clocksource=tsc"|2' /etc/default/grub
   grub2-mkconfig -o /boot/grub2/grub.cfg | tee -a ${HANA_LOG_FILE}

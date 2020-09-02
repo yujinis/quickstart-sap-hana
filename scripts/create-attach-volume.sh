@@ -139,7 +139,7 @@ VOL_PIOPS=
 [ -z ${VOL_SIZE} ] && usage;
 [ -z ${VOL_TYPE} ] && usage;
 
-if [[ "${VOL_TYPE}" == "io1" ]] ; then
+if [[ "${VOL_TYPE}" == "io1" || "${VOL_TYPE}" == "io2" ]] ; then
     VOL_PIOPS=${ARGS_LIST_ARRAY[3]}
 	DEVICE_START=${ARGS_LIST_ARRAY[4]}
 	VOL_NAME=${ARGS_LIST_ARRAY[5]}
@@ -171,7 +171,7 @@ while [  $COUNTER -lt ${VOL_COUNT} ]; do
 	device=$(echo ${device} | sed 's/^"\(.*\)"$/\1/')
 	let DeviceIndexStart=DeviceIndexStart+1
 	let COUNTER=COUNTER+1
-	if [[ "${VOL_TYPE}" == "io1" ]]; then
+	if [[ "${VOL_TYPE}" == "io1" || "${VOL_TYPE}" == "io2" ]]; then
 		volumeid=$(aws ec2 create-volume \
 					--region ${AWS_DEFAULT_REGION} \
 					--availability-zone ${AWS_DEFAULT_AVAILABILITY_ZONE} \

@@ -117,6 +117,7 @@ Parameters:
     AllowedValues:
       - gp2
       - io1
+      - io2
   VolumeTypeHanaLog:
     Type: String
     Description: 'EBS volume type for SAP HANA Log: General Purpose SSD (gp2) or Provisioned
@@ -125,6 +126,7 @@ Parameters:
     AllowedValues:
       - gp2
       - io1
+      - io2
   MyOS:
     Type: String
     Description: Operating system (SLES or RHEL) and version for master and worker
