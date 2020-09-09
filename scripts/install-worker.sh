@@ -178,13 +178,26 @@ update_status "CONFIGURING_INSTANCE_FOR_HANA"
 #           Set i/o scheduler to noop
 # ------------------------------------------------------------------
 
-log `date` "Setting i/o scheduler to noop for each physical volume"
+
 for i in `pvs | grep dev | awk '{print $1}' | sed s/\\\/dev\\\///`
-do
-  echo "noop" > /sys/block/$i/queue/scheduler
-  printf "$i: "
-  cat /sys/block/$i/queue/scheduler
+  do
+    if [[ "$i" != *"nvme"* ]]; then
+      if [[ $(grep -wq noop /sys/block/$i/queue/scheduler; echo $?) -eq 0 ]]; then
+        log `date` "Setting i/o scheduler to noop for each physical volume"
+	    echo "noop" > /sys/block/$i/queue/scheduler
+	    printf "$i: "
+	    cat /sys/block/$i/queue/scheduler
+	  else
+	    log `date` "Setting i/o scheduler to none for each physical volume"
+	    echo "none" > /sys/block/$i/queue/scheduler
+	    printf "$i: "
+	    cat /sys/block/$i/queue/scheduler
+	  fi
+    else
+      log `date` "Skipping IO block scheduler change - NVMe device detected"
+    fi
 done
+
 
 
 # ------------------------------------------------------------------

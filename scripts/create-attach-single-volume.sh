@@ -189,7 +189,7 @@ VOL_PIOPS=
 [ -z ${VOL_SIZE} ] && usage;
 [ -z ${VOL_TYPE} ] && usage;
 
-if [[ "${VOL_TYPE}" == "io1" ]] ; then
+if [[ "${VOL_TYPE}" == "io1" || "${VOL_TYPE}" == "io2" ]] ; then
     VOL_PIOPS=${ARGS_LIST_ARRAY[2]}
 	DEVICE_START=${ARGS_LIST_ARRAY[3]}
 	VOL_NAME=${ARGS_LIST_ARRAY[4]}
@@ -212,7 +212,7 @@ MyEncryption=$(/usr/local/bin/aws cloudformation describe-stacks --stack-name ${
 
 if [[ ${MyEncryption} == "No" ]];
 then
-	if [[ "${VOL_TYPE}" == "io1" ]]; then
+	if [[ "${VOL_TYPE}" == "io1" || "${VOL_TYPE}" == "io2" ]]; then
 		volumeid=$(${AWS} ec2 create-volume \
 					--region ${AWS_DEFAULT_REGION} \
 					--availability-zone ${AWS_DEFAULT_AVAILABILITY_ZONE} \
@@ -226,7 +226,7 @@ then
 					--volume-type ${VOL_TYPE}| ${JQ_COMMAND} '.VolumeId')
 	fi
 else
-	if [[ "${VOL_TYPE}" == "io1" ]]; then
+	if [[ "${VOL_TYPE}" == "io1" || "${VOL_TYPE}" == "io2" ]]; then
 		volumeid=$(${AWS} ec2 create-volume \
 					--region ${AWS_DEFAULT_REGION} \
 					--availability-zone ${AWS_DEFAULT_AVAILABILITY_ZONE} --encrypted \
