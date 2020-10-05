@@ -278,6 +278,26 @@ install_prereq_rhel81() {
   yum -y install nvme-cli 2>&1 | tee -a ${HANA_LOG_FILE}
   yum -y install tuned-profiles-sap-hana 2>&1 | tee -a ${HANA_LOG_FILE}
   yum -y install libatomic 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install libnsl 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install uuidd 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install tcsh 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install bind-utils 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install psmisc 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install expect 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install graphviz 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install iptraf-ng 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install krb5-workstation 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install libatomic 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install libcanberra-gtk2 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install libibverbs 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install libicu 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install libpng12 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install libssh2 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install lm_sensors 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install numactl 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install PackageKit-gtk3-module 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install xorg-x11-xauth 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y group install Server  2>&1 | tee -a ${HANA_LOG_FILE}
   yum -y install libaio 2>&1 | tee -a ${HANA_LOG_FILE}
   yum -y install libtool-ltdl 2>&1 | tee -a ${HANA_LOG_FILE}
   yum -y install lvm2 2>&1 | tee -a ${HANA_LOG_FILE}
@@ -449,17 +469,42 @@ start_oss_configs_rhel81() {
     systemctl disable kdump
     systemctl stop numad
     systemctl disable numad
+    systemctl stop firewalld
+    systemctl disable firewalld
     systemctl enable chronyd
     systemctl start chronyd
+    systemctl enable uuidd
+    systemctl start uuidd
     #
     sysctl -w kernel.pid_max=4194304
     sysctl -w net.core.somaxconn=4096
     sysctl -w net.ipv4.tcp_max_syn_backlog=8192
     sysctl -w net.ipv4.tcp_slow_start_after_idle=0
+    system -w kernel.pid_max=4194304
     echo "kernel.pid_max=4194304" >> /etc/sysctl.d/sap.conf 
     echo "net.core.somaxconn=4096" >> /etc/sysctl.d/sap.conf 
     echo "net.ipv4.tcp_max_syn_backlog=8192" >> /etc/sysctl.d/sap.conf 
-    echo "net.ipv4.tcp_slow_start_after_idle=0" >>  /etc/sysctl.d/sap.conf 
+    echo "net.ipv4.tcp_slow_start_after_idle=0" >>  /etc/sysctl.d/sap.conf
+    echo "kernel.pid_max=4194304" >>  /etc/sysctl.d/sap.conf
+    #
+    echo "@sapsys    hard    nofile    65536" >>  /etc/security/limits.d/99-sap.conf
+    echo "@sapsys    soft    nofile    65536" >>  /etc/security/limits.d/99-sap.conf
+    echo "@sapsys    hard    nproc    unlimited" >>  /etc/security/limits.d/99-sap.conf
+    echo "@sapsys    soft    nproc    unlimited" >>  /etc/security/limits.d/99-sap.conf
+    #
+    cat >>  /etc/tmpfiles.d/sap.conf <<_EOF
+# systemd.tmpfiles exclude file for SAP
+# SAP software stores some important files in /tmp which should not be deleted automatically
+ 
+# Exclude SAP socket and lock files
+x /tmp/.sap*
+ 
+# Exclude HANA lock file
+x /tmp/.hdb*lock
+
+# Exclude TREX lock file
+x /tmp/.trex*lock
+_EOF
     #
     echo "tsc" > /sys/devices/system/clocksource/clocksource0/current_clocksource
     #
