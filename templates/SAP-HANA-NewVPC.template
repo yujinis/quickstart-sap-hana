@@ -137,12 +137,14 @@ Parameters:
       - SuSELinux12SP5
       - SuSELinux15
       - SuSELinux15SP1
+      - SuSELinux15SP2
       - SuSELinux12SP2ForSAP
       - SuSELinux12SP3ForSAP
       - SuSELinux12SP4ForSAP
       - SuSELinux12SP5ForSAP
       - SuSELinux15ForSAP
       - SuSELinux15SP1ForSAP
+      - SuSELinux15SP2ForSAP
       - SuSELinux12SP1ForSAP-BYOS
       - SuSELinux12SP2ForSAP-BYOS
       - SuSELinux12SP3ForSAP-BYOS
@@ -150,6 +152,7 @@ Parameters:
       - SuSELinux12SP5ForSAP-BYOS
       - SuSELinux15ForSAP-BYOS
       - SuSELinux15SP1ForSAP-BYOS
+      - SuSELinux15SP2ForSAP-BYOS
   MyInstanceType:
     Type: String
     Description: Instance type for SAP HANA host.
