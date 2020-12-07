@@ -211,6 +211,13 @@ Parameters:
       - r5.16xlarge
       - r5.24xlarge
       - r5.metal
+      - r5b.2xlarge
+      - r5b.4xlarge
+      - r5b.8xlarge
+      - r5b.12xlarge
+      - r5b.16xlarge
+      - r5b.24xlarge
+      - r5b.metal
       - x1.16xlarge
       - x1.32xlarge
       - x1e.xlarge
@@ -1511,32 +1518,86 @@ Resources:
                   - s3:GetObject
                   - s3:ListBucket
                   - s3:GetBucketLocation
-                  - ec2:Describe*
-                  - ec2:ModifyInstanceAttribute
-                  - ec2:AttachVolume
-                  - ec2:CreateTags
-                  - ec2:CreateVolume
-                Resource: '*'
+                Resource: !Join
+                  - ''
+                  - - "arn:aws:s3:::"
+                    - !Select
+                      - "2"
+                      - !Split
+                        - "/"
+                        - !Ref "HANAInstallMedia"
+              
+              - Effect: Allow
+                Action: ec2:ModifyInstanceAttribute
+                Resource: "arn:aws:ec2:*:*:instance/*"
+                Condition:
+                  StringEquals: 
+                    "ec2:ResourceTag/aws:cloudformation:stack-name": !Ref AWS::StackName
+              
+              - Effect: Allow
+                Action: ec2:CreateTags
+                Resource: 
+                  - "arn:aws:ec2:*:*:volume/*"
+                  - "arn:aws:ec2:*:*:instance/*"
+
+              - Effect: Allow
+                Action: ec2:AttachVolume
+                Resource:
+                  - "arn:aws:ec2:*:*:volume/*"
+                  - "arn:aws:ec2:*:*:instance/*"
+                Condition:
+                  StringLike: 
+                    "ec2:ResourceTag/SAPHANAQuickStart": !Ref AWS::StackId
+
+              - Effect: Allow
+                Action: ec2:CreateVolume
+                Resource: "*"
+                Condition:
+                  ForAllValues:StringEquals: 
+                    "aws:TagKeys": "SAPHANAQuickStart"
+                    
+              - Effect: Allow
+                Action:
+                  - ec2:DescribeVolumes
+                  - ec2:DescribeVolumeStatus
+                  - ec2:DescribeInstances
+                Resource: "*"
+                
               - Effect: Allow
                 Action: cloudwatch:GetMetricStatistics
                 Resource: '*'
+              
+              - Effect: Allow
+                Action: cloudformation:DescribeStacks
+                Resource: !Join
+                  - ''
+                  - - "arn:aws:cloudformation:"
+                    - !Ref "AWS::Region"
+                    - ':'
+                    - !Ref "AWS::AccountId"
+                    - ':stack/'
+                    - !Ref "AWS::StackName"
+                    - '/*'
+
               - Effect: Allow
                 Action:
-                  - sqs:*
-                  - dynamodb:*
+                  - dynamodb:CreateTable
+                  - dynamodb:DeleteTable
+                  - dynamodb:UpdateItem
+                  - dynamodb:DescribeTable
                   - dynamodb:Scan
                   - dynamodb:Query
                   - dynamodb:GetItem
                   - dynamodb:BatchGetItem
                   - dynamodb:UpdateTable
-                  - cloudformation:DescribeStacks
-                  - cloudformation:DescribeStackEvents
-                  - cloudformation:DescribeStackResource
-                  - cloudformation:DescribeStackResources
-                  - cloudformation:GetTemplate
-                  - cloudformation:List*
-                Resource:
-                  - '*'
+                Resource: !Join
+                  - ''
+                  - - "arn:aws:dynamodb:"
+                    - !Ref "AWS::Region"
+                    - ':'
+                    - !Ref "AWS::AccountId"
+                    - ':table/HANAMonitor__'
+                    - !Ref "AWS::StackName"
   HANAIAMProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
@@ -1566,93 +1627,11 @@ Resources:
             Action:
               - sts:AssumeRole
       Path: /
-      Policies:
-        - PolicyName: root
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - s3:*
-                  - ec2:Describe*
-                  - ec2:AttachNetworkInterface
-                  - ec2:AttachVolume
-                  - ec2:CreateTags
-                  - ec2:CreateVolume
-                  - ec2:DeleteVolume
-                  - ec2:RunInstances
-                  - ec2:StartInstances
-                  - ec2:CreateSecurityGroup
-                  - ec2:CreatePlacementGroup
-                  - ec2:CreateSnapshot
-                Resource: '*'
-              - Action:
-                  - sqs:*
-                Effect: Allow
-                Resource: '*'
-              - Effect: Allow
-                Action:
-                  - cloudformation:CreateStack
-                  - cloudformation:DeleteStack
-                  - cloudformation:DescribeStack
-                  - cloudformation:EstimateTemplateCost
-                  - cloudformation:ValidateTemplate
-                  - cloudformation:DescribeStackEvents
-                  - cloudformation:DescribeStackResource
-                  - cloudformation:DescribeStackResources
-                  - cloudformation:DescribeStacks
-                Resource:
-                  - '*'
-              - Effect: Allow
-                Action:
-                  - iam:CreateRole
-                Resource:
-                  - '*'
-              - Effect: Allow
-                Action:
-                  - iam:PutRolePolicy
-                Resource:
-                  - '*'
-              - Effect: Allow
-                Action:
-                  - iam:CreateInstanceProfile
-                Resource:
-                  - '*'
-              - Effect: Allow
-                Action:
-                  - iam:AddRoleToInstanceProfile
-                Resource:
-                  - '*'
-              - Effect: Allow
-                Action:
-                  - iam:PassRole
-                Resource:
-                  - '*'
-              - Effect: Allow
-                Action:
-                  - ec2:RevokeSecurityGroupEgress
-                Resource:
-                  - '*'
-              - Effect: Allow
-                Action:
-                  - ec2:AuthorizeSecurityGroupEgress
-                Resource:
-                  - '*'
-              - Effect: Allow
-                Action:
-                  - ec2:AuthorizeSecurityGroupIngress
-                Resource:
-                  - '*'
-              - Effect: Allow
-                Action:
-                  - ec2:CreateNetworkInterface
-                Resource:
-                  - '*'
-              - Effect: Allow
-                Action:
-                  - ec2:ModifyNetworkInterfaceAttribute
-                Resource:
-                  - '*'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+        - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess
+        
   RDPProfile:
     Condition: NeedWindowsInstance
     Type: AWS::IAM::InstanceProfile
@@ -1712,6 +1691,8 @@ Resources:
       Tags:
         - Key: Name
           Value: SAP RDP Instance (Public Subnet)
+        - Key: SAPHANAQuickStart
+          Value: !Ref 'AWS::StackId'
       InstanceType: !Ref 'RDPInstanceType'
       UserData: !Base64
         Fn::Join:
@@ -1757,6 +1738,8 @@ Resources:
       Tags:
         - Key: Name
           Value: SAP HANA Master
+        - Key: SAPHANAQuickStart
+          Value: !Ref AWS::StackId
       UserData: !Base64
         Fn::Join:
           - ''
@@ -2014,6 +1997,8 @@ Resources:
       Tags:
         - Key: Name
           Value: SAP HANA Worker 1
+        - Key: SAPHANAQuickStart
+          Value: !Ref AWS::StackId
       UserData: !Base64
         Fn::Join:
           - ''
@@ -2258,6 +2243,8 @@ Resources:
       Tags:
         - Key: Name
           Value: SAP HANA Worker 2
+        - Key: SAPHANAQuickStart
+          Value: !Ref AWS::StackId
       UserData: !Base64
         Fn::Join:
           - ''
@@ -2487,6 +2474,8 @@ Resources:
       Tags:
         - Key: Name
           Value: SAP HANA Worker 3
+        - Key: SAPHANAQuickStart
+          Value: !Ref AWS::StackId
       UserData: !Base64
         Fn::Join:
           - ''
@@ -2731,6 +2720,8 @@ Resources:
       Tags:
         - Key: Name
           Value: SAP HANA Worker 4
+        - Key: SAPHANAQuickStart
+          Value: !Ref AWS::StackId
       UserData: !Base64
         Fn::Join:
           - ''
@@ -2975,6 +2966,8 @@ Resources:
       Tags:
         - Key: Name
           Value: SAP HANA Worker 5
+        - Key: SAPHANAQuickStart
+          Value: !Ref AWS::StackId
       UserData: !Base64
         Fn::Join:
           - ''

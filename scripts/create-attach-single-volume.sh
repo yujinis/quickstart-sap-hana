@@ -217,13 +217,18 @@ then
 					--region ${AWS_DEFAULT_REGION} \
 					--availability-zone ${AWS_DEFAULT_AVAILABILITY_ZONE} \
 					--size ${VOL_SIZE} \
-					--volume-type ${VOL_TYPE} --iops ${VOL_PIOPS} | ${JQ_COMMAND} '.VolumeId')
+					--volume-type ${VOL_TYPE} --iops ${VOL_PIOPS} \
+					--tag-specification ResourceType=volume,Tags=[\{Key=SAPHANAQuickStart,Value=${MyStackId}\}] \
+					| ${JQ_COMMAND} '.VolumeId' )
+					
 	else
 		volumeid=$(${AWS} ec2 create-volume \
 					--region ${AWS_DEFAULT_REGION} \
 					--availability-zone ${AWS_DEFAULT_AVAILABILITY_ZONE} \
 					--size ${VOL_SIZE} \
-					--volume-type ${VOL_TYPE}| ${JQ_COMMAND} '.VolumeId')
+					--volume-type ${VOL_TYPE} \
+					--tag-specification ResourceType=volume,Tags=[\{Key=SAPHANAQuickStart,Value=${MyStackId}\}] \
+					| ${JQ_COMMAND} '.VolumeId')
 	fi
 else
 	if [[ "${VOL_TYPE}" == "io1" || "${VOL_TYPE}" == "io2" ]]; then
@@ -231,13 +236,17 @@ else
 					--region ${AWS_DEFAULT_REGION} \
 					--availability-zone ${AWS_DEFAULT_AVAILABILITY_ZONE} --encrypted \
 					--size ${VOL_SIZE} \
-					--volume-type ${VOL_TYPE} --iops ${VOL_PIOPS} | ${JQ_COMMAND} '.VolumeId')
+					--volume-type ${VOL_TYPE} --iops ${VOL_PIOPS} \
+					--tag-specification ResourceType=volume,Tags=[\{Key=SAPHANAQuickStart,Value=${MyStackId}\}] \
+					| ${JQ_COMMAND} '.VolumeId')
 	else
 		volumeid=$(${AWS} ec2 create-volume \
 					--region ${AWS_DEFAULT_REGION} \
 					--availability-zone ${AWS_DEFAULT_AVAILABILITY_ZONE} --encrypted \
 					--size ${VOL_SIZE} \
-					--volume-type ${VOL_TYPE}| ${JQ_COMMAND} '.VolumeId')
+					--volume-type ${VOL_TYPE}\
+					--tag-specification ResourceType=volume,Tags=[\{Key=SAPHANAQuickStart,Value=${MyStackId}\}] \
+					| ${JQ_COMMAND} '.VolumeId')
 	fi
 fi
 
