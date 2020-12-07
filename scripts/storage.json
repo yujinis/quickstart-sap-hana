@@ -561,7 +561,162 @@
                 }
               ]
             }
+          },
+          "r5b.2xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "256G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "256G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "512G"
+                }
+              ]
+            }
+          },
+          "r5b.4xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "2566G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "256G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "512G"
+                }
+              ]
+            }
+          },
+          "r5b.8xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "512G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "512G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                }
+              ]
+            }
+          },
+          "r5b.12xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "512G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "512G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                }
+              ]
+            }
+          },
+          "r5b.16xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "512G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "512G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                }
+              ]
+            }
+          },
+          "r5b.24xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "1024G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "2048G"
+                }
+              ]
+            }
+          },
+          "r5b.metal": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "1024G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "2048G"
+                }
+              ]
+            }
           }
+
         }
       }
     },
@@ -966,6 +1121,160 @@
             }
           },
           "r5.metal": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "2048G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "2048G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "4096G"
+                }
+              ]
+            }
+          },
+          "r5b.2xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "512G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "512G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                }
+              ]
+            }
+          },
+          "r5b.4xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "512G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "512G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                }
+              ]
+            }
+          },
+          "r5b.8xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "512G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "512G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                }
+              ]
+            }
+          },
+          "r5b.12xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "1024G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "2048G"
+                }
+              ]
+            }
+          },
+          "r5b.16xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "512G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "512G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                }
+              ]
+            }
+          },
+          "r5b.24xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "2048G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "2048G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "4096G"
+                }
+              ]
+            }
+          },
+          "r5b.metal": {
             "gp2": {
               "drives": [
                 {
@@ -1411,6 +1720,160 @@
                 }
               ]
             }
+          },
+          "r5b.2xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "768G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "768G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1536G"
+                }
+              ]
+            }
+          },
+          "r5b.4xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "768G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "768G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1536G"
+                }
+              ]
+            }
+          },
+          "r5b.8xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "512G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "512G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                }
+              ]
+            }
+          },
+          "r5b.12xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1536G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "1536G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "3072G"
+                }
+              ]
+            }
+          },
+          "r5b.16xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "512G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "512G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                }
+              ]
+            }
+          },
+          "r5b.24xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "3072G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "3072G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "6144G"
+                }
+              ]
+            }
+          },
+          "r5b.metal": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "3072G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "3072G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "6144G"
+                }
+              ]
+            }
           }
         }
       }
@@ -1836,6 +2299,160 @@
                 }
               ]
             }
+          },
+          "r5b.2xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "1024G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "2048G"
+                }
+              ]
+            }
+          },
+          "r5b.4xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "1024G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "2048G"
+                }
+              ]
+            }
+          },
+          "r5b.8xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "512G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "512G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                }
+              ]
+            }
+          },
+          "r5b.12xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "2048G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "2048G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "4096G"
+                }
+              ]
+            }
+          },
+          "r5b.16xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "512G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "512G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                }
+              ]
+            }
+          },
+          "r5b.24xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "4096G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "4096G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "8192G"
+                }
+              ]
+            }
+          },
+          "r5b.metal": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "4096G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "4096G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "8192G"
+                }
+              ]
+            }
           }
         }
       }
@@ -2241,6 +2858,160 @@
             }
           },
           "r5.metal": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "5120G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "5120G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "10240G"
+                }
+              ]
+            }
+          },
+          "r5b.2xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1280G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "1280G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "2560G"
+                }
+              ]
+            }
+          },
+          "r5b.4xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1280G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "1280G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "2560G"
+                }
+              ]
+            }
+          },
+          "r5b.8xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "512G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "512G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                }
+              ]
+            }
+          },
+          "r5b.12xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "2560G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "2560G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "5120G"
+                }
+              ]
+            }
+          },
+          "r5b.16xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "512G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "512G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "1024G"
+                }
+              ]
+            }
+          },
+          "r5b.24xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "5120G"
+                },
+                {
+                  "device": "/dev/sdg",
+                  "size": "5120G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdf",
+                  "size": "10240G"
+                }
+              ]
+            }
+          },
+          "r5b.metal": {
             "gp2": {
               "drives": [
                 {
@@ -4108,7 +4879,323 @@
           ],
           "volume_group": "vghanadata"
         }
+      },
+      "r5b.2xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "size": "225G"
+            },
+            {
+              "device": "/dev/sdc",
+              "size": "225G"
+            },
+            {
+              "device": "/dev/sdd",
+              "size": "225G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "585G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "piops": 2000,
+              "size": "300G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "292G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        }
+      },
+      "r5b.4xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "size": "225G"
+            },
+            {
+              "device": "/dev/sdc",
+              "size": "225G"
+            },
+            {
+              "device": "/dev/sdd",
+              "size": "225G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "585G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "piops": 2000,
+              "size": "300G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "292G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        }
+      },
+      "r5b.8xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "size": "225G"
+            },
+            {
+              "device": "/dev/sdc",
+              "size": "225G"
+            },
+            {
+              "device": "/dev/sdd",
+              "size": "225G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "674G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "piops": 7500,
+              "size": "300G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "299G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        }
+      },
+      "r5b.12xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "size": "225G"
+            },
+            {
+              "device": "/dev/sdc",
+              "size": "225G"
+            },
+            {
+              "device": "/dev/sdd",
+              "size": "225G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "585G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "piops": 7500,
+              "size": "600G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "585G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        }
+      },
+      "r5b.16xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "size": "225G"
+            },
+            {
+              "device": "/dev/sdc",
+              "size": "225G"
+            },
+            {
+              "device": "/dev/sdd",
+              "size": "225G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "674G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "piops": 7500,
+              "size": "600G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "599G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        }
+      },
+      "r5b.24xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "size": "400G"
+            },
+            {
+              "device": "/dev/sdc",
+              "size": "400G"
+            },
+            {
+              "device": "/dev/sdd",
+              "size": "400G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "1175G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "piops": 7500,
+              "size": "1200G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "1175G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        }
+      },
+      "r5b.metal": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "size": "400G"
+            },
+            {
+              "device": "/dev/sdc",
+              "size": "400G"
+            },
+            {
+              "device": "/dev/sdd",
+              "size": "400G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "1175G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "piops": 7500,
+              "size": "1200G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "1175G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        }
       }
+
     }
   },
   "hana_log": {
@@ -5587,7 +6674,295 @@
           ],
           "volume_group": "vghanalog"
         }
+      },
+      "r5b.2xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdh",
+              "size": "175G"
+            },
+            {
+              "device": "/dev/sdi",
+              "size": "175G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "325G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdh",
+              "piops": 1000,
+              "size": "260G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "256G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        }
+      },
+      "r5b.4xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdh",
+              "size": "175G"
+            },
+            {
+              "device": "/dev/sdi",
+              "size": "175G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "325G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdh",
+              "piops": 1000,
+              "size": "260G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "256G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        }
+      },
+      "r5b.8xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdh",
+              "size": "300G"
+            },
+            {
+              "device": "/dev/sdi",
+              "size": "300G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "599G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdh",
+              "piops": 2000,
+              "size": "260G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "259G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        }
+      },
+      "r5b.12xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdh",
+              "size": "300G"
+            },
+            {
+              "device": "/dev/sdi",
+              "size": "300G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "512G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdh",
+              "piops": 2000,
+              "size": "260G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "256G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        }
+      },
+      "r5b.16xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdh",
+              "size": "300G"
+            },
+            {
+              "device": "/dev/sdi",
+              "size": "300G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "599G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdh",
+              "piops": 2000,
+              "size": "260G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "259G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        }
+      },
+      "r5b.24xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdh",
+              "size": "300G"
+            },
+            {
+              "device": "/dev/sdi",
+              "size": "300G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "512G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdh",
+              "piops": 2000,
+              "size": "525G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "512G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        }
+      },
+      "r5b.metal": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdh",
+              "size": "300G"
+            },
+            {
+              "device": "/dev/sdi",
+              "size": "300G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "512G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdh",
+              "piops": 2000,
+              "size": "525G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "512G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        }
       }
+
     }
   },
   "shared": {
@@ -5833,6 +7208,76 @@
         }
       },
       "r5.metal": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sde",
+              "size": "1024G"
+            }
+          ]
+        }
+      },
+      "r5b.2xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sde",
+              "size": "300G"
+            }
+          ]
+        }
+      },
+      "r5b.4xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sde",
+              "size": "300G"
+            }
+          ]
+        }
+      },
+      "r5b.8xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sde",
+              "size": "300G"
+            }
+          ]
+        }
+      },
+      "r5b.12xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sde",
+              "size": "512G"
+            }
+          ]
+        }
+      },
+      "r5b.16xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sde",
+              "size": "512G"
+            }
+          ]
+        }
+      },
+      "r5b.24xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sde",
+              "size": "1024G"
+            }
+          ]
+        }
+      },
+      "r5b.metal": {
         "gp2": {
           "drives": [
             {
@@ -6095,6 +7540,76 @@
             }
           ]
         }
+      },
+      "r5b.2xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
+      },
+      "r5b.4xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
+      },
+      "r5b.8xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
+      },
+      "r5b.12xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
+      },
+      "r5b.16xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
+      },
+      "r5b.24xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
+      },
+      "r5b.metal": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
       }
     },
     "worker": {
@@ -6279,6 +7794,76 @@
         }
       },
       "r5.metal": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
+      },
+      "r5b.2xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
+      },
+      "r5b.4xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
+      },
+      "r5b.8xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
+      },
+      "r5b.12xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
+      },
+      "r5b.16xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
+      },
+      "r5b.24xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
+      },
+      "r5b.metal": {
         "gp2": {
           "drives": [
             {

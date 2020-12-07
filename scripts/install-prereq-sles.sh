@@ -1268,17 +1268,17 @@ start_oss_configs() {
     
      
     case $instance_type in
-      r4.8xlarge|r4.16xlarge|x1.16xlarge|x1.32xlarge|x1e.32xlarge|r5.metal|u-6tb1.metal|u-9tb1.metal|u-12tb1.metal )
+      r4.8xlarge|r4.16xlarge|x1.16xlarge|x1.32xlarge|x1e.32xlarge|r5.metal|r5b.metal|u-6tb1.metal|u-9tb1.metal|u-12tb1.metal )
           log "`date` Configuring c-state"
           cpupower frequency-set -g performance > /dev/null
-          # cpupower idle-set -d 6 > /dev/null; cpupower idle-set -d 5 > /dev/null
-          # cpupower idle-set -d 4 > /dev/null; cpupower idle-set -d 3 > /dev/null
-          # cpupower idle-set -d 2 > /dev/null
-	        echo "cpupower frequency-set -g performance" >> /etc/init.d/boot.local
+          cpupower idle-set -d 6 > /dev/null; cpupower idle-set -d 5 > /dev/null
+          cpupower idle-set -d 4 > /dev/null; cpupower idle-set -d 3 > /dev/null
+          cpupower idle-set -d 2 > /dev/null
+          echo "cpupower frequency-set -g performance" >> /etc/init.d/boot.local
           # echo "cpupower idle-set -d 6 > /dev/null; cpupower idle-set -d 5 > /dev/null" >> /etc/init.d/boot.local
-     	    # echo "cpupower idle-set -d 4 > /dev/null; cpupower idle-set -d 3 > /dev/null" >> /etc/init.d/boot.local
-     	    # echo "cpupower idle-set -d 2 > /dev/null" >> /etc/init.d/boot.local
-     	    ;;
+     	  # echo "cpupower idle-set -d 4 > /dev/null; cpupower idle-set -d 3 > /dev/null" >> /etc/init.d/boot.local
+     	  # echo "cpupower idle-set -d 2 > /dev/null" >> /etc/init.d/boot.local
+     	  ;;
       *)
           log "`date`  Instance type doesn't allow c-state and p-state configuration" ;;
     esac

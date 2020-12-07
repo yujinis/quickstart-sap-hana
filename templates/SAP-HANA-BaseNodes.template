@@ -211,6 +211,13 @@ Parameters:
       - r5.16xlarge
       - r5.24xlarge
       - r5.metal
+      - r5b.2xlarge
+      - r5b.4xlarge
+      - r5b.8xlarge
+      - r5b.12xlarge
+      - r5b.16xlarge
+      - r5b.24xlarge
+      - r5b.metal
       - x1.16xlarge
       - x1.32xlarge
       - x1e.xlarge
