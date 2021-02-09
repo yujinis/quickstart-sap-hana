@@ -22,16 +22,25 @@ PYTHON_BIN=$(which python3)
 
 if [ ! -z ${PYTHON_BIN} ]; then
    echo "export PYTHON_BIN=${PYTHON_BIN}" >> ${SCRIPT_DIR}/config.sh
-   echo "...found python in ${PYTHON_BIN}" | tee -a ${HANA_LOG_FILE} 
+   echo "...found python in ${PYTHON_BIN}" | tee -a ${HANA_LOG_FILE}
+   echo -n "Checking python3 minor version...."
+   CHECKPYTHON3=$(${PYTHON_BIN} -c 'import sys; print(sys.version_info.minor)')
+   echo "...found Python 3.${CHECKPYTHON3}"
 else 
    PYTHON_BIN=$(which python)
    echo "export PYTHON_BIN=${PYTHON_BIN}" >> ${SCRIPT_DIR}/config.sh
    echo "...found python in ${PYTHON_BIN}" | tee -a ${HANA_LOG_FILE}
 fi
 
-wget https://s3.amazonaws.com/aws-cli/awscli-bundle.zip | tee -a ${HANA_LOG_FILE}
+if [[ ! -z ${CHECKPYTHON3} && ${CHECKPYTHON3} -lt 6 ]]; then
+   AWSCLI=awscli-bundle-1.18.223.zip
+else
+   AWSCLI=awscli-bundle.zip
+fi
+
+wget https://s3.amazonaws.com/aws-cli/${AWSCLI} | tee -a ${HANA_LOG_FILE}
 zypper -n install unzip
-unzip awscli-bundle.zip | tee -a ${HANA_LOG_FILE}
+unzip ${AWSCLI} | tee -a ${HANA_LOG_FILE}
 #sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws | tee -a ${HANA_LOG_FILE}
 ${PYTHON_BIN} /root/install/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws | tee -a ${HANA_LOG_FILE}
 
