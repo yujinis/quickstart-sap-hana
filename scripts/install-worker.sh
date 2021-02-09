@@ -393,6 +393,22 @@ mount -a
 mount
 
 # ------------------------------------------------------------------
+# Enable SAP HANA Fast Restart
+# ------------------------------------------------------------------
+
+if [[ "${FastRestartEnabled}" == "Yes" ]]; then
+    #
+    cp ${SCRIPT_DIR}/sap-hana-tmpfs.service /etc/systemd/system/
+    cp ${SCRIPT_DIR}/sap-hana-tmpfs.sh /etc/rc.d/
+    sed -i -e "s/HDB/${SID}/" /etc/rc.d/sap-hana-tmpfs.sh
+    systemctl daemon-reload
+    systemctl enable --now sap-hana-tmpfs
+    mount | grep -q '/hana/tmpfs' || \
+    ( log "`date` ERROR: Unable to mount tmpfs - aborting" ; \
+        sh ${SCRIPT_DIR}/signal-failure.sh "TMPFSFAIL" )
+fi
+
+# ------------------------------------------------------------------
 #          Pass through HANA installation
 # ------------------------------------------------------------------
 
@@ -436,7 +452,16 @@ cat /root/install/install.log >> /var/log/messages
 
 
 # Post installation: Install AWS Data provider
-cd /root/install/
-/usr/local/bin/aws s3 cp s3://aws-data-provider/bin/aws-agent_install.sh /root/install/aws-agent_install.sh
-chmod +x aws-agent_install.sh
-./aws-agent_install.sh
+
+if [[ "${MyOS}" == "SLES"* ]]; then
+	# Install SAP Data Provider for SLES
+	cd /root/install/
+	wget https://aws-sap-data-provider.s3.amazonaws.com/Installers/aws-sap-dataprovider-sles-standalone.x86_64.rpm
+	wget https://aws-sap-data-provider.s3.amazonaws.com/Installers/RPM-GPG-KEY-AWS
+	rpm --import RPM-GPG-KEY-AWS
+	zypper install -y aws-sap-dataprovider-sles-standalone.x86_64.rpm
+else
+	# Install SAP Data Provider for RHEL
+	wget https://aws-sap-data-provider.s3.amazonaws.com/Installers/aws-sap-dataprovider-rhel-standalone.x86_64.rpm
+	yum -y install aws-sap-dataprovider-rhel-standalone.x86_64.rpm
+fi

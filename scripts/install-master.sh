@@ -456,7 +456,7 @@ else
 	
 	# Check if SAP HANA media satisfies SAP HANA Fast Restart needs
 	log `date` "Checking media label for SAP HANA version"
-	if [ ${FAST_RESTART_ENABLED} -eq 1 ]; then
+	if [[ "${FastRestartEnabled}" == "Yes" ]]; then
 		#
 		HANA_V=$(sh ${SCRIPT_DIR}/check-hana-version.sh -v)  # HANA version
 		HANA_SPS=$(sh ${SCRIPT_DIR}/check-hana-version.sh -s | tr -d 'SPS') # HANA SPS
@@ -464,10 +464,13 @@ else
 		if [ ${HANA_V} == "2.0" -a ${HANA_SPS} -ge 4 ]; then
 			# Good for SAP HANA FR
 			cp ${SCRIPT_DIR}/sap-hana-tmpfs.service /etc/systemd/system/
+			cp ${SCRIPT_DIR}/sap-hana-tmpfs.sh /etc/rc.d/
+			sed -i -e "s/HDB/${SID}/" /etc/rc.d/sap-hana-tmpfs.sh
 			systemctl daemon-reload
 			systemctl enable --now sap-hana-tmpfs
-			mount | grep -q '/hana/tmpfs' || log "`date` - ERROR: Unable to mount tmpfs - aborting"
-				# sh ${SCRIPT_DIR}/signal-failure.sh "HANACHECKFAIL"
+			mount | grep -q '/hana/tmpfs' || \
+				( log "`date` ERROR: Unable to mount tmpfs - aborting" ; \
+				sh ${SCRIPT_DIR}/signal-failure.sh "TMPFSFAIL" )
 		else
 			sh ${SCRIPT_DIR}/signal-failure.sh "HANACHECKFAIL"
 		fi

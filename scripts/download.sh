@@ -59,6 +59,9 @@ wget ${DOWNLOADLINK}/scripts/writeconfig.sh --output-document=/root/install/writ
 wget ${DOWNLOADLINK}/scripts/create-attach-volume.sh --output-document=/root/install/create-attach-volume.sh
 wget ${DOWNLOADLINK}/scripts/configureVol.sh --output-document=/root/install/configureVol.sh
 wget ${DOWNLOADLINK}/scripts/create-attach-single-volume.sh --output-document=/root/install/create-attach-single-volume.sh
+wget ${DOWNLOADLINK}/scripts/check-hana-version.sh --output-document=/root/install/check-hana-version.sh
+wget ${DOWNLOADLINK}/scripts/sap-hana-tmpfs.sh --output-document=/root/install/sap-hana-tmpfs.sh
+wget ${DOWNLOADLINK}/scripts/sap-hana-tmpfs.service --output-document=/root/install/sap-hana-tmpfs.service
 wget ${DOWNLOADSTORAGE}/storage.json --output-document=/root/install/storage.json
 
 for f in download_media.py extract.sh get_advancedoptions.py postprocess.py signal-precheck-failure.sh signal-precheck-status.sh signal-precheck-success.sh build_storage.py

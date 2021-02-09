@@ -92,24 +92,24 @@ check_hana_compat() {
     if [ ! -z ${MIN_SPS} ]; then
         #
         if [[ ! -n ${MIN_REV} || ${HANA_REV} == 00 ]]; then
-        log "`date` - check-hana-version No revision to check"
+        log `date` - check-hana-version No revision to check
         elif [ ${HANA_REV} -ge ${MIN_REV} ]; then
-            log "`date` - check-hana-version - SAP HANA revision is supported with ${OS}"
+            log `date` - check-hana-version - SAP HANA revision is supported with ${OS}
         else
-            log "`date` - check-hana-version - WARNING: SAP HANA SPS Revision is not supported with ${OS}"
-            log "`date` END check-hana-version"
+            log `date` - check-hana-version - WARNING: SAP HANA SPS Revision is not supported with ${OS}
+            log `date` END - check-hana-version
             exit 2
         fi
         #
         if [ ${HANA_SPS_VER} -ge ${MIN_SPS_VER} ]; then
-            log "`date` - check-hana-version - SAP HANA SPS is supported with ${OS}"
+            log `date` check-hana-version - SAP HANA SPS is supported with ${OS}
         else
-            log "`date` - check-hana-version - WARNING: HANA SPS is not supported with ${OS}"
+            log `date` check-hana-version - WARNING: HANA SPS is not supported with ${OS}
             log `date` END - check-hana-version
             exit 2
         fi
     else
-        log "`date` - check-hana-version - WARNING: HANA SPS is not supported with ${OS}"
+        log `date` check-hana-version - WARNING: HANA SPS is not supported with ${OS}
         log `date` END - check-hana-version
         exit 2
     fi
@@ -131,7 +131,7 @@ print_info() {
 
 [[ -z "${OS}" ]]  && echo "input Operating System name missing" && exit 1;
 
-log `date` - BEGIN check-hana-version
+log `date` BEGIN - check-hana-version
 
 while getopts ":hvsrc" o; do
     case "${o}" in
