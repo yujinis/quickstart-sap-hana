@@ -1408,24 +1408,6 @@ start_fs() {
     #error check and return
 }
 
-#set_clocksource () {
-#    log "`date` Setting clocksource to tsc"
-#    # Checking for Nitro instances
-##    if grep tsc /sys/devices/system/clocksource/clocksource0/available_clocksource >> ${HANA_LOG_FILE} 2>&1
-#    then
-#        if grep tsc /sys/devices/system/clocksource/clocksource0/current_clocksource >> ${HANA_LOG_FILE} 2>&1
-#        then
-#            log "`date` Do nothing! Clocksource is already set to tsc"
-#        else
-#            echo "tsc" > /sys/devices/system/clocksource/clocksource0/current_clocksource
-#            sed -i.bkup 's/GRUB_CMDLINE_LINUX="[^"]*/&clocksource=tsc tsc=reliable/' /etc/default/grub
-#            grub2-mkconfig -o /boot/grub2/grub.cfg >> ${HANA_LOG_FILE} 2>&1
-#        fi
-#    else
-#        log "`date` Clocksource tsc is not supported on Nitro instance"
-#    fi
-#}
-
 start_oss_configs() {
 
     #This section is from OSS #2205917 - SAP HANA DB: Recommended OS settings for SLES 12 / SLES for SAP Applications 12
@@ -1460,10 +1442,8 @@ start_oss_configs() {
     sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="[^"]*/& numa_balancing=disable transparent_hugepage=never intel_idle.max_cstate=1 processor.max_cstate=1 clocksource=tsc tsc=reliable/' /etc/default/grub
     cp -p /boot/grub2/grub.cfg /boot/grub2/grub.cfg.quickstart.save
     grub2-mkconfig -o /boot/grub2/grub.cfg
-
-    instance_type=$(curl http://169.254.169.254/latest/meta-data/instance-type 2> /dev/null)
-    
-    log "`date` Configuring c-state"
+    #
+    log "`date` Configuring C-State and P-State"
     cpupower frequency-set -g performance > /dev/null
     cpupower idle-set -d 6 > /dev/null
     cpupower idle-set -d 5 > /dev/null
@@ -1471,7 +1451,6 @@ start_oss_configs() {
     cpupower idle-set -d 3 > /dev/null
     cpupower idle-set -d 2 > /dev/null
     echo "cpupower frequency-set -g performance" >> /etc/init.d/boot.local
-    log "`date`  Instance type doesn't allow c-state and p-state configuration"
     
 }
 
@@ -1591,6 +1570,7 @@ then
     #
     log "`date` Adding ${MyOS} Public Cloud Module x86_64 extension"
     VERSION_ID=$(grep VERSION_ID /etc/os-release | cut -f2 -d= | sed -e s/\"//g)
+    #
     if [[ "$MyOS" =~ 12 ]]
     then
         SUSEConnect -p sle-module-public-cloud/12/x86_64 | tee -a ${HANA_LOG_FILE}
@@ -1598,6 +1578,7 @@ then
     then
         SUSEConnect -p sle-module-public-cloud/${VERSION_ID}/x86_64 && SUSEConnect -p sle-module-legacy/${VERSION_ID}/x86_64 | tee -a ${HANA_LOG_FILE}
     fi
+    #
     if [ $? -eq 0 ]
     then
         log "`date` SUSE public cloud module activation SUCCEED"

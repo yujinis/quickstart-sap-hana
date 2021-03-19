@@ -114,7 +114,7 @@ _EOF
        #  SLES15 doesn't honor "elevator" kernel param on blk_mq schedulers
 		cat <<_EOF >> /etc/init.d/after.local
 #!/bin/bash
-for i in \$(pvs | grep dev | awk '{print \$1}' | sed s/\\\/dev\\\///)
+for i in \$(ls /sys/block/)
 do
    echo "none" > /sys/block/\$i/queue/scheduler
 done
