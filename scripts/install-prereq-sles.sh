@@ -236,7 +236,7 @@ install_prereq_sles12sp1() {
     zypper -n install autoyast2-installation | tee -a ${HANA_LOG_FILE}
     zypper -n install yast2-ncurses  | tee -a ${HANA_LOG_FILE}
     zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
-	  zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
     zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
     zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
     zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
@@ -392,6 +392,9 @@ install_prereq_sles12sp4() {
     zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
     zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
     zypper -n install cloud-netconfig-ec2 | tee -a ${HANA_LOG_FILE}
+    zypper -n install sysstat | tee -a ${HANA_LOG_FILE}
+    zypper -n install uuidd | tee -a ${HANA_LOG_FILE}
+    zypper -n install sapconf | tee -a ${HANA_LOG_FILE}
 
     # As of SLES12 SP4, /sbin/insserv has to be installed for HANA install
     zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
@@ -418,9 +421,12 @@ install_prereq_sles12sp4() {
 
     chkconfig boot.kdump  | tee -a ${HANA_LOG_FILE}
     chkconfig kdump off
+    
+    echo '#### Added by AWS QuickStart' >> /etc/sysctl.conf
     echo "net.ipv4.tcp_slow_start_after_idle=0" >> /etc/sysctl.conf
-    sysctl -p /etc/sysctl.conf  | tee -a ${HANA_LOG_FILE}
     echo "kernel.shmmni=65536" >> /etc/sysctl.conf
+    echo "net.core.somaxconn=4096" >> /etc/sysctl.conf
+    echo "net.ipv4.tcp_max_syn_backlog=8192" >> /etc/sysctl.conf
     sysctl -p /etc/sysctl.conf  | tee -a ${HANA_LOG_FILE}
     
 }
@@ -449,6 +455,9 @@ install_prereq_sles12sp5() {
     zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
     zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
     zypper -n install cloud-netconfig-ec2 | tee -a ${HANA_LOG_FILE}
+    zypper -n install sysstat | tee -a ${HANA_LOG_FILE}
+    zypper -n install uuidd | tee -a ${HANA_LOG_FILE}
+    zypper -n install sapconf | tee -a ${HANA_LOG_FILE}
 
     # As of SLES12 SP4, /sbin/insserv has to be installed for HANA install program or it'll fai
     zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
@@ -471,10 +480,12 @@ install_prereq_sles12sp5() {
 
     chkconfig boot.kdump  | tee -a ${HANA_LOG_FILE}
     chkconfig kdump off
+    
+    echo '#### Added by AWS QuickStart' >> /etc/sysctl.conf
     echo "net.ipv4.tcp_slow_start_after_idle=0" >> /etc/sysctl.conf
-    sysctl -p /etc/sysctl.conf  | tee -a ${HANA_LOG_FILE}
-
     echo "kernel.shmmni=65536" >> /etc/sysctl.conf
+    echo "net.core.somaxconn=4096" >> /etc/sysctl.conf
+    echo "net.ipv4.tcp_max_syn_backlog=8192" >> /etc/sysctl.conf
     sysctl -p /etc/sysctl.conf  | tee -a ${HANA_LOG_FILE}
 
 }
@@ -502,6 +513,9 @@ install_prereq_sles15() {
     zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
     zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
     zypper -n install cloud-netconfig-ec2 | tee -a ${HANA_LOG_FILE}
+    zypper -n install sysstat | tee -a ${HANA_LOG_FILE}
+    zypper -n install uuidd | tee -a ${HANA_LOG_FILE}
+    zypper -n install sapconf | tee -a ${HANA_LOG_FILE}
 
     # See OSS note 2788495
     zypper -n install libopenssl1_0_0 | tee -a ${HANA_LOG_FILE}
@@ -545,11 +559,11 @@ install_prereq_sles15() {
     #Remove ulimit package
     zypper remove ulimit > /dev/null
 
-    chkconfig boot.kdump  | tee -a ${HANA_LOG_FILE}
-    chkconfig kdump off
+    echo '#### Added by AWS QuickStart' >> /etc/sysctl.conf
     echo "net.ipv4.tcp_slow_start_after_idle=0" >> /etc/sysctl.conf
-    sysctl -p /etc/sysctl.conf  | tee -a ${HANA_LOG_FILE}
     echo "kernel.shmmni=65536" >> /etc/sysctl.conf
+    echo "net.core.somaxconn=4096" >> /etc/sysctl.conf
+    echo "net.ipv4.tcp_max_syn_backlog=8192" >> /etc/sysctl.conf
     sysctl -p /etc/sysctl.conf  | tee -a ${HANA_LOG_FILE}
 
 }
@@ -577,6 +591,9 @@ install_prereq_sles15sp1() {
     zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
     zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
     zypper -n install cloud-netconfig-ec2 | tee -a ${HANA_LOG_FILE}
+    zypper -n install sysstat | tee -a ${HANA_LOG_FILE}
+    zypper -n install uuidd | tee -a ${HANA_LOG_FILE}
+    zypper -n install sapconf | tee -a ${HANA_LOG_FILE}
 
     # See OSS note 2788495
     zypper -n install libopenssl1_0_0 | tee -a ${HANA_LOG_FILE}
@@ -619,11 +636,89 @@ install_prereq_sles15sp1() {
     # Remove ulimit package
     zypper remove ulimit > /dev/null
 
-    chkconfig boot.kdump  | tee -a ${HANA_LOG_FILE}
-    chkconfig kdump off
+    echo '#### Added by AWS QuickStart' >> /etc/sysctl.conf
     echo "net.ipv4.tcp_slow_start_after_idle=0" >> /etc/sysctl.conf
-    sysctl -p /etc/sysctl.conf  | tee -a ${HANA_LOG_FILE}
     echo "kernel.shmmni=65536" >> /etc/sysctl.conf
+    echo "net.core.somaxconn=4096" >> /etc/sysctl.conf
+    echo "net.ipv4.tcp_max_syn_backlog=8192" >> /etc/sysctl.conf
+    sysctl -p /etc/sysctl.conf  | tee -a ${HANA_LOG_FILE}
+
+}
+
+install_prereq_sles15sp2() {
+    # ------------------------------------------------------------------
+    #          Install all the pre-requisites for SAP HANA
+    # ------------------------------------------------------------------
+
+    log "## Installing required OS Packages## "
+    install_enable_ssm_agent
+    zypper -n update kernel-default 2>&1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install systemd 2>&1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install gtk2 2>&1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install java-1_6_0-ibm 2>&1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libicu  | tee -a ${HANA_LOG_FILE}
+    zypper -n install mozilla-xulrunner*  | tee -a ${HANA_LOG_FILE}
+    zypper -n install sudo  | tee -a ${HANA_LOG_FILE}
+    zypper -n install syslog-ng  | tee -a ${HANA_LOG_FILE}
+    zypper -n install tcsh libssh2-1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install autoyast2-installation | tee -a ${HANA_LOG_FILE}
+    zypper -n install yast2-ncurses  | tee -a ${HANA_LOG_FILE}
+    zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
+    zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
+    zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+    zypper -n install cloud-netconfig-ec2 | tee -a ${HANA_LOG_FILE}
+    zypper -n install sysstat | tee -a ${HANA_LOG_FILE}
+    zypper -n install uuidd | tee -a ${HANA_LOG_FILE}
+    zypper -n install sapconf | tee -a ${HANA_LOG_FILE}
+
+    # See OSS note 2788495
+    zypper -n install libopenssl1_0_0 | tee -a ${HANA_LOG_FILE}
+#    zypper -n install libssh2-1
+
+
+    # As of SLES12 SP4, /sbin/insserv has to be installed for HANA install program or it'll fail
+    zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+
+
+    # unrar has been replaced by unar in SLES 15, and is implemented as 
+    # a symbolic link to unar "unrar --> /usr/bin/unar.                 
+    zypper -n install unrar_wrapper | tee -a ${HANA_LOG_FILE}
+
+    # -------------------------------------------------------------------------
+    # Chrony has replaced NTP for time server synchonization as of SLES 15, and
+    # it's installed by default.                                               
+    # Below command is only to update chrony to the most current version.       
+    # -------------------------------------------------------------------------
+    zypper -n install chrony | tee -a ${HANA_LOG_FILE}
+
+    # ---------------------------------------------------------------------
+    # in SLES 15, command "ifconfig" has been replaced by "ip", and moved   
+    # from package net-tools to net-tools-deprecated. "ip" is installed by  
+    # default. Once "ifconfig" is completely removed we'll need to replace  
+    # "ifconfig" by "ip" in all codes for SLES15.                           
+    # --------------------------------------------------------------------- 
+    zypper -n install net-tools-deprecated | tee -a ${HANA_LOG_FILE}
+
+    #SLES 12 installation fails with libnuma
+    zypper -n install libnuma-devel | tee -a ${HANA_LOG_FILE}
+    
+    # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
+    zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+    zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+    
+    # Install most current libatomic1 if available
+    zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
+    
+    # Remove ulimit package
+    zypper remove ulimit > /dev/null
+
+    echo '#### Added by AWS QuickStart' >> /etc/sysctl.conf
+    echo "net.ipv4.tcp_slow_start_after_idle=0" >> /etc/sysctl.conf
+    echo "kernel.shmmni=65536" >> /etc/sysctl.conf
+    echo "net.core.somaxconn=4096" >> /etc/sysctl.conf
+    echo "net.ipv4.tcp_max_syn_backlog=8192" >> /etc/sysctl.conf
     sysctl -p /etc/sysctl.conf  | tee -a ${HANA_LOG_FILE}
 
 }
@@ -853,6 +948,57 @@ install_prereq_sles15sap() {
 }
 
 install_prereq_sles15sp1sap() {
+  # ------------------------------------------------------------------
+  #          Install all SLES15ForSAP pre-requisites for SAP HANA
+  # ------------------------------------------------------------------
+
+  log "`date` - Install / Update OS Packages## "
+  install_enable_ssm_agent
+  zypper -n install systemd 2>&1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install tuned  | tee -a ${HANA_LOG_FILE}
+  zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
+  zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
+  zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+  zypper -n install cloud-netconfig-ec2 | tee -a ${HANA_LOG_FILE}
+
+  
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
+  zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+  zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+  zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
+  
+  # Install most current libatomic1 if available
+  zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
+  
+  # unrar has been replaced by unar in SLES 15, and is implemented as 
+  # a symbolic link to unar "unrar --> /usr/bin/unar.                 
+  zypper -n install unrar_wrapper | tee -a ${HANA_LOG_FILE}
+
+  # Chrony has replaced NTP for time server synchonization as of SLES 15, and 
+  # it's installed by default.                                                
+  # Below command is only to update chrony to the most current version.
+  zypper -n install chrony | tee -a ${HANA_LOG_FILE}
+
+  # In SLES 15, command "ifconfig" has been replaced by "ip", and moved 
+  # from package net-tools to net-tools-deprecated. "ip" is installed by
+  # default. Once "ifconfig" is completely removed we'll need to replace  
+  # "ifconfig" by "ip" in all codes for SLES15.                         
+  zypper -n install net-tools-deprecated | tee -a ${HANA_LOG_FILE}
+
+  # See SLES15 for SAP install Guides
+  zypper -n install patterns-sles-sap_server | tee -a ${HANA_LOG_FILE}
+
+  # See OSS note 2788495
+  
+  zypper -n install libopenssl1_0_0 | tee -a ${HANA_LOG_FILE}
+
+  # Apply all Recommended HANA settings with SAPTUNE
+  install_and_run_saptune
+  
+}
+
+install_prereq_sles15sp2sap() {
   # ------------------------------------------------------------------
   #          Install all SLES15ForSAP pre-requisites for SAP HANA
   # ------------------------------------------------------------------
@@ -1154,6 +1300,53 @@ install_prereq_sles15sp1sapbyos() {
 
 }
 
+install_prereq_sles15sp2sapbyos() {
+  # ------------------------------------------------------------------
+  #          Install all the pre-requisites for SAP HANA
+  # ------------------------------------------------------------------
+  log "`date` - Install / Update OS Packages## "
+  install_enable_ssm_agent
+  zypper -n install systemd 2>&1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install tuned  | tee -a ${HANA_LOG_FILE}
+  zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
+  zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
+  zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+  
+  # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
+  zypper -n install gcc | tee -a ${HANA_LOG_FILE}
+  zypper -n install gcc-c++ | tee -a ${HANA_LOG_FILE}
+  zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
+  
+  # Install most current libatomic1 if available
+  zypper -n install libatomic1 | tee -a ${HANA_LOG_FILE}
+  
+  # See OSS note 2788495 
+  zypper -n install libopenssl1_0_0 | tee -a ${HANA_LOG_FILE}
+
+  ## unrar has been replaced by unar in SLES 15, and is implemented as 
+  ## a symbolic link to unar "unrar --> /usr/bin/unar.                
+  zypper -n install unrar_wrapper | tee -a ${HANA_LOG_FILE}
+
+  # Chrony has replaced NTP for time server synchonization as of SLES 15, and 
+  # it's installed by default.                                                
+  # Below command is only to update chrony to the most current version.     
+  zypper -n install chrony | tee -a ${HANA_LOG_FILE}
+
+  # in SLES 15, command "ifconfig" has been replaced by "ip", and moved   
+  # from package net-tools to net-tools-deprecated. "ip" is installed by  
+  # default. Once "ifconfig" is completely removed we'll need to replace  
+  # "ifconfig" by "ip" in all codes for SLES15.                           
+  zypper -n install net-tools-deprecated | tee -a ${HANA_LOG_FILE}
+
+  # See SLES15 for SAP install Guides
+  zypper -n install patterns-sles-sap_server | tee -a ${HANA_LOG_FILE}
+
+  # Apply all Recommended HANA settings with SAPTUNE
+  install_and_run_saptune
+
+}
+
 install_prereq_sles11sp4() {
     # ------------------------------------------------------------------
     #          Install all the pre-requisites for SAP HANA
@@ -1215,7 +1408,12 @@ start_fs() {
     #error check and return
 }
 
-set_clocksource () {
+start_oss_configs() {
+
+    #This section is from OSS #2205917 - SAP HANA DB: Recommended OS settings for SLES 12 / SLES for SAP Applications 12
+    #and OSS #2684254 - SAP HANA DB: Recommended OS settings for SLES 15 / SLES for SAP Applications 15
+
+    # Set Clocksource to tsc
     log "`date` Setting clocksource to tsc"
     # Checking for Nitro instances
     if grep tsc /sys/devices/system/clocksource/clocksource0/available_clocksource >> ${HANA_LOG_FILE} 2>&1
@@ -1225,33 +1423,14 @@ set_clocksource () {
             log "`date` Do nothing! Clocksource is already set to tsc"
         else
             echo "tsc" > /sys/devices/system/clocksource/clocksource0/current_clocksource
-            sed -i.bkup 's/GRUB_CMDLINE_LINUX="/&clocksource=tsc tsc=reliable/' /etc/default/grub
-            grub2-mkconfig -o /boot/grub2/grub.cfg >> ${HANA_LOG_FILE} 2>&1
         fi
-    else
-        log "`date` Clocksource tsc is not supported on Nitro instance"
     fi
-}
-
-start_oss_configs() {
-
-    #This section is from OSS #2205917 - SAP HANA DB: Recommended OS settings for SLES 12 / SLES for SAP Applications 12
-    #and OSS #2684254 - SAP HANA DB: Recommended OS settings for SLES 15 / SLES for SAP Applications 15
-
-    #echo "###################" >> /etc/init.d/boot.local
-    #echo "#BEGIN: This section inserted by AWS SAP HANA Quickstart" >> /etc/init.d/boot.local
-
+    
     ##Disable THP
     echo never > /sys/kernel/mm/transparent_hugepage/enabled
-    #echo "echo never > /sys/kernel/mm/transparent_hugepage/enabled" >> /etc/init.d/boot.local
-    #
-    #echo 10 > /proc/sys/vm/swappiness
-    #echo "echo 10 > /proc/sys/vm/swappiness" >> /etc/init.d/boot.local
-    #
 
     #Disable AutoNUMA
     echo 0 > /proc/sys/kernel/numa_balancing
-    #echo "echo 0 > /proc/sys/kernel/numa_balancing" >> /etc/init.d/boot.local
 
     #Disable KSM
     echo 0 > /sys/kernel/mm/ksm/run
@@ -1260,29 +1439,19 @@ start_oss_configs() {
     # Set GRUB configuration for required settings from
     #     SAP Note 2684254 and SAP Note 2205917
     cp -p /etc/default/grub /etc/default/grub.quickstart.save
-    sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="[^"]*/& numa_balancing=disable transparent_hugepage=never intel_idle.max_cstate=1 processor.max_cstate=1/' /etc/default/grub
+    sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="[^"]*/& numa_balancing=disable transparent_hugepage=never intel_idle.max_cstate=1 processor.max_cstate=1 clocksource=tsc tsc=reliable/' /etc/default/grub
     cp -p /boot/grub2/grub.cfg /boot/grub2/grub.cfg.quickstart.save
     grub2-mkconfig -o /boot/grub2/grub.cfg
-
-    instance_type=$(curl http://169.254.169.254/latest/meta-data/instance-type 2> /dev/null)
+    #
+    log "`date` Configuring C-State and P-State"
+    cpupower frequency-set -g performance > /dev/null
+    cpupower idle-set -d 6 > /dev/null
+    cpupower idle-set -d 5 > /dev/null
+    cpupower idle-set -d 4 > /dev/null
+    cpupower idle-set -d 3 > /dev/null
+    cpupower idle-set -d 2 > /dev/null
+    echo "cpupower frequency-set -g performance" >> /etc/init.d/boot.local
     
-     
-    case $instance_type in
-      r4.8xlarge|r4.16xlarge|x1.16xlarge|x1.32xlarge|x1e.32xlarge|r5.metal|r5b.metal|u-6tb1.metal|u-9tb1.metal|u-12tb1.metal )
-          log "`date` Configuring c-state"
-          cpupower frequency-set -g performance > /dev/null
-          cpupower idle-set -d 6 > /dev/null; cpupower idle-set -d 5 > /dev/null
-          cpupower idle-set -d 4 > /dev/null; cpupower idle-set -d 3 > /dev/null
-          cpupower idle-set -d 2 > /dev/null
-          echo "cpupower frequency-set -g performance" >> /etc/init.d/boot.local
-          # echo "cpupower idle-set -d 6 > /dev/null; cpupower idle-set -d 5 > /dev/null" >> /etc/init.d/boot.local
-     	  # echo "cpupower idle-set -d 4 > /dev/null; cpupower idle-set -d 3 > /dev/null" >> /etc/init.d/boot.local
-     	  # echo "cpupower idle-set -d 2 > /dev/null" >> /etc/init.d/boot.local
-     	  ;;
-      *)
-          log "`date`  Instance type doesn't allow c-state and p-state configuration" ;;
-    esac
-
 }
 
 disable_dhcp() {
@@ -1400,16 +1569,16 @@ then
     # Activating SUSE legacy and public cloud modules
     #
     log "`date` Adding ${MyOS} Public Cloud Module x86_64 extension"
+    VERSION_ID=$(grep VERSION_ID /etc/os-release | cut -f2 -d= | sed -e s/\"//g)
+    #
     if [[ "$MyOS" =~ 12 ]]
     then
         SUSEConnect -p sle-module-public-cloud/12/x86_64 | tee -a ${HANA_LOG_FILE}
-    elif [[ "$MyOS" == "SLES15SAPBYOSHVM" ]]
+    elif [[ "$MyOS" =~ 15 ]]
     then
-        SUSEConnect -p sle-module-legacy/15/x86_64 >>${HANA_LOG_FILE}  && SUSEConnect -p sle-module-public-cloud/15/x86_64 >>${HANA_LOG_FILE}
-    elif [[ "$MyOS" == "SLES15SP1SAPBYOSHVM" ]]
-    then
-        SUSEConnect -p sle-module-legacy/15.1/x86_64 >>${HANA_LOG_FILE}  && SUSEConnect -p sle-module-public-cloud/15.1/x86_64 >>${HANA_LOG_FILE}
+        SUSEConnect -p sle-module-public-cloud/${VERSION_ID}/x86_64 && SUSEConnect -p sle-module-legacy/${VERSION_ID}/x86_64 | tee -a ${HANA_LOG_FILE}
     fi
+    #
     if [ $? -eq 0 ]
     then
         log "`date` SUSE public cloud module activation SUCCEED"
@@ -1471,7 +1640,6 @@ case "$MyOS" in
     start_ntp
     start_fs
     start_oss_configs
-    set_clocksource
     log "`date` End - Executing SLES 12 SP1 related pre-requisites" ;;
   SLES12SP2HVM )
     log "`date` Start - Executing SLES 12 SP2 related pre-requisites"
@@ -1481,7 +1649,6 @@ case "$MyOS" in
     start_ntp
     start_fs
     start_oss_configs
-    set_clocksource
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP2 related pre-requisites" ;;
   SLES12SP3HVM )
@@ -1492,7 +1659,6 @@ case "$MyOS" in
     start_ntp
     start_fs
     start_oss_configs
-    set_clocksource
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP3 related pre-requisites" ;;
   SLES12SP4HVM )
@@ -1503,7 +1669,6 @@ case "$MyOS" in
     start_ntp
     start_fs
     start_oss_configs
-    set_clocksource
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP4 related pre-requisites" ;;
   SLES12SP5HVM )
@@ -1514,7 +1679,6 @@ case "$MyOS" in
     start_ntp
     start_fs
     start_oss_configs
-    set_clocksource
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP5 related pre-requisites" ;;
   SLES15HVM )
@@ -1524,7 +1688,6 @@ case "$MyOS" in
     disable_hostname
     start_fs
     start_oss_configs
-    set_clocksource
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 15 related pre-requisites" ;;
   SLES15SP1HVM )
@@ -1534,9 +1697,17 @@ case "$MyOS" in
     disable_hostname
     start_fs
     start_oss_configs
-    set_clocksource
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 15 SP1 related pre-requisites" ;;
+  SLES15SP2HVM )
+    log "`date` Start - Executing SLES 15 SP2 related pre-requisites"
+    install_prereq_sles15sp1
+    disable_dhcp
+    disable_hostname
+    start_fs
+    start_oss_configs
+    enable_resize_to_from_nitro
+    log "`date` End - Executing SLES 15 SP2 related pre-requisites" ;;
   SLES12SP1SAPHVM )
     log "`date` Start - Executing SLES 12 SP1 for SAP related pre-requisites"
     install_prereq_sles12sp1sap
@@ -1546,7 +1717,6 @@ case "$MyOS" in
     log "`date` Start - Executing SLES 12 SP2 for SAP related pre-requisites"
     install_prereq_sles12sp2sap
     start_oss_configs
-    set_clocksource
     disable_hostname
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP2 for SAP related pre-requisites" ;;
@@ -1554,7 +1724,6 @@ case "$MyOS" in
     log "`date` Start - Executing SLES 12 SP3 for SAP related pre-requisites"
     install_prereq_sles12sp3sap
     start_oss_configs
-    set_clocksource
     disable_hostname
     enable_resize_to_from_nitro
     fix_slesforsap_suse_repo
@@ -1563,7 +1732,6 @@ case "$MyOS" in
     log "`date` Start - Executing SLES 12 SP4 for SAP related pre-requisites"
     install_prereq_sles12sp4sap
     start_oss_configs
-    set_clocksource
     disable_hostname
     enable_resize_to_from_nitro
     fix_slesforsap_suse_repo
@@ -1572,7 +1740,6 @@ case "$MyOS" in
     log "`date` Start - Executing SLES 12 SP5 for SAP related pre-requisites"
     install_prereq_sles12sp5sap
     start_oss_configs
-    set_clocksource
     disable_hostname
     enable_resize_to_from_nitro
     fix_slesforsap_suse_repo
@@ -1581,7 +1748,6 @@ case "$MyOS" in
     log "`date` Start - Executing SLES 15 for SAP related pre-requisites"
     install_prereq_sles15sap
     start_oss_configs
-    set_clocksource
     disable_hostname
     enable_resize_to_from_nitro
     fix_slesforsap_suse_repo
@@ -1590,11 +1756,18 @@ case "$MyOS" in
     log "`date` Start - Executing SLES 15 SP1 for SAP related pre-requisites"
     install_prereq_sles15sp1sap
     start_oss_configs
-    set_clocksource
     disable_hostname
     enable_resize_to_from_nitro
     fix_slesforsap_suse_repo
     log "`date` End - Executing SLES 15 SP1 for SAP related pre-requisites" ;;
+  SLES15SP2SAPHVM )
+    log "`date` Start - Executing SLES 15 SP2 for SAP related pre-requisites"
+    install_prereq_sles15sp1sap
+    start_oss_configs
+    disable_hostname
+    enable_resize_to_from_nitro
+    fix_slesforsap_suse_repo
+    log "`date` End - Executing SLES 15 SP2 for SAP related pre-requisites" ;;
   SLES12SP1SAPBYOSHVM )
     log "`date` Start - Executing SLES 12 SP1 for SAP BYOS related pre-requisites"
     install_prereq_sles12sp1sapbyos
@@ -1603,7 +1776,6 @@ case "$MyOS" in
     start_ntp
     start_fs
     start_oss_configs
-    set_clocksource
     log "`date` End - Executing SLES 12 SP1 for SAP BYOS related pre-requisites" ;;
   SLES12SP2SAPBYOSHVM )
     log "`date` Start - Executing SLES 12 SP2 for SAP BYOS related pre-requisites"
@@ -1613,7 +1785,6 @@ case "$MyOS" in
     start_ntp
     start_fs
     start_oss_configs
-    set_clocksource
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP2 for SAP BYOS related pre-requisites" ;;
   SLES12SP3SAPBYOSHVM )
@@ -1624,7 +1795,6 @@ case "$MyOS" in
     start_ntp
     start_fs
     start_oss_configs
-    set_clocksource
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP3 for SAP BYOS related pre-requisites" ;;
   SLES12SP4SAPBYOSHVM )
@@ -1635,7 +1805,6 @@ case "$MyOS" in
     start_ntp
     start_fs
     start_oss_configs
-    set_clocksource
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP4 for SAP BYOS related pre-requisites" ;;
   SLES12SP5SAPBYOSHVM )
@@ -1646,7 +1815,6 @@ case "$MyOS" in
     start_ntp
     start_fs
     start_oss_configs
-    set_clocksource
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 12 SP5 for SAP BYOS related pre-requisites" ;;
   SLES15SAPBYOSHVM )
@@ -1656,7 +1824,6 @@ case "$MyOS" in
     disable_hostname
     start_fs
     start_oss_configs
-    set_clocksource
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 15 for SAP BYOS related pre-requisites" ;;
   SLES15SP1SAPBYOSHVM )
@@ -1666,9 +1833,17 @@ case "$MyOS" in
     disable_hostname
     start_fs
     start_oss_configs
-    set_clocksource
     enable_resize_to_from_nitro
     log "`date` End - Executing SLES 15 SP1 for SAP BYOS related pre-requisites" ;;
+  SLES15SP2SAPBYOSHVM )
+    log "`date` Start - Executing SLES 15 SP2 for SAP BYOS related pre-requisites"
+    install_prereq_sles15sp2sapbyos
+    disable_dhcp
+    disable_hostname
+    start_fs
+    start_oss_configs
+    enable_resize_to_from_nitro
+    log "`date` End - Executing SLES 15 SP2 for SAP BYOS related pre-requisites" ;;
 esac
 
 #install_prereq

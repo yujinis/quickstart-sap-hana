@@ -77,25 +77,52 @@ create_volume () {
 }
 
 
+
 set_noop_scheduler () {
-	for i in `pvs | grep dev | awk '{print $1}' | sed s/\\\/dev\\\///`
-	do
-	  if [[ "$i" != *"nvme"* ]]; then
-	    if [[ $(grep -wq noop /sys/block/$i/queue/scheduler; echo $?) -eq 0 ]]; then
-	      log `date` "Setting i/o scheduler to noop for each physical volume"
-	      echo "noop" > /sys/block/$i/queue/scheduler
-	      printf "$i: "
-	      cat /sys/block/$i/queue/scheduler
-	    else
-	      log `date` "Setting i/o scheduler to none for each physical volume"
-	      echo "none" > /sys/block/$i/queue/scheduler
-	      printf "$i: "
-	      cat /sys/block/$i/queue/scheduler
-	    fi
-      else
-        log `date` "Skipping IO block scheduler change - NVMe device detected"
-      fi
-    done
+	
+	if [[ $(grep -wq noop /sys/block/*/queue/scheduler; echo $?) -eq 0 ]]; then
+		for i in `pvs | grep dev | awk '{print $1}' | sed s/\\\/dev\\\///`
+		do
+			log `date` "Setting i/o scheduler to noop for each physical volume"
+			echo "noop" > /sys/block/$i/queue/scheduler
+			printf "$i: "
+			cat /sys/block/$i/queue/scheduler
+		done
+		sed -i.bkup 's/GRUB_CMDLINE_LINUX_DEFAULT="[^"]*/& elevator=noop /' /etc/default/grub
+		grub2-mkconfig -o /boot/grub2/grub.cfg >> ${HANA_LOG_FILE} 2>&1
+	else
+		for i in `pvs | grep dev | awk '{print $1}' | sed s/\\\/dev\\\///`
+		do
+	    	log `date` "Setting i/o scheduler to none for each physical volume"
+	    	echo "none" > /sys/block/$i/queue/scheduler
+	    	log `date` "$i: "
+	    	log `date` `cat /sys/block/$i/queue/scheduler`
+	    done
+	    sed -i.bkup 's/GRUB_CMDLINE_LINUX_DEFAULT="[^"]*/& elevator=none /' /etc/default/grub
+	    grub2-mkconfig -o /boot/grub2/grub.cfg >> ${HANA_LOG_FILE} 2>&1
+	fi
+
+	if [[ "$MyOS" =~ 12 ]]; then
+		# SLES12 doesn't honor "elevator" kernel param on blk_mq schedulers
+		cat <<_EOF >> /etc/init.d/boot.local
+for i in \$(pvs | grep dev | awk '{print \$1}' | sed s/\\\/dev\\\///)
+do
+   echo "none" > /sys/block/\$i/queue/scheduler
+done
+_EOF
+    elif [[ "$MyOS" =~ 15 ]]; then
+       #  SLES15 doesn't honor "elevator" kernel param on blk_mq schedulers
+		cat <<_EOF >> /etc/init.d/after.local
+#!/bin/bash
+for i in \$(ls /sys/block/)
+do
+   echo "none" > /sys/block/\$i/queue/scheduler
+done
+_EOF
+		chmod +x /etc/init.d/after.local
+		systemctl enable --now after-local
+	fi
+	
 }
 
 
@@ -360,7 +387,8 @@ chmod 600 ${sf}
 mkswap ${sf}
 swapon ${sf}
 echo "${sf}	swap swap defaults 0 0" >> /etc/fstab
-log `swapon --show` "End of creating swap space"
+log `date` `swapon --show`
+log `date` "End of creating swap space"
 
 
 # ------------------------------------------------------------------
