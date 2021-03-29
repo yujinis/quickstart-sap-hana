@@ -8,7 +8,7 @@ start() {
 		#
 		mkdir -p /hana/tmpfs${COUNT}/${SID}
 		mount tmpfs${SID}${COUNT} -t tmpfs -o mpol=prefer:${COUNT} /hana/tmpfs${COUNT}/${SID}
-		COUNT=$(expr ${COUNT} + 1)
+		COUNT=$((COUNT} + 1))
 		chown -R $SIDADM:sapsys /hana/tmpfs*/${SID}
 		chmod 777 -R /hana/tmpfs*/${SID}
 	done
