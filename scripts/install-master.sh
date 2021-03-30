@@ -449,11 +449,34 @@ then
 	cp -r /home/ec2-user/media.cache /media
 else
 	log `date` "Downloading SAP HANA Media from S3: START"
+	
 	# Download media
 	${PYTHON_BIN} ${SCRIPT_DIR}/download_media.py  -o /media/
 	log `date` "Downloading SAP HANA Media from S3: END"
+	
+	# Check if SAP HANA media satisfies SAP HANA Fast Restart needs
+	log `date` "Checking media label for SAP HANA version"
+	if [[ "${FastRestartEnabled}" == "Yes" ]]; then
+		#
+		HANA_V=$(sh ${SCRIPT_DIR}/check-hana-version.sh -v)  # HANA version
+		HANA_SPS=$(sh ${SCRIPT_DIR}/check-hana-version.sh -s | tr -d 'SPS') # HANA SPS
+		#
+		if [ ${HANA_V} == "2.0" -a ${HANA_SPS} -ge 4 ]; then
+			# Good for SAP HANA FR
+			cp ${SCRIPT_DIR}/sap-hana-tmpfs.service /etc/systemd/system/
+			cp ${SCRIPT_DIR}/sap-hana-tmpfs.sh /etc/rc.d/
+			sed -i -e "s/HDB/${SID}/" /etc/rc.d/sap-hana-tmpfs.sh
+			systemctl daemon-reload
+			systemctl enable --now sap-hana-tmpfs
+			mount | grep -q '/hana/tmpfs' || \
+				( log "`date` ERROR: Unable to mount tmpfs - aborting" ; \
+				sh ${SCRIPT_DIR}/signal-failure.sh "TMPFSFAIL" )
+		else
+			sh ${SCRIPT_DIR}/signal-failure.sh "HANACHECKFAIL"
+		fi
+	fi
+	
 	# extract media
-
 	log `date` "Extracting SAP HANA Media: START"
 	sh ${SCRIPT_DIR}/extract.sh
 	log `date` "Extracting SAP HANA Media: END"

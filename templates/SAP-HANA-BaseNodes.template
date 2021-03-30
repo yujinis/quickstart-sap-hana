@@ -102,6 +102,13 @@ Parameters:
     AllowedValues:
       - 'Yes'
       - 'No'
+  SAPHANAFastRestart:
+    Type: String
+    Description: Enable (Yes) or disable (No) SAP HANA Fast Restart.
+    Default: 'No'
+    AllowedValues:
+      - 'Yes'
+      - 'No'
   Encryption:
     Type: String
     Description: Enable (Yes) or disable (No) encryption on EBS volumes.
@@ -357,6 +364,7 @@ Metadata:
           - SAPTZ
           - HANAInstallMedia
           - InstallHANA
+          - SAPHANAFastRestart
       - Label:
           default: Optional configuration
         Description:
@@ -442,6 +450,8 @@ Metadata:
         default: Enter SAP HANA instance number
       HANAMasterPass:
         default: Enter SAP HANA password
+      SAPHANAFastRestart:
+        default: Would you like to enable SAP HANA Fast Restart?
       RDPInstanceType:
         default: Choose instance type for RDP host
       EnableLogging:
@@ -551,6 +561,9 @@ Conditions:
     - !Ref 'AWSEFS'
   - !Not
     - !Condition 'TwoOrMoreNodes'
+  UseSAPHANAFR: !Equals
+    - 'Yes'
+    - !Ref 'SAPHANAFastRestart'
   UseEncryption: !Equals
     - !Ref 'Encryption'
     - 'Yes'
@@ -1935,6 +1948,9 @@ Resources:
             - "\n"
             - sh /root/install/writeconfig.sh NO_PROXY=localhost,127.0.0.1,169.254.169.254
             - "\n"
+            - sh /root/install/writeconfig.sh FastRestartEnabled=
+            - !Ref 'SAPHANAFastRestart'
+            - "\n"
             - sh /root/install/writeconfig.sh IsMasterNode=1
             - "\n"
             - sh /root/install/writeconfig.sh IsWorkerNode=0
@@ -2213,6 +2229,9 @@ Resources:
             - "\n"
             - sh /root/install/writeconfig.sh NO_PROXY=localhost,127.0.0.1,169.254.169.254
             - "\n"
+            - sh /root/install/writeconfig.sh FastRestartEnabled=
+            - !Ref 'SAPHANAFastRestart'
+            - "\n"
             - sh /root/install/writeconfig.sh IsMasterNode=0
             - "\n"
             - sh /root/install/writeconfig.sh IsWorkerNode=1
@@ -2443,6 +2462,9 @@ Resources:
             - sh /root/install/writeconfig.sh no_proxy=localhost,127.0.0.1,169.254.169.254
             - "\n"
             - sh /root/install/writeconfig.sh NO_PROXY=localhost,127.0.0.1,169.254.169.254
+            - "\n"
+            - sh /root/install/writeconfig.sh FastRestartEnabled=
+            - !Ref 'SAPHANAFastRestart'
             - "\n"
             - sh /root/install/writeconfig.sh IsMasterNode=0
             - "\n"
@@ -2690,6 +2712,9 @@ Resources:
             - "\n"
             - sh /root/install/writeconfig.sh NO_PROXY=localhost,127.0.0.1,169.254.169.254
             - "\n"
+            - sh /root/install/writeconfig.sh FastRestartEnabled=
+            - !Ref 'SAPHANAFastRestart'
+            - "\n"
             - sh /root/install/writeconfig.sh IsMasterNode=0
             - "\n"
             - sh /root/install/writeconfig.sh IsWorkerNode=1
@@ -2936,6 +2961,9 @@ Resources:
             - "\n"
             - sh /root/install/writeconfig.sh NO_PROXY=localhost,127.0.0.1,169.254.169.254
             - "\n"
+            - sh /root/install/writeconfig.sh FastRestartEnabled=
+            - !Ref 'SAPHANAFastRestart'
+            - "\n"
             - sh /root/install/writeconfig.sh IsMasterNode=0
             - "\n"
             - sh /root/install/writeconfig.sh IsWorkerNode=1
@@ -3166,6 +3194,9 @@ Resources:
             - sh /root/install/writeconfig.sh no_proxy=localhost,127.0.0.1,169.254.169.254
             - "\n"
             - sh /root/install/writeconfig.sh NO_PROXY=localhost,127.0.0.1,169.254.169.254
+            - "\n"
+            - sh /root/install/writeconfig.sh FastRestartEnabled=
+            - !Ref 'SAPHANAFastRestart'
             - "\n"
             - sh /root/install/writeconfig.sh IsMasterNode=0
             - "\n"
