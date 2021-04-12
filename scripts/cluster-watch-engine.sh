@@ -49,6 +49,9 @@ CREATE=0
 PRINT=0
 BLOCK_UNTIL_TABLE_LIVE=0
 DELETE_TABLE=0
+NUM_RETRY=0
+MAX_RETRIES=10
+
 [[ $# -eq 0 ]] && usage;
 
 while getopts "hcbprs:i:n:q:w:" o; do
@@ -190,6 +193,16 @@ CreateTable() {
         --key-schema \
             AttributeName=PrivateIpAddress,KeyType=HASH \
         --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1 >> ${HANA_LOG_FILE} 2>&1
+    
+    rc=$?
+    
+    if [ $rc -lt 0 ]; then
+        # CreateTable failed - retry max 10 times
+        if [ ${NUM_RETRY} -lt ${MAX_RETRIES} ]; then
+            NUM_RETRY=$((NUM_RETRY+1))
+            CreateTable
+        fi
+    fi
     
     log "Waiting for table creation"
     WaitUntilTableActive

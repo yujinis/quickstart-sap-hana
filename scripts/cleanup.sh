@@ -30,7 +30,7 @@ fi
 
 cd /root/install
 
-for f in awscli-bundle.zip cluster-watch-engine.sh config.sh install-aws.sh install-hana-master.sh install-hana-worker.sh install-master.sh install-prereq.sh install-worker.sh jq reconcile-ips.py reconcile-ips.sh wait-for-master.sh wait-for-workers.sh debug-log.sh download.sh fence-cluster.sh log2s3.sh README.txt *.sh *.py *.json
+for f in awscli-bundle.zip cluster-watch-engine.sh config.sh install-aws.sh install-hana-master.sh install-hana-worker.sh install-master.sh install-prereq.sh install-worker.sh jq reconcile-ips.py reconcile-ips.sh wait-for-master.sh wait-for-workers.sh debug-log.sh download.sh fence-cluster.sh log2s3.sh README.txt sap-hana-tmpfs.service *.sh *.py *.json
 do
    FILE=/root/install/${f}
    if [ -f "$FILE" ]; then

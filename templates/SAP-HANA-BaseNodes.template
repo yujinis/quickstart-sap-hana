@@ -1993,6 +1993,23 @@ Resources:
             - sh /root/install/writeconfig.sh FastRestartEnabled=
             - !Ref 'SAPHANAFastRestart'
             - "\n"
+            
+            - sh /root/install/writeconfig.sh DomainName=
+            - !Ref 'DomainName'
+            - "\n"
+            - sh /root/install/writeconfig.sh SID=
+            - !Ref 'SID'
+            - "\n"
+            - sh /root/install/writeconfig.sh HANAMasterPass=
+            - !Ref 'HANAMasterPass'
+            - "\n"
+            - sh /root/install/writeconfig.sh HANAMasterHostname=
+            - !Ref 'HANAMasterHostname'
+            - "\n"
+            - sh /root/install/writeconfig.sh HANAWorkerHostname=
+            - !Ref 'HANAWorkerHostname'
+            - "\n"
+
             - sh /root/install/writeconfig.sh IsMasterNode=1
             - "\n"
             - sh /root/install/writeconfig.sh IsWorkerNode=0
@@ -2022,68 +2039,7 @@ Resources:
             - "\n"
             - "sh /root/install/install-prereq.sh\n"
             - "sh /root/install/install-aws.sh\n"
-            - "#sh /root/install/signal-complete.sh \n"
-            - "sh /root/install/cluster-watch-engine.sh -c \n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - DomainName=
-            - !Ref 'DomainName'
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - MyHostname=
-            - !Ref 'HANAMasterHostname'
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - MyRole=Master
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - HostCount=
-            - !Ref 'HostCount'
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - Status=PRE_INSTALL_COMPLETE
-            - '"'
-            - "\n"
-            - 'sh /root/install/reconcile-ips.sh '
-            - !Ref 'HostCount'
-            - " >> /root/install.log\n"
-            - sh /root/install/fence-cluster.sh -w "PRE_INSTALL_COMPLETE_ACK=
-            - !Ref 'HostCount'
-            - '"'
-            - "\n"
-            - 'sh /root/install/install-master.sh -s '
-            - !Ref 'SID'
-            - ' -i '
-            - !Ref 'SAPInstanceNum'
-            - ' -p '''
-            - !Ref 'HANAMasterPass'
-            - ''' -n '
-            - !Ref 'HANAMasterHostname'
-            - ' -d '
-            - !Ref 'DomainName'
-            - ' -w '
-            - !Ref 'HANAWorkerHostname'
-            - "\n"
-            - "sh /root/install/cluster-watch-engine.sh -s \"MASTER_NODE_COMPLETE\"\
-              \n"
-            - 'sh /root/install/wait-for-workers.sh '
-            - !Ref 'HostCount'
-            - "\n"
-            - "sh /root/install/cluster-watch-engine.sh  -r \n"
-            - sh /root/install/validate-install.sh "
-            - !Ref 'WaitForMasterInstallWaitHandle'
-            - "\" \n"
-            - "#python /root/install/postprocess.py \n"
-            - "sh /root/install/cleanup.sh \n"
-            - "\n"
+            - "sh /root/install/setup-reboot.sh \n"
             - "\n"
       InstanceType: !Ref 'MyInstanceType'
   PlacementGroup:
