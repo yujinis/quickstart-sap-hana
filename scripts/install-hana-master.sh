@@ -135,7 +135,7 @@ cat ${PASSFILE} | ${HANAMEDIA}/HDB_LCM_LINUX_X86_64/hdblcm \
     --hostname=${MASTER_HOSTNAME} \
     --number=${INSTANCE}  \
     --logpath=/hana/log/${SID} \
-    --datapath=/hana/log/${SID} \
+    --datapath=/hana/data/${SID} \
     --custom_cfg=${CUSTOM_CFG_DIR} \
     --read_password_from_stdin=xml >> ${HANA_LOG_FILE} 2>&1
 
