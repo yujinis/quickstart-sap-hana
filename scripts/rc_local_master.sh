@@ -30,8 +30,6 @@ fi
 
 MyHostname=$(hostname)
 
-
-
 sleep 20
 sh /root/install/cluster-watch-engine.sh -c
 sh /root/install/cluster-watch-engine.sh -i "DomainName=${DomainName}"
@@ -52,4 +50,8 @@ if [ -f /etc/init.d/boot.local.bkup.QS ]; then
 	# Restore original file
 	rm -fr /etc/init.d/boot.local
 	mv /etc/init.d/boot.local.bkup.QS /etc/init.d/boot.local
+elif [ -f /etc/init.d/rc.local.bkup.QS ]; then
+	# Restore original file
+	rm -fr /etc/init.d/rc.local
+	mv /etc/init.d/rc.local.bkup.QS /etc/init.d/rc.local]
 fi
