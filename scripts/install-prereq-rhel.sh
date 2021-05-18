@@ -266,6 +266,49 @@ install_prereq_rhel76() {
   yum -y install compat-sap-c++-9 | tee -a ${HANA_LOG_FILE}
 }
 
+install_prereq_rhel77() {
+  log "`date` Installing packages required for RHEL 7.7"
+  install_enable_ssm_agent
+  yum -y update glibc.x86_64 | tee -a ${HANA_LOG_FILE}
+  yum -y update kernel | tee -a ${HANA_LOG_FILE}
+  yum -y update systemd | tee -a ${HANA_LOG_FILE}
+  yum -y install uuidd | tee -a ${HANA_LOG_FILE}
+  yum -y install xfsprogs 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install autofs 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install gcc | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-5 | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-6 | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-7 | tee -a ${HANA_LOG_FILE}
+  yum -y install tuned-profiles-sap-hana | tee -a ${HANA_LOG_FILE}
+  yum -y install nvme-cli | tee -a ${HANA_LOG_FILE}
+  #Install libatomic and compat-sap-c++-7 to support SAP HANA 2 SP4 and above. OSS Note 2593824
+  yum -y install libatomic | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-7 | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-9 | tee -a ${HANA_LOG_FILE}
+}
+
+install_prereq_rhel79() {
+  log "`date` Installing packages required for RHEL 7.9"
+  install_enable_ssm_agent
+  yum -y update glibc.x86_64 | tee -a ${HANA_LOG_FILE}
+  yum -y update kernel | tee -a ${HANA_LOG_FILE}
+  yum -y update systemd | tee -a ${HANA_LOG_FILE}
+  yum -y install uuidd | tee -a ${HANA_LOG_FILE}
+  yum -y install xfsprogs 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install autofs 2>&1 | tee -a ${HANA_LOG_FILE}
+  yum -y install gcc | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-5 | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-6 | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-7 | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-8 | tee -a ${HANA_LOG_FILE}
+  yum -y install tuned-profiles-sap-hana | tee -a ${HANA_LOG_FILE}
+  yum -y install nvme-cli | tee -a ${HANA_LOG_FILE}
+  #Install libatomic and compat-sap-c++-7 to support SAP HANA 2 SP4 and above. OSS Note 2593824
+  yum -y install libatomic | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-7 | tee -a ${HANA_LOG_FILE}
+  yum -y install compat-sap-c++-9 | tee -a ${HANA_LOG_FILE}
+}
+
 install_prereq_rhel81() {
   log "`date` Installing packages required for RHEL 8.2"
   install_enable_ssm_agent
@@ -473,6 +516,158 @@ start_oss_configs_rhel76() {
 
 }
 
+start_oss_configs_rhel77() {
+
+    #This section is from OSS #2292690 - SAP HANA DB: Recommended OS settings for RHEL 7
+
+    log "`date` - Apply saptune HANA profile"
+    systemctl enable uuidd
+    systemctl start uuidd
+    systemctl start tuned  | tee -a ${HANA_LOG_FILE}
+    systemctl enable tuned | tee -a ${HANA_LOG_FILE}
+    tuned-adm profile sap-hana | tee -a ${HANA_LOG_FILE}
+    tuned-adm active | tee -a ${HANA_LOG_FILE}
+    #
+    # Set tsc clocksource
+    #
+    log "`date` - Set clocksource to tsc"
+    echo "tsc" > /sys/devices/system/clocksource/clocksource0/current_clocksource
+    #
+    #Disable KSM
+    #
+    log "`date` - Disabling KSM"
+    echo 0 > /sys/kernel/mm/ksm/run
+    echo "echo 0 > /sys/kernel/mm/ksm/run" >> /etc/rc.d/rc.local
+    #
+    # Disable SELinux
+    #
+    log "`date` - Disabling SELinux"
+    sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+    sed -i 's/SELINUX=permissive/SELINUX=disabled/g' /etc/selinux/config
+    setenforce 0
+    #
+    # Recommended networking settings (SAP Note 2382421)
+    sysctl -w kernel.pid_max=4194304
+    sysctl -w net.core.somaxconn=4096
+    sysctl -w net.ipv4.tcp_max_syn_backlog=8192
+    sysctl -w net.ipv4.tcp_slow_start_after_idle=0
+    sysctl -w vm.max_map_count=2147483647
+    echo "kernel.pid_max=4194304" >> /etc/sysctl.d/sap.conf 
+    echo "net.core.somaxconn=4096" >> /etc/sysctl.d/sap.conf 
+    echo "net.ipv4.tcp_max_syn_backlog=8192" >> /etc/sysctl.d/sap.conf 
+    echo "net.ipv4.tcp_slow_start_after_idle=0" >>  /etc/sysctl.d/sap.conf
+    echo "vm.max_map_count=2147483647" >>  /etc/sysctl.d/sap.conf
+    #
+    echo "@sapsys    hard    nofile    65536" >>  /etc/security/limits.d/99-sap.conf
+    echo "@sapsys    soft    nofile    65536" >>  /etc/security/limits.d/99-sap.conf
+    echo "@sapsys    hard    nproc    unlimited" >>  /etc/security/limits.d/99-sap.conf
+    echo "@sapsys    soft    nproc    unlimited" >>  /etc/security/limits.d/99-sap.conf
+    #
+    #
+    cat >>  /etc/tmpfiles.d/sap.conf <<_EOF
+# systemd.tmpfiles exclude file for SAP
+# SAP software stores some important files in /tmp which should not be deleted automatically
+ 
+# Exclude SAP socket and lock files
+x /tmp/.sap*
+ 
+# Exclude HANA lock file
+x /tmp/.hdb*lock
+
+# Exclude TREX lock file
+x /tmp/.trex*lock
+_EOF
+    # Set recommended boot options
+    #       elevator=none   (I/O scheduler)
+    #       clocksource=tsc (clocksource)
+    #       transparent_hugepages=never (disable THP)
+    #       intel_idle.max_cstate=1 && processor.max_cstate=1 (disable deeper C-states)
+    #
+    io_sched=$(get_io_scheduler)
+    log "`date` - Setting recommended boot options"
+    cp -p /etc/default/grub /etc/default/grub.quickstart.save
+    sed -i "s/GRUB_CMDLINE_LINUX=\"[^\"]*/& numa_balancing=disable elevator=${io_sched} clocksource=tsc transparent_hugepage=never intel_idle.max_cstate=1 processor.max_cstate=1/" /etc/default/grub
+    cp -p /boot/grub2/grub.cfg /boot/grub2/grub.cfg.quickstart.save
+    grub2-mkconfig -o /boot/grub2/grub.cfg
+
+}
+
+start_oss_configs_rhel79() {
+
+    #This section is from OSS #2292690 - SAP HANA DB: Recommended OS settings for RHEL 7
+
+    log "`date` - Apply saptune HANA profile"
+    systemctl enable uuidd
+    systemctl start uuidd
+    systemctl start tuned  | tee -a ${HANA_LOG_FILE}
+    systemctl enable tuned | tee -a ${HANA_LOG_FILE}
+    tuned-adm profile sap-hana | tee -a ${HANA_LOG_FILE}
+    tuned-adm active | tee -a ${HANA_LOG_FILE}
+    #
+    # Set tsc clocksource
+    #
+    log "`date` - Set clocksource to tsc"
+    echo "tsc" > /sys/devices/system/clocksource/clocksource0/current_clocksource
+    #
+    #Disable KSM
+    #
+    log "`date` - Disabling KSM"
+    echo 0 > /sys/kernel/mm/ksm/run
+    echo "echo 0 > /sys/kernel/mm/ksm/run" >> /etc/rc.d/rc.local
+    #
+    # Disable SELinux
+    #
+    log "`date` - Disabling SELinux"
+    sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+    sed -i 's/SELINUX=permissive/SELINUX=disabled/g' /etc/selinux/config
+    setenforce 0
+    #
+    # Recommended networking settings (SAP Note 2382421)
+    sysctl -w kernel.pid_max=4194304
+    sysctl -w net.core.somaxconn=4096
+    sysctl -w net.ipv4.tcp_max_syn_backlog=8192
+    sysctl -w net.ipv4.tcp_slow_start_after_idle=0
+    sysctl -w vm.max_map_count=2147483647
+    echo "kernel.pid_max=4194304" >> /etc/sysctl.d/sap.conf 
+    echo "net.core.somaxconn=4096" >> /etc/sysctl.d/sap.conf 
+    echo "net.ipv4.tcp_max_syn_backlog=8192" >> /etc/sysctl.d/sap.conf 
+    echo "net.ipv4.tcp_slow_start_after_idle=0" >>  /etc/sysctl.d/sap.conf
+    echo "vm.max_map_count=2147483647" >>  /etc/sysctl.d/sap.conf
+    #
+    echo "@sapsys    hard    nofile    65536" >>  /etc/security/limits.d/99-sap.conf
+    echo "@sapsys    soft    nofile    65536" >>  /etc/security/limits.d/99-sap.conf
+    echo "@sapsys    hard    nproc    unlimited" >>  /etc/security/limits.d/99-sap.conf
+    echo "@sapsys    soft    nproc    unlimited" >>  /etc/security/limits.d/99-sap.conf
+    #
+    #
+    cat >>  /etc/tmpfiles.d/sap.conf <<_EOF
+# systemd.tmpfiles exclude file for SAP
+# SAP software stores some important files in /tmp which should not be deleted automatically
+ 
+# Exclude SAP socket and lock files
+x /tmp/.sap*
+ 
+# Exclude HANA lock file
+x /tmp/.hdb*lock
+
+# Exclude TREX lock file
+x /tmp/.trex*lock
+_EOF
+    # Set recommended boot options
+    #       elevator=none   (I/O scheduler)
+    #       clocksource=tsc (clocksource)
+    #       transparent_hugepages=never (disable THP)
+    #       intel_idle.max_cstate=1 && processor.max_cstate=1 (disable deeper C-states)
+    #
+    io_sched=$(get_io_scheduler)
+    log "`date` - Setting recommended boot options"
+    cp -p /etc/default/grub /etc/default/grub.quickstart.save
+    sed -i "s/GRUB_CMDLINE_LINUX=\"[^\"]*/& numa_balancing=disable elevator=${io_sched} clocksource=tsc transparent_hugepage=never intel_idle.max_cstate=1 processor.max_cstate=1/" /etc/default/grub
+    cp -p /boot/grub2/grub.cfg /boot/grub2/grub.cfg.quickstart.save
+    grub2-mkconfig -o /boot/grub2/grub.cfg
+
+}
+
 start_oss_configs_rhel81() {
 
     #This section is from OSS #2777782 - SAP HANA DB: Recommended OS settings for RHEL 8
@@ -629,6 +824,16 @@ lockversion () {
   yum versionlock redhat-release-server kernel kernel-headers | tee -a ${HANA_LOG_FILE}
   yum versionlock list | tee -a ${HANA_LOG_FILE}
 
+}
+
+get_io_scheduler() {
+  if [[ $(grep -wq noop /sys/block/*/queue/scheduler; echo $?) -eq 0 ]]; then
+    echo noop
+  elif [[ $(grep -wq none /sys/block/*/queue/scheduler; echo $?) -eq 0 ]]; then
+    echo none
+  else
+    echo none
+  fi
 }
 
 install_enable_ssm_agent() {
@@ -791,6 +996,26 @@ case "$MyOS" in
     download_unrar
 #   lockversion - Version lock not required for HA & EUS AMIs
     log "`date` End - Executing RHEL 7.6 with HA and US related pre-requisites" ;;
+  RHEL77SAPHAUSHVM )
+    log "`date` Start - Executing RHEL 7.7 with HA and US related pre-requisites"
+    install_prereq_rhel77
+    start_oss_configs_rhel77
+    preserve_hostname
+    start_ntp
+    start_fs
+    download_unrar
+#   lockversion - Version lock not required for HA & EUS AMIs
+    log "`date` End - Executing RHEL 7.7 with HA and US related pre-requisites" ;;
+  RHEL79SAPHAUSHVM )
+    log "`date` Start - Executing RHEL 7.9 with HA and US related pre-requisites"
+    install_prereq_rhel79
+    start_oss_configs_rhel79
+    preserve_hostname
+    start_ntp
+    start_fs
+    download_unrar
+#   lockversion - Version lock not required for HA & EUS AMIs
+    log "`date` End - Executing RHEL 7.9 with HA and US related pre-requisites" ;;
   RHEL81SAPHAUSHVM )
     log "`date` Start - Executing RHEL 8.1 with HA and US related pre-requisites"
     install_prereq_rhel81
