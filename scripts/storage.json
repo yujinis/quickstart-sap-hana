@@ -26,6 +26,50 @@
               ]
             }
           },
+          "u-6tb1.56xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdg",
+                  "size": "6144G"
+                },
+                {
+                  "device": "/dev/sdh",
+                  "size": "6144G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdg",
+                  "size": "12288G"
+                }
+              ]
+            }
+          },
+          "u-6tb1.112xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdg",
+                  "size": "6144G"
+                },
+                {
+                  "device": "/dev/sdh",
+                  "size": "6144G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdg",
+                  "size": "12288G"
+                }
+              ]
+            }
+          },
           "u-9tb1.metal": {
             "gp2": {
               "drives": [
@@ -48,7 +92,51 @@
               ]
             }
           },
+          "u-9tb1.112xlarge": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdg",
+                  "size": "8192G"
+                },
+                {
+                  "device": "/dev/sdh",
+                  "size": "8192G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdg",
+                  "size": "16384G"
+                }
+              ]
+            }
+          },
           "u-12tb1.metal": {
+            "gp2": {
+              "drives": [
+                {
+                  "device": "/dev/sdg",
+                  "size": "8192G"
+                },
+                {
+                  "device": "/dev/sdh",
+                  "size": "8192G"
+                }
+              ]
+            },
+            "st1": {
+              "drives": [
+                {
+                  "device": "/dev/sdg",
+                  "size": "16384G"
+                }
+              ]
+            }
+          },
+          "u-12tb1.112xlarge": {
             "gp2": {
               "drives": [
                 {
@@ -3136,6 +3224,256 @@
           "volume_group": "vghanadata"
         }
       },
+      "u-6tb1.56xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdc",
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdd",
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sde",
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdk",
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdl",
+              "size": "1200G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "7150G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "piops": 2000,
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdc",
+              "piops": 2000,
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdd",
+              "piops": 2000,
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sde",
+              "piops": 2000,
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdk",
+              "piops": 2000,
+              "size": "1200G"              
+            },
+            {
+              "device": "/dev/sdl",
+              "piops": 2000,
+              "size": "1200G"              
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "7150G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        },
+        "io2": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "piops": 2000,
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdc",
+              "piops": 2000,
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdd",
+              "piops": 2000,
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sde",
+              "piops": 2000,
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdk",
+              "piops": 2000,
+              "size": "1200G"              
+            },
+            {
+              "device": "/dev/sdl",
+              "piops": 2000,
+              "size": "1200G"              
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "7150G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        }
+      },
+      "u-6tb1.112xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdc",
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdd",
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sde",
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdk",
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdl",
+              "size": "1200G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "7150G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "piops": 2000,
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdc",
+              "piops": 2000,
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdd",
+              "piops": 2000,
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sde",
+              "piops": 2000,
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdk",
+              "piops": 2000,
+              "size": "1200G"              
+            },
+            {
+              "device": "/dev/sdl",
+              "piops": 2000,
+              "size": "1200G"              
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "7150G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        },
+        "io2": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "piops": 2000,
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdc",
+              "piops": 2000,
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdd",
+              "piops": 2000,
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sde",
+              "piops": 2000,
+              "size": "1200G"
+            },
+            {
+              "device": "/dev/sdk",
+              "piops": 2000,
+              "size": "1200G"              
+            },
+            {
+              "device": "/dev/sdl",
+              "piops": 2000,
+              "size": "1200G"              
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "7150G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        }
+      },
       "u-9tb1.metal": {
         "gp2": {
           "drives": [
@@ -3233,6 +3571,131 @@
           "volume_group": "vghanadata"
         }
       },
+      "u-9tb1.112xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "size": "1800G"
+            },
+            {
+              "device": "/dev/sdc",
+              "size": "1800G"
+            },
+            {
+              "device": "/dev/sdd",
+              "size": "1800G"
+            },
+            {
+              "device": "/dev/sde",
+              "size": "1800G"
+            },
+            {
+              "device": "/dev/sdk",
+              "size": "1800G"
+            },
+            {
+              "device": "/dev/sdl",
+              "size": "1800G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "10750G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "piops": 2000,
+              "size": "1800G"
+            },
+            {
+              "device": "/dev/sdc",
+              "piops": 2000,
+              "size": "1800G"
+            },
+            {
+              "device": "/dev/sdd",
+              "piops": 2000,
+              "size": "1800G"
+            },
+            {
+              "device": "/dev/sde",
+              "piops": 2000,
+              "size": "1800G"
+            },
+            {
+              "device": "/dev/sdk",
+              "piops": 2000,
+              "size": "1800G"
+            },
+            {
+              "device": "/dev/sdl",
+              "piops": 2000,
+              "size": "1800G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "10750G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        },
+        "io2": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "piops": 2000,
+              "size": "1800G"
+            },
+            {
+              "device": "/dev/sdc",
+              "piops": 2000,
+              "size": "1800G"
+            },
+            {
+              "device": "/dev/sdd",
+              "piops": 2000,
+              "size": "1800G"
+            },
+            {
+              "device": "/dev/sde",
+              "piops": 2000,
+              "size": "1800G"
+            },
+            {
+              "device": "/dev/sdk",
+              "piops": 2000,
+              "size": "1800G"
+            },
+            {
+              "device": "/dev/sdl",
+              "piops": 2000,
+              "size": "1800G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "10750G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        }
+      },
       "u-12tb1.metal": {
         "gp2": {
           "drives": [
@@ -3317,6 +3780,131 @@
               "device": "/dev/sde",
               "piops": 2250,
               "size": "3600G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "14350G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        }
+      },
+      "u-12tb1.112xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "size": "2400G"
+            },
+            {
+              "device": "/dev/sdc",
+              "size": "2400G"
+            },
+            {
+              "device": "/dev/sdd",
+              "size": "2400G"
+            },
+            {
+              "device": "/dev/sde",
+              "size": "2400G"
+            },
+            {
+              "device": "/dev/sdk",
+              "size": "2400G"
+            },
+            {
+              "device": "/dev/sdl",
+              "size": "2400G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "14350G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "piops": 2000,
+              "size": "2400G"
+            },
+            {
+              "device": "/dev/sdc",
+              "piops": 2000,
+              "size": "2400G"
+            },
+            {
+              "device": "/dev/sdd",
+              "piops": 2000,
+              "size": "2400G"
+            },
+            {
+              "device": "/dev/sde",
+              "piops": 2000,
+              "size": "2400G"
+            },
+            {
+              "device": "/dev/sdk",
+              "piops": 2000,
+              "size": "2400G"
+            },
+            {
+              "device": "/dev/sdl",
+              "piops": 2000,
+              "size": "2400G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/data",
+              "logical_volume": "lvhanadata",
+              "size": "14350G"
+            }
+          ],
+          "volume_group": "vghanadata"
+        },
+        "io2": {
+          "drives": [
+            {
+              "device": "/dev/sdb",
+              "piops": 2000,
+              "size": "2400G"
+            },
+            {
+              "device": "/dev/sdc",
+              "piops": 2000,
+              "size": "2400G"
+            },
+            {
+              "device": "/dev/sdd",
+              "piops": 2000,
+              "size": "2400G"
+            },
+            {
+              "device": "/dev/sde",
+              "piops": 2000,
+              "size": "2400G"
+            },
+            {
+              "device": "/dev/sdk",
+              "piops": 2000,
+              "size": "2400G"
+            },
+            {
+              "device": "/dev/sdl",
+              "piops": 2000,
+              "size": "2400G"
             }
           ],
           "stride": 256,
@@ -5259,6 +5847,124 @@
           "volume_group": "vghanalog"
         }
       },
+      "u-6tb1.56xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdi",
+              "size": "300G"
+            },
+            {
+              "device": "/dev/sdj",
+              "size": "300G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "512G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdi",
+              "piops": 2000,
+              "size": "525G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "512G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        },
+        "io2": {
+          "drives": [
+            {
+              "device": "/dev/sdi",
+              "piops": 2000,
+              "size": "525G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "512G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        }
+      },
+      "u-6tb1.112xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdi",
+              "size": "300G"
+            },
+            {
+              "device": "/dev/sdj",
+              "size": "300G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "512G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdi",
+              "piops": 2000,
+              "size": "525G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "512G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        },
+        "io2": {
+          "drives": [
+            {
+              "device": "/dev/sdi",
+              "piops": 2000,
+              "size": "525G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "512G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        }
+      },
       "u-9tb1.metal": {
         "gp2": {
           "drives": [
@@ -5318,7 +6024,125 @@
           "volume_group": "vghanalog"
         }
       },
+      "u-9tb1.112xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdi",
+              "size": "300G"
+            },
+            {
+              "device": "/dev/sdj",
+              "size": "300G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "512G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdi",
+              "piops": 2000,
+              "size": "525G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "512G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        },
+        "io2": {
+          "drives": [
+            {
+              "device": "/dev/sdi",
+              "piops": 2000,
+              "size": "525G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "512G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        }
+      },
       "u-12tb1.metal": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdi",
+              "size": "300G"
+            },
+            {
+              "device": "/dev/sdj",
+              "size": "300G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "512G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        },
+        "io1": {
+          "drives": [
+            {
+              "device": "/dev/sdi",
+              "piops": 2000,
+              "size": "525G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "512G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        },
+        "io2": {
+          "drives": [
+            {
+              "device": "/dev/sdi",
+              "piops": 2000,
+              "size": "525G"
+            }
+          ],
+          "stride": 256,
+          "stripe": [
+            {
+              "drive": "/hana/log",
+              "logical_volume": "lvhanalog",
+              "size": "512G"
+            }
+          ],
+          "volume_group": "vghanalog"
+        }
+      },
+      "u-12tb1.112xlarge": {
         "gp2": {
           "drives": [
             {
@@ -6977,6 +7801,26 @@
           ]
         }
       },
+      "u-6tb1.56xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdf",
+              "size": "1024G"
+            }
+          ]
+        }
+      },
+      "u-6tb1.112xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdf",
+              "size": "1024G"
+            }
+          ]
+        }
+      },
       "u-9tb1.metal": {
         "gp2": {
           "drives": [
@@ -6987,7 +7831,27 @@
           ]
         }
       },
+      "u-9tb1.112xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdf",
+              "size": "1024G"
+            }
+          ]
+        }
+      },
       "u-12tb1.metal": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sdf",
+              "size": "1024G"
+            }
+          ]
+        }
+      },
+      "u-12tb1.112xlarge": {
         "gp2": {
           "drives": [
             {
@@ -7301,6 +8165,26 @@
           ]
         }
       },
+      "u-6tb1.56xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
+      },
+      "u-6tb1.112xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
+      },
       "u-9tb1.metal": {
         "gp2": {
           "drives": [
@@ -7311,7 +8195,27 @@
           ]
         }
       },
+      "u-9tb1.112xlarge": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
+      },
       "u-12tb1.metal": {
+        "gp2": {
+          "drives": [
+            {
+              "device": "/dev/sds",
+              "size": "50G"
+            }
+          ]
+        }
+      },
+      "u-12tb1.112xlarge": {
         "gp2": {
           "drives": [
             {
