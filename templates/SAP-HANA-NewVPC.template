@@ -187,9 +187,13 @@ Parameters:
       - x1e.2xlarge
       - x1e.4xlarge
       - x1e.32xlarge
+      - u-6tb1.56xlarge
+      - u-6tb1.112xlarge
       - u-6tb1.metal
       - u-9tb1.metal
+      - u-9tb1.112xlarge
       - u-12tb1.metal
+      - u-12tb1.112xlarge
       - u-18tb1.metal
       - u-24tb1.metal
   DedicatedHostId:
