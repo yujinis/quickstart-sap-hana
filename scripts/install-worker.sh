@@ -219,7 +219,7 @@ do
 done
 _EOF
     chmod +x /etc/init.d/after.local
-    systemctl enable --now after-local
+    # systemctl enable --now after-local
 fi
 
 

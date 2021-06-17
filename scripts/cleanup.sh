@@ -43,7 +43,8 @@ done
 
 if [ "${IsMasterNode}" == "1" ]; then
 	sleep 240
-	/usr/local/bin/aws dynamodb delete-table --table-name ${TABLE_NAME}
+	/usr/local/bin/aws dynamodb delete-table --table-name ${TABLE_NAME} --region ${REGION}
+	/usr/local/bin/aws secretsmanager delete-secret --secret-id ${MyStackName} --recovery-window-in-days 7 --region ${REGION}
 fi
 
 #echo "/root/install has been cleaned up after install" >> /root/install/README.txt
