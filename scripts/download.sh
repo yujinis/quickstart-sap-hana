@@ -62,6 +62,9 @@ wget ${DOWNLOADLINK}/scripts/create-attach-single-volume.sh --output-document=/r
 wget ${DOWNLOADLINK}/scripts/check-hana-version.sh --output-document=/root/install/check-hana-version.sh
 wget ${DOWNLOADLINK}/scripts/sap-hana-tmpfs.sh --output-document=/root/install/sap-hana-tmpfs.sh
 wget ${DOWNLOADLINK}/scripts/sap-hana-tmpfs.service --output-document=/root/install/sap-hana-tmpfs.service
+wget ${DOWNLOADLINK}/scripts/setup-hana.sh --output-document=/root/install/setup-hana.sh
+wget ${DOWNLOADLINK}/scripts/rc_local_master.sh --output-document=/root/install/rc_local_master.sh
+wget ${DOWNLOADLINK}/scripts/rc_local_worker.sh --output-document=/root/install/rc_local_worker.sh
 wget ${DOWNLOADSTORAGE}/storage.json --output-document=/root/install/storage.json
 
 for f in download_media.py extract.sh get_advancedoptions.py postprocess.py signal-precheck-failure.sh signal-precheck-status.sh signal-precheck-success.sh build_storage.py

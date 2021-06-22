@@ -109,6 +109,13 @@ Parameters:
     AllowedValues:
       - 'Yes'
       - 'No'
+  AutomaticReboot:
+    Type: String
+    Description: Enable (Yes) or disable (No) automatic instance reboot
+    Default: 'No'
+    AllowedValues:
+      - 'Yes'
+      - 'No'
   Encryption:
     Type: String
     Description: Enable (Yes) or disable (No) encryption on EBS volumes.
@@ -356,6 +363,7 @@ Metadata:
           - VolumeTypeHanaLog
           - AWSEFS
           - Encryption
+          - AutomaticReboot
       - Label:
           default: SAP HANA database configuration
         Description:
@@ -458,6 +466,8 @@ Metadata:
         default: Enter SAP HANA password
       SAPHANAFastRestart:
         default: Would you like to enable SAP HANA Fast Restart?
+      AutomaticReboot:
+        default: Would you like to have the SAP HANA instance automatically rebooted?
       RDPInstanceType:
         default: Choose instance type for RDP host
       EnableLogging:
@@ -1312,6 +1322,12 @@ Resources:
     Properties:
       DelaySeconds: 0
       VisibilityTimeout: 0
+  HANASecretManager:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Ref 'AWS::StackName'
+      Description: 'SAP HANA QuickStart SecretsManager Password'
+      SecretString: !Ref 'HANAMasterPass'
   HANAMasterInterface:
     Type: AWS::EC2::NetworkInterface
     Properties:
@@ -1717,6 +1733,7 @@ Resources:
                   - dynamodb:GetItem
                   - dynamodb:BatchGetItem
                   - dynamodb:UpdateTable
+                  - dynamodb:PutItem
                 Resource: !Join
                   - ''
                   - - "arn:aws:dynamodb:"
@@ -1725,6 +1742,16 @@ Resources:
                     - !Ref "AWS::AccountId"
                     - ':table/HANAMonitor__'
                     - !Ref "AWS::StackName"
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                  - secretsmanager:DeleteSecret
+                Resource:
+                  - !Ref 'HANASecretManager'
+                Condition:
+                  StringLike: 
+                    "secretsmanager:ResourceTag/aws:cloudformation:stack-id": !Ref AWS::StackId
+                
   HANAIAMProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
@@ -1950,6 +1977,9 @@ Resources:
             - sh /root/install/writeconfig.sh MyStackId=
             - !Ref 'AWS::StackId'
             - "\n"
+            - sh  /root/install/writeconfig.sh MyStackName=
+            - !Ref 'AWS::StackName'
+            - "\n"
             - sh /root/install/writeconfig.sh INSTALL_HANA=
             - !Ref 'InstallHANA'
             - "\n"
@@ -1993,6 +2023,23 @@ Resources:
             - sh /root/install/writeconfig.sh FastRestartEnabled=
             - !Ref 'SAPHANAFastRestart'
             - "\n"
+            
+            - sh /root/install/writeconfig.sh DomainName=
+            - !Ref 'DomainName'
+            - "\n"
+            - sh /root/install/writeconfig.sh SID=
+            - !Ref 'SID'
+            - "\n"
+            - sh /root/install/writeconfig.sh HANAMasterPass=
+            - !Ref 'HANAMasterPass'
+            - "\n"
+            - sh /root/install/writeconfig.sh HANAMasterHostname=
+            - !Ref 'HANAMasterHostname'
+            - "\n"
+            - sh /root/install/writeconfig.sh HANAWorkerHostname=
+            - !Ref 'HANAWorkerHostname'
+            - "\n"
+
             - sh /root/install/writeconfig.sh IsMasterNode=1
             - "\n"
             - sh /root/install/writeconfig.sh IsWorkerNode=0
@@ -2020,70 +2067,12 @@ Resources:
             - sh /root/install/writeconfig.sh REGION=
             - !Ref 'AWS::Region'
             - "\n"
+            - sh /root/install/writeconfig.sh AutomaticReboot=
+            - !Ref 'AutomaticReboot'
+            - "\n"
             - "sh /root/install/install-prereq.sh\n"
             - "sh /root/install/install-aws.sh\n"
-            - "#sh /root/install/signal-complete.sh \n"
-            - "sh /root/install/cluster-watch-engine.sh -c \n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - DomainName=
-            - !Ref 'DomainName'
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - MyHostname=
-            - !Ref 'HANAMasterHostname'
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - MyRole=Master
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - HostCount=
-            - !Ref 'HostCount'
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - Status=PRE_INSTALL_COMPLETE
-            - '"'
-            - "\n"
-            - 'sh /root/install/reconcile-ips.sh '
-            - !Ref 'HostCount'
-            - " >> /root/install.log\n"
-            - sh /root/install/fence-cluster.sh -w "PRE_INSTALL_COMPLETE_ACK=
-            - !Ref 'HostCount'
-            - '"'
-            - "\n"
-            - 'sh /root/install/install-master.sh -s '
-            - !Ref 'SID'
-            - ' -i '
-            - !Ref 'SAPInstanceNum'
-            - ' -p '''
-            - !Ref 'HANAMasterPass'
-            - ''' -n '
-            - !Ref 'HANAMasterHostname'
-            - ' -d '
-            - !Ref 'DomainName'
-            - ' -w '
-            - !Ref 'HANAWorkerHostname'
-            - "\n"
-            - "sh /root/install/cluster-watch-engine.sh -s \"MASTER_NODE_COMPLETE\"\
-              \n"
-            - 'sh /root/install/wait-for-workers.sh '
-            - !Ref 'HostCount'
-            - "\n"
-            - "sh /root/install/cluster-watch-engine.sh  -r \n"
-            - sh /root/install/validate-install.sh "
-            - !Ref 'WaitForMasterInstallWaitHandle'
-            - "\" \n"
-            - "#python /root/install/postprocess.py \n"
-            - "sh /root/install/cleanup.sh \n"
-            - "\n"
+            - "sh /root/install/setup-hana.sh master\n"
             - "\n"
       InstanceType: !Ref 'MyInstanceType'
   PlacementGroup:
@@ -2234,11 +2223,17 @@ Resources:
             - sh /root/install/writeconfig.sh MyStackId=
             - !Ref 'AWS::StackId'
             - "\n"
+            - sh  /root/install/writeconfig.sh MyStackName=
+            - !Ref 'AWS::StackName'
+            - "\n"
             - sh /root/install/writeconfig.sh INSTALL_HANA=
             - !Ref 'InstallHANA'
             - "\n"
             - sh /root/install/writeconfig.sh HostCount=
             - !Ref 'HostCount'
+            - "\n"
+            - sh /root/install/writeconfig.sh SAPInstanceNum=
+            - !Ref 'SAPInstanceNum'
             - "\n"
             - sh /root/install/writeconfig.sh http_proxy=
             - !Ref 'Proxy'
@@ -2274,6 +2269,12 @@ Resources:
             - sh /root/install/writeconfig.sh FastRestartEnabled=
             - !Ref 'SAPHANAFastRestart'
             - "\n"
+            - sh /root/install/writeconfig.sh DomainName=
+            - !Ref 'DomainName'
+            - "\n"
+            - sh /root/install/writeconfig.sh SID=
+            - !Ref 'SID'
+            - "\n"
             - sh /root/install/writeconfig.sh IsMasterNode=0
             - "\n"
             - sh /root/install/writeconfig.sh IsWorkerNode=1
@@ -2283,61 +2284,15 @@ Resources:
             - sh /root/install/writeconfig.sh REGION=
             - !Ref 'AWS::Region'
             - "\n"
+            - sh /root/install/writeconfig.sh AutomaticReboot=
+            - !Ref 'AutomaticReboot'
+            - "\n"
+            - sh /root/install/writeconfig.sh HANAMasterHostname=
+            - !Ref 'HANAMasterHostname'
+            - "\n"
             - "sh /root/install/install-prereq.sh\n"
             - "sh /root/install/install-aws.sh\n"
-            - "sh /root/install/cluster-watch-engine.sh -c \n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - DomainName=
-            - !Ref 'DomainName'
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - MyHostname=
-            - !Ref 'HANAWorkerHostname'
-            - '01'
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - MyRole=Worker
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - HostCount=
-            - !Ref 'HostCount'
-            - '"'
-            - "\n"
-            - "sh /root/install/cluster-watch-engine.sh -s \"PRE_INSTALL_COMPLETE\"\
-              \n"
-            - 'sh /root/install/reconcile-ips.sh '
-            - !Ref 'HostCount'
-            - "\n"
-            - sh /root/install/fence-cluster.sh -w "PRE_INSTALL_COMPLETE_ACK=
-            - !Ref 'HostCount'
-            - '"'
-            - "\n"
-            - "sh /root/install/wait-for-master.sh\n"
-            - 'sh /root/install/install-worker.sh -s '
-            - !Ref 'SID'
-            - ' -p '''
-            - !Ref 'HANAMasterPass'
-            - ''' -n '
-            - !Ref 'HANAMasterHostname'
-            - ' -d '
-            - !Ref 'DomainName'
-            - "\n"
-            - "sh /root/install/cluster-watch-engine.sh -s \"WORKER_NODE_COMPLETE\"\
-              \n"
-            - 'sh /root/install/wait-for-workers.sh '
-            - !Ref 'HostCount'
-            - "\n"
-            - "#python /root/install/postprocess.py \n"
-            - 'sh /root/install/cleanup.sh '
-            - "\n"
-            - ''' '
+            - "sh /root/install/setup-hana.sh worker\n"
             - "\n"
       InstanceType: !Ref 'MyInstanceType'
   HANAWorkerInstance2:
@@ -2417,6 +2372,21 @@ Resources:
             - export HTTPS_PROXY=
             - !Ref 'Proxy'
             - "\n"
+            - sh /root/install/writeconfig.sh AWSEFS=
+            - !Ref 'AWSEFS'
+            - "\n"
+            - sh /root/install/writeconfig.sh EFSshared=
+            - !If
+               - UseEFS
+               - !Ref 'EFSshared'
+               - !Ref 'AWS::NoValue'
+            - "\n"
+            - sh /root/install/writeconfig.sh EFSbackup=
+            - !If
+               - UseEFS
+               - !Ref 'EFSbackup'
+               - !Ref 'AWS::NoValue'
+            - "\n"
             - export no_proxy=localhost,127.0.0.1,169.254.169.254
             - "\n"
             - export NO_PROXY=localhost,127.0.0.1,169.254.169.254
@@ -2468,11 +2438,17 @@ Resources:
             - sh /root/install/writeconfig.sh MyStackId=
             - !Ref 'AWS::StackId'
             - "\n"
+            - sh  /root/install/writeconfig.sh MyStackName=
+            - !Ref 'AWS::StackName'
+            - "\n"
             - sh /root/install/writeconfig.sh INSTALL_HANA=
             - !Ref 'InstallHANA'
             - "\n"
             - sh /root/install/writeconfig.sh HostCount=
             - !Ref 'HostCount'
+            - "\n"
+            - sh /root/install/writeconfig.sh SAPInstanceNum=
+            - !Ref 'SAPInstanceNum'
             - "\n"
             - sh /root/install/writeconfig.sh http_proxy=
             - !Ref 'Proxy'
@@ -2508,6 +2484,12 @@ Resources:
             - sh /root/install/writeconfig.sh FastRestartEnabled=
             - !Ref 'SAPHANAFastRestart'
             - "\n"
+            - sh /root/install/writeconfig.sh DomainName=
+            - !Ref 'DomainName'
+            - "\n"
+            - sh /root/install/writeconfig.sh SID=
+            - !Ref 'SID'
+            - "\n"
             - sh /root/install/writeconfig.sh IsMasterNode=0
             - "\n"
             - sh /root/install/writeconfig.sh IsWorkerNode=1
@@ -2517,61 +2499,15 @@ Resources:
             - sh /root/install/writeconfig.sh REGION=
             - !Ref 'AWS::Region'
             - "\n"
+            - sh /root/install/writeconfig.sh AutomaticReboot=
+            - !Ref 'AutomaticReboot'
+            - "\n"
+            - sh /root/install/writeconfig.sh HANAMasterHostname=
+            - !Ref 'HANAMasterHostname'
+            - "\n"
             - "sh /root/install/install-prereq.sh\n"
             - "sh /root/install/install-aws.sh\n"
-            - "sh /root/install/cluster-watch-engine.sh -c \n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - DomainName=
-            - !Ref 'DomainName'
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - MyHostname=
-            - !Ref 'HANAWorkerHostname'
-            - '02'
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - MyRole=Worker
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - HostCount=
-            - !Ref 'HostCount'
-            - '"'
-            - "\n"
-            - "sh /root/install/cluster-watch-engine.sh -s \"PRE_INSTALL_COMPLETE\"\
-              \n"
-            - 'sh /root/install/reconcile-ips.sh '
-            - !Ref 'HostCount'
-            - "\n"
-            - sh /root/install/fence-cluster.sh -w "PRE_INSTALL_COMPLETE_ACK=
-            - !Ref 'HostCount'
-            - '"'
-            - "\n"
-            - "sh /root/install/wait-for-master.sh\n"
-            - 'sh /root/install/install-worker.sh -s '
-            - !Ref 'SID'
-            - ' -p '''
-            - !Ref 'HANAMasterPass'
-            - ''' -n '
-            - !Ref 'HANAMasterHostname'
-            - ' -d '
-            - !Ref 'DomainName'
-            - "\n"
-            - "sh /root/install/cluster-watch-engine.sh -s \"WORKER_NODE_COMPLETE\"\
-              \n"
-            - 'sh /root/install/wait-for-workers.sh '
-            - !Ref 'HostCount'
-            - "\n"
-            - "#python /root/install/postprocess.py \n"
-            - 'sh /root/install/cleanup.sh '
-            - "\n"
-            - ''' '
+            - "sh /root/install/setup-hana.sh worker\n"
             - "\n"
       InstanceType: !Ref 'MyInstanceType'
   HANAWorkerInstance3:
@@ -2717,11 +2653,17 @@ Resources:
             - sh /root/install/writeconfig.sh MyStackId=
             - !Ref 'AWS::StackId'
             - "\n"
+            - sh  /root/install/writeconfig.sh MyStackName=
+            - !Ref 'AWS::StackName'
+            - "\n"
             - sh /root/install/writeconfig.sh INSTALL_HANA=
             - !Ref 'InstallHANA'
             - "\n"
             - sh /root/install/writeconfig.sh HostCount=
             - !Ref 'HostCount'
+            - "\n"
+            - sh /root/install/writeconfig.sh SAPInstanceNum=
+            - !Ref 'SAPInstanceNum'
             - "\n"
             - sh /root/install/writeconfig.sh http_proxy=
             - !Ref 'Proxy'
@@ -2757,6 +2699,12 @@ Resources:
             - sh /root/install/writeconfig.sh FastRestartEnabled=
             - !Ref 'SAPHANAFastRestart'
             - "\n"
+            - sh /root/install/writeconfig.sh DomainName=
+            - !Ref 'DomainName'
+            - "\n"
+            - sh /root/install/writeconfig.sh SID=
+            - !Ref 'SID'
+            - "\n"
             - sh /root/install/writeconfig.sh IsMasterNode=0
             - "\n"
             - sh /root/install/writeconfig.sh IsWorkerNode=1
@@ -2766,61 +2714,15 @@ Resources:
             - sh /root/install/writeconfig.sh REGION=
             - !Ref 'AWS::Region'
             - "\n"
+            - sh /root/install/writeconfig.sh AutomaticReboot=
+            - !Ref 'AutomaticReboot'
+            - "\n"
+            - sh /root/install/writeconfig.sh HANAMasterHostname=
+            - !Ref 'HANAMasterHostname'
+            - "\n"
             - "sh /root/install/install-prereq.sh\n"
             - "sh /root/install/install-aws.sh\n"
-            - "sh /root/install/cluster-watch-engine.sh -c \n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - DomainName=
-            - !Ref 'DomainName'
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - MyHostname=
-            - !Ref 'HANAWorkerHostname'
-            - '03'
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - MyRole=Worker
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - HostCount=
-            - !Ref 'HostCount'
-            - '"'
-            - "\n"
-            - "sh /root/install/cluster-watch-engine.sh -s \"PRE_INSTALL_COMPLETE\"\
-              \n"
-            - 'sh /root/install/reconcile-ips.sh '
-            - !Ref 'HostCount'
-            - "\n"
-            - sh /root/install/fence-cluster.sh -w "PRE_INSTALL_COMPLETE_ACK=
-            - !Ref 'HostCount'
-            - '"'
-            - "\n"
-            - "sh /root/install/wait-for-master.sh\n"
-            - 'sh /root/install/install-worker.sh -s '
-            - !Ref 'SID'
-            - ' -p '''
-            - !Ref 'HANAMasterPass'
-            - ''' -n '
-            - !Ref 'HANAMasterHostname'
-            - ' -d '
-            - !Ref 'DomainName'
-            - "\n"
-            - "sh /root/install/cluster-watch-engine.sh -s \"WORKER_NODE_COMPLETE\"\
-              \n"
-            - 'sh /root/install/wait-for-workers.sh '
-            - !Ref 'HostCount'
-            - "\n"
-            - "#python /root/install/postprocess.py \n"
-            - 'sh /root/install/cleanup.sh '
-            - "\n"
-            - ''' '
+            - "sh /root/install/setup-hana.sh worker\n"
             - "\n"
       InstanceType: !Ref 'MyInstanceType'
   HANAWorkerInstance4:
@@ -2966,11 +2868,17 @@ Resources:
             - sh /root/install/writeconfig.sh MyStackId=
             - !Ref 'AWS::StackId'
             - "\n"
+            - sh  /root/install/writeconfig.sh MyStackName=
+            - !Ref 'AWS::StackName'
+            - "\n"
             - sh /root/install/writeconfig.sh INSTALL_HANA=
             - !Ref 'InstallHANA'
             - "\n"
             - sh /root/install/writeconfig.sh HostCount=
             - !Ref 'HostCount'
+            - "\n"
+            - sh /root/install/writeconfig.sh SAPInstanceNum=
+            - !Ref 'SAPInstanceNum'
             - "\n"
             - sh /root/install/writeconfig.sh http_proxy=
             - !Ref 'Proxy'
@@ -3006,6 +2914,12 @@ Resources:
             - sh /root/install/writeconfig.sh FastRestartEnabled=
             - !Ref 'SAPHANAFastRestart'
             - "\n"
+            - sh /root/install/writeconfig.sh DomainName=
+            - !Ref 'DomainName'
+            - "\n"
+            - sh /root/install/writeconfig.sh SID=
+            - !Ref 'SID'
+            - "\n"
             - sh /root/install/writeconfig.sh IsMasterNode=0
             - "\n"
             - sh /root/install/writeconfig.sh IsWorkerNode=1
@@ -3015,61 +2929,15 @@ Resources:
             - sh /root/install/writeconfig.sh REGION=
             - !Ref 'AWS::Region'
             - "\n"
+            - sh /root/install/writeconfig.sh AutomaticReboot=
+            - !Ref 'AutomaticReboot'
+            - "\n"
+            - sh /root/install/writeconfig.sh HANAMasterHostname=
+            - !Ref 'HANAMasterHostname'
+            - "\n"
             - "sh /root/install/install-prereq.sh\n"
             - "sh /root/install/install-aws.sh\n"
-            - "sh /root/install/cluster-watch-engine.sh -c \n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - DomainName=
-            - !Ref 'DomainName'
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - MyHostname=
-            - !Ref 'HANAWorkerHostname'
-            - '04'
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - MyRole=Worker
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - HostCount=
-            - !Ref 'HostCount'
-            - '"'
-            - "\n"
-            - "sh /root/install/cluster-watch-engine.sh -s \"PRE_INSTALL_COMPLETE\"\
-              \n"
-            - 'sh /root/install/reconcile-ips.sh '
-            - !Ref 'HostCount'
-            - "\n"
-            - sh /root/install/fence-cluster.sh -w "PRE_INSTALL_COMPLETE_ACK=
-            - !Ref 'HostCount'
-            - '"'
-            - "\n"
-            - "sh /root/install/wait-for-master.sh\n"
-            - 'sh /root/install/install-worker.sh -s '
-            - !Ref 'SID'
-            - ' -p '''
-            - !Ref 'HANAMasterPass'
-            - ''' -n '
-            - !Ref 'HANAMasterHostname'
-            - ' -d '
-            - !Ref 'DomainName'
-            - "\n"
-            - "sh /root/install/cluster-watch-engine.sh -s \"WORKER_NODE_COMPLETE\"\
-              \n"
-            - 'sh /root/install/wait-for-workers.sh '
-            - !Ref 'HostCount'
-            - "\n"
-            - "#python /root/install/postprocess.py \n"
-            - 'sh /root/install/cleanup.sh '
-            - "\n"
-            - ''' '
+            - "sh /root/install/setup-hana.sh worker\n"
             - "\n"
       InstanceType: !Ref 'MyInstanceType'
   HANAWorkerInstance5:
@@ -3149,6 +3017,21 @@ Resources:
             - export HTTPS_PROXY=
             - !Ref 'Proxy'
             - "\n"
+            - sh /root/install/writeconfig.sh AWSEFS=
+            - !Ref 'AWSEFS'
+            - "\n"
+            - sh /root/install/writeconfig.sh EFSshared=
+            - !If
+               - UseEFS
+               - !Ref 'EFSshared'
+               - !Ref 'AWS::NoValue'
+            - "\n"
+            - sh /root/install/writeconfig.sh EFSbackup=
+            - !If
+               - UseEFS
+               - !Ref 'EFSbackup'
+               - !Ref 'AWS::NoValue'
+            - "\n"
             - export no_proxy=localhost,127.0.0.1,169.254.169.254
             - "\n"
             - export NO_PROXY=localhost,127.0.0.1,169.254.169.254
@@ -3200,11 +3083,17 @@ Resources:
             - sh /root/install/writeconfig.sh MyStackId=
             - !Ref 'AWS::StackId'
             - "\n"
+            - sh  /root/install/writeconfig.sh MyStackName=
+            - !Ref 'AWS::StackName'
+            - "\n"
             - sh /root/install/writeconfig.sh INSTALL_HANA=
             - !Ref 'InstallHANA'
             - "\n"
             - sh /root/install/writeconfig.sh HostCount=
             - !Ref 'HostCount'
+            - "\n"
+            - sh /root/install/writeconfig.sh SAPInstanceNum=
+            - !Ref 'SAPInstanceNum'
             - "\n"
             - sh /root/install/writeconfig.sh http_proxy=
             - !Ref 'Proxy'
@@ -3240,6 +3129,12 @@ Resources:
             - sh /root/install/writeconfig.sh FastRestartEnabled=
             - !Ref 'SAPHANAFastRestart'
             - "\n"
+            - sh /root/install/writeconfig.sh DomainName=
+            - !Ref 'DomainName'
+            - "\n"
+            - sh /root/install/writeconfig.sh SID=
+            - !Ref 'SID'
+            - "\n"
             - sh /root/install/writeconfig.sh IsMasterNode=0
             - "\n"
             - sh /root/install/writeconfig.sh IsWorkerNode=1
@@ -3249,61 +3144,15 @@ Resources:
             - sh /root/install/writeconfig.sh REGION=
             - !Ref 'AWS::Region'
             - "\n"
+            - sh /root/install/writeconfig.sh AutomaticReboot=
+            - !Ref 'AutomaticReboot'
+            - "\n"
+            - sh /root/install/writeconfig.sh HANAMasterHostname=
+            - !Ref 'HANAMasterHostname'
+            - "\n"
             - "sh /root/install/install-prereq.sh\n"
             - "sh /root/install/install-aws.sh\n"
-            - "sh /root/install/cluster-watch-engine.sh -c \n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - DomainName=
-            - !Ref 'DomainName'
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - MyHostname=
-            - !Ref 'HANAWorkerHostname'
-            - '05'
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - MyRole=Worker
-            - '"'
-            - "\n"
-            - 'sh /root/install/cluster-watch-engine.sh -i '
-            - '"'
-            - HostCount=
-            - !Ref 'HostCount'
-            - '"'
-            - "\n"
-            - "sh /root/install/cluster-watch-engine.sh -s \"PRE_INSTALL_COMPLETE\"\
-              \n"
-            - 'sh /root/install/reconcile-ips.sh '
-            - !Ref 'HostCount'
-            - "\n"
-            - sh /root/install/fence-cluster.sh -w "PRE_INSTALL_COMPLETE_ACK=
-            - !Ref 'HostCount'
-            - '"'
-            - "\n"
-            - "sh /root/install/wait-for-master.sh\n"
-            - 'sh /root/install/install-worker.sh -s '
-            - !Ref 'SID'
-            - ' -p '''
-            - !Ref 'HANAMasterPass'
-            - ''' -n '
-            - !Ref 'HANAMasterHostname'
-            - ' -d '
-            - !Ref 'DomainName'
-            - "\n"
-            - "sh /root/install/cluster-watch-engine.sh -s \"WORKER_NODE_COMPLETE\"\
-              \n"
-            - 'sh /root/install/wait-for-workers.sh '
-            - !Ref 'HostCount'
-            - "\n"
-            - "#python /root/install/postprocess.py \n"
-            - 'sh /root/install/cleanup.sh '
-            - "\n"
-            - ''' '
+            - "sh /root/install/setup-hana.sh worker\n"
             - "\n"
       InstanceType: !Ref 'MyInstanceType'
   AutoRecoverAlarmMaster:

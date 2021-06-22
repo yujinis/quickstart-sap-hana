@@ -104,7 +104,8 @@ set_noop_scheduler () {
 
 	if [[ "$MyOS" =~ 12 ]]; then
 		# SLES12 doesn't honor "elevator" kernel param on blk_mq schedulers
-		cat <<_EOF >> /etc/init.d/boot.local
+		cat <<_EOF >> /etc/init.d/after.local
+#!/bin/bash
 for i in \$(pvs | grep dev | awk '{print \$1}' | sed s/\\\/dev\\\///)
 do
    echo "none" > /sys/block/\$i/queue/scheduler
@@ -120,7 +121,7 @@ do
 done
 _EOF
 		chmod +x /etc/init.d/after.local
-		systemctl enable --now after-local
+		# systemctl enable --now after-local
 	fi
 	
 }
@@ -132,7 +133,7 @@ _EOF
 
 while getopts ":h:s:i:p:n:d:w:l:" o; do
     case "${o}" in
-    h) usage && exit 0
+    	h) usage && exit 0
 			;;
 		s) SID=${OPTARG}
 			;;
@@ -144,13 +145,13 @@ while getopts ":h:s:i:p:n:d:w:l:" o; do
 			;;
 		d) DOMAIN=${OPTARG}
 			;;
-    w) WORKER_HOSTNAME=${OPTARG}
-      ;;
-    l) HANA_LOG_FILE=${OPTARG}
-      ;;
-    *)
-       usage
-      ;;
+		w) WORKER_HOSTNAME=${OPTARG}
+    		;;
+    	l) HANA_LOG_FILE=${OPTARG}
+    		;;
+    	*)
+    		usage
+    	;;
     esac
 done
 

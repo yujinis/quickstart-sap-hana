@@ -30,7 +30,7 @@ fi
 
 cd /root/install
 
-for f in awscli-bundle.zip cluster-watch-engine.sh config.sh install-aws.sh install-hana-master.sh install-hana-worker.sh install-master.sh install-prereq.sh install-worker.sh jq reconcile-ips.py reconcile-ips.sh wait-for-master.sh wait-for-workers.sh debug-log.sh download.sh fence-cluster.sh log2s3.sh README.txt *.sh *.py *.json
+for f in awscli-bundle.zip cluster-watch-engine.sh config.sh install-aws.sh install-hana-master.sh install-hana-worker.sh install-master.sh install-prereq.sh install-worker.sh jq reconcile-ips.py reconcile-ips.sh wait-for-master.sh wait-for-workers.sh debug-log.sh download.sh fence-cluster.sh log2s3.sh README.txt sap-hana-tmpfs.service *.sh *.py *.json
 do
    FILE=/root/install/${f}
    if [ -f "$FILE" ]; then
@@ -43,7 +43,8 @@ done
 
 if [ "${IsMasterNode}" == "1" ]; then
 	sleep 240
-	/usr/local/bin/aws dynamodb delete-table --table-name ${TABLE_NAME}
+	/usr/local/bin/aws dynamodb delete-table --table-name ${TABLE_NAME} --region ${REGION}
+	/usr/local/bin/aws secretsmanager delete-secret --secret-id ${MyStackName} --recovery-window-in-days 7 --region ${REGION}
 fi
 
 #echo "/root/install has been cleaned up after install" >> /root/install/README.txt
