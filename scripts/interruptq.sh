@@ -30,7 +30,7 @@ if [ ! -f ${JQ_COMMAND} ]; then
   chmod 755 ${JQ_COMMAND}
 fi
 export PATH=${PATH}:/sbin:/usr/sbin:/usr/local/sbin:/root/bin:/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/X11R6/bin:/usr/games:/usr/lib/AmazonEC2/ec2-api-tools/bin:/usr/lib/AmazonEC2/ec2-ami-tools/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin
-export AWS_CMD=/usr/local/bin/aws
+export AWS_CMD=${AWSCLI_BIN}
 export SIGNALCODE="StopDeploymentNow"
 
 # ------------------------------------------------------------------

@@ -62,7 +62,7 @@ export AWS_DEFAULT_REGION=$(echo ${AWS_DEFAULT_REGION} | sed 's/^"\(.*\)"$/\1/' 
 export AWS_DEFAULT_AVAILABILITY_ZONE=$(echo ${AWS_DEFAULT_AVAILABILITY_ZONE} | sed 's/^"\(.*\)"$/\1/' )
 export AWS_INSTANCEID=$(echo ${AWS_INSTANCEID} | sed 's/^"\(.*\)"$/\1/' )
 
-export AWS=/usr/local/bin/aws
+export AWS=${AWSCLI_BIN}
 
 # ------------------------------------------------------------------
 #          Choose default log file
@@ -202,11 +202,11 @@ fi
 [ -z ${DEVICE_START} ] && usage;
 [ -z ${VOL_NAME} ] && usage;
 
-MyInstanceType=$(/usr/local/bin/aws cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
+MyInstanceType=$(${AWSCLI_BIN} cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
 				| /root/install/jq '.Stacks[0].Parameters[] | select(.ParameterKey=="MyInstanceType") | .ParameterValue' \
 				| sed 's/"//g')
 
-MyEncryption=$(/usr/local/bin/aws cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
+MyEncryption=$(${AWSCLI_BIN} cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
 				| /root/install/jq '.Stacks[0].Parameters[] | select(.ParameterKey=="Encryption") | .ParameterValue' \
 				| sed 's/"//g')
 
