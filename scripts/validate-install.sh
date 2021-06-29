@@ -55,7 +55,7 @@ if [ "${INSTALL_HANA}" == "No" ]; then
 fi
 
 
-HANAS3Bucket=$(/usr/local/bin/aws cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
+HANAS3Bucket=$(${AWSCLI_BIN} cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
 				| /root/install/jq '.Stacks[0].Parameters[] | select(.ParameterKey=="HANAInstallMedia") | .ParameterValue' \
 				| sed 's/"//g')
 HANAS3BucketLen=${#HANAS3Bucket} 

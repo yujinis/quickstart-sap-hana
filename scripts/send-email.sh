@@ -81,7 +81,7 @@ export AWS_DEFAULT_AVAILABILITY_ZONE=$(echo ${AWS_DEFAULT_AVAILABILITY_ZONE} | s
 export AWS_INSTANCEID=$(echo ${AWS_INSTANCEID} | sed 's/^"\(.*\)"$/\1/' )
 
 
-export AWS_CMD=/usr/local/bin/aws
+export AWS_CMD=${AWSCLI_BIN}
 
 ${AWS_CMD} sns create-topic --name MyTopic
 

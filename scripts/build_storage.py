@@ -5,7 +5,6 @@ import pprint
 import subprocess
 import json
 
-aws_cmd = '/usr/local/bin/aws --debug'
 ebs_attach_cmd = 'sh -x /root/install/create-attach-single-volume.sh '
 nvme_device_id = '/root/install/nvme_id'
 
@@ -30,9 +29,10 @@ def exe_cmd(cmd,cwd=None):
         return output
 
 def read_config():
-    command = ['bash', '-c', 'source /root/install/config.sh && env']
+    command = ['/bin/bash', '-c', 'source /root/install/config.sh && env']
     proc = subprocess.Popen(command, stdout = subprocess.PIPE)
     for line in proc.stdout:
+        line = line.decode()
         (key, _, value) = line.partition("=")
         os.environ[key] = value
     proc.communicate()
@@ -422,4 +422,6 @@ def main():
 
 
 if __name__ == "__main__":
+    read_config()
+    aws_cmd = os.environ['AWSCLI_BIN'].rstrip()
     main()

@@ -31,7 +31,7 @@ if [ -z "${HANA_LOG_FILE}" ] ; then
 fi
 
 MyHostname=$(hostname)
-GetSecretCmd="aws secretsmanager get-secret-value --secret-id ${MyStackName} --output json --region ${REGION}"
+GetSecretCmd="${AWSCLI_BIN} secretsmanager get-secret-value --secret-id ${MyStackName} --output json --region ${REGION}"
 HANAMasterPass=$(${GetSecretCmd} | ${JQ_COMMAND} .SecretString | sed -e 's/\"//g')
 
 sh /root/install/cluster-watch-engine.sh -c

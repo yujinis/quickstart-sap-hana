@@ -37,14 +37,14 @@ sh /root/install/signal-precheck-success.sh
 # ------------------------------------------------------------------
 
 
-S3MEDIA=$(/usr/local/bin/aws cloudformation describe-stacks --stack-name  ${MyStackId}  --region ${REGION} \
+S3MEDIA=$(${AWSCLI_BIN} cloudformation describe-stacks --stack-name  ${MyStackId}  --region ${REGION} \
 	 	| /root/install/jq '.Stacks[0].Parameters' \
 	 	| /root/install/jq '.[] | select(.ParameterKey == "HANAInstallMedia")' \
 	 	| /root/install/jq '.ParameterValue' \
 	 	| sed 's/"//g')
 
-EXE_COUNT=$(/usr/local/bin/aws s3 ls ${S3MEDIA} | grep exe |wc -l)
-RAR_COUNT=$(/usr/local/bin/aws s3 ls ${S3MEDIA} | grep rar |wc -l)
+EXE_COUNT=$(${AWSCLI_BIN} s3 ls ${S3MEDIA} | grep exe |wc -l)
+RAR_COUNT=$(${AWSCLI_BIN} s3 ls ${S3MEDIA} | grep rar |wc -l)
 
 if [ $EXE_COUNT -eq 0 ]; 
 then

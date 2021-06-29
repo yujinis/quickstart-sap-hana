@@ -94,13 +94,13 @@ shift $((OPTIND-1))
 # ------------------------------------------------------------------
 
 export USE_NEW_STORAGE=1
-MyInstanceType=$(/usr/local/bin/aws cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
+MyInstanceType=$(${AWSCLI_BIN} cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
 				| /root/install/jq '.Stacks[0].Parameters[] | select(.ParameterKey=="MyInstanceType") | .ParameterValue' \
 				| sed 's/"//g')
-MyHanaDataVolumeType=$(/usr/local/bin/aws cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
+MyHanaDataVolumeType=$(${AWSCLI_BIN} cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
 				| /root/install/jq '.Stacks[0].Parameters[] | select(.ParameterKey=="VolumeTypeHanaData") | .ParameterValue' \
 				| sed 's/"//g')
-MyHanaLogVolumeType=$(/usr/local/bin/aws cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
+MyHanaLogVolumeType=$(${AWSCLI_BIN} cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
 				| /root/install/jq '.Stacks[0].Parameters[] | select(.ParameterKey=="VolumeTypeHanaLog") | .ParameterValue' \
 				| sed 's/"//g')
 

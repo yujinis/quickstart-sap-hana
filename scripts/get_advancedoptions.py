@@ -7,7 +7,6 @@ import json
 import getopt, sys
 import six
 
-aws_cmd = '/usr/local/bin/aws --debug'
 config_file = '/root/install/config.sh'
 
 def exe_cmd(cmd,cwd=None):
@@ -29,7 +28,7 @@ def exe_cmd(cmd,cwd=None):
         return output
 
 def read_config():
-    command = ['bash', '-c', 'source /root/install/config.sh && env']
+    command = ['/bin/bash', '-c', 'source /root/install/config.sh && env']
     proc = subprocess.Popen(command, stdout = subprocess.PIPE)
     for line in proc.stdout:
         line = line.decode()
@@ -125,4 +124,6 @@ def main():
         pass
 
 if __name__ == "__main__":
+    read_config()
+    aws_cmd = os.environ['AWSCLI_BIN'].rstrip()
     main()

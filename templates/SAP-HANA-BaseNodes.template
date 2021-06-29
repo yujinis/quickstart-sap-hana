@@ -1930,15 +1930,31 @@ Resources:
             - "\n"
             - export NO_PROXY=localhost,127.0.0.1,169.254.169.254
             - "\n"
-            - !If [IfUseSLES, "# SLES\n", "yum install -y wget\n", ]
-            - wget https://s3.amazonaws.com/
+            #- !If [IfUseSLES, "# SLES\n", "yum install -y wget\n", ]
+            #- wget https://s3.amazonaws.com/
+            #- !Ref 'PrivateBucket'
+            #- "/scripts/download.sh --output-document=/root/install/download.sh\n"
+            #- 'sh /root/install/download.sh -b '
+            #- !Ref 'PrivateBucket'
+            #- ' -c '
+            #- !Ref 'CustomStorageConfig'
+            #- "\n"
+            - "source /etc/os-release\n"
+            - "if [ ${ID} == \"sles\" ]; then \n"
+            - "   zypper install -y aws-cli \n"
+            - "elif [[ ${ID} == \"rhel\" && ${VERSION_ID} != \"7\"* ]]; then \n"
+            - "   yum install -y python3 unzip \n"
+            - "   curl \"https://s3.amazonaws.com/aws-cli/awscli-bundle.zip\" -o \"/tmp/awscli-bundle.zip\" \n"
+            - "   cd /tmp && unzip awscli-bundle.zip \n"
+            - "   python3 /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
+            - "elif [[ ${ID} == \"rhel\" && ${VERSION_ID} == \"7.\"* ]]; then \n"
+            - "   curl \"https://s3.amazonaws.com/aws-cli/awscli-bundle.zip\" -o \"/tmp/awscli-bundle.zip\" \n"
+            - "   cd /tmp && unzip awscli-bundle.zip \n"
+            - "   /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
+            - "fi \n"
+            - "cd /root/install && aws s3 sync s3://"
             - !Ref 'PrivateBucket'
-            - "/scripts/download.sh --output-document=/root/install/download.sh\n"
-            - 'sh /root/install/download.sh -b '
-            - !Ref 'PrivateBucket'
-            - ' -c '
-            - !Ref 'CustomStorageConfig'
-            - "\n"
+            - "/scripts/ . \n"
             - "chmod 755 /root/install/*.sh\n"
             - "chmod 755 /root/install/*.py\n"
             - 'echo '
@@ -2176,15 +2192,31 @@ Resources:
             - "\n"
             - export NO_PROXY=localhost,127.0.0.1,169.254.169.254
             - "\n"
-            - !If [IfUseSLES, "# SLES\n", "yum install -y wget\n", ]
-            - wget https://s3.amazonaws.com/
+            #- !If [IfUseSLES, "# SLES\n", "yum install -y wget\n", ]
+            #- wget https://s3.amazonaws.com/
+            #- !Ref 'PrivateBucket'
+            #- "/scripts/download.sh --output-document=/root/install/download.sh\n"
+            #- 'sh /root/install/download.sh -b '
+            #- !Ref 'PrivateBucket'
+            #- ' -c '
+            #- !Ref 'CustomStorageConfig'
+            #- "\n"
+            - "source /etc/os-release\n"
+            - "if [ ${ID} == \"sles\" ]; then \n"
+            - "   zypper install -y aws-cli \n"
+            - "elif [[ ${ID} == \"rhel\" && ${VERSION_ID} != \"7\"* ]]; then \n"
+            - "   yum install -y python3 unzip \n"
+            - "   curl \"https://s3.amazonaws.com/aws-cli/awscli-bundle.zip\" -o \"/tmp/awscli-bundle.zip\" \n"
+            - "   cd /tmp && unzip awscli-bundle.zip \n"
+            - "   python3 /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
+            - "elif [[ ${ID} == \"rhel\" && ${VERSION_ID} == \"7.\"* ]]; then \n"
+            - "   curl \"https://s3.amazonaws.com/aws-cli/awscli-bundle.zip\" -o \"/tmp/awscli-bundle.zip\" \n"
+            - "   cd /tmp && unzip awscli-bundle.zip \n"
+            - "   /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
+            - "fi \n"
+            - "cd /root/install && aws s3 sync s3://"
             - !Ref 'PrivateBucket'
-            - "/scripts/download.sh --output-document=/root/install/download.sh\n"
-            - 'sh /root/install/download.sh -b '
-            - !Ref 'PrivateBucket'
-            - ' -c '
-            - !Ref 'CustomStorageConfig'
-            - "\n"
+            - "/scripts/ . \n"
             - "chmod 755 /root/install/*.sh\n"
             - "chmod 755 /root/install/*.py\n"
             - 'echo '
@@ -2391,15 +2423,31 @@ Resources:
             - "\n"
             - export NO_PROXY=localhost,127.0.0.1,169.254.169.254
             - "\n"
-            - !If [IfUseSLES, "# SLES\n", "yum install -y wget\n", ]
-            - wget https://s3.amazonaws.com/
+            #- !If [IfUseSLES, "# SLES\n", "yum install -y wget\n", ]
+            #- wget https://s3.amazonaws.com/
+            #- !Ref 'PrivateBucket'
+            #- "/scripts/download.sh --output-document=/root/install/download.sh\n"
+            #- 'sh /root/install/download.sh -b '
+            #- !Ref 'PrivateBucket'
+            #- ' -c '
+            #- !Ref 'CustomStorageConfig'
+            #- "\n"
+            - "source /etc/os-release\n"
+            - "if [ ${ID} == \"sles\" ]; then \n"
+            - "   zypper install -y aws-cli \n"
+            - "elif [[ ${ID} == \"rhel\" && ${VERSION_ID} != \"7\"* ]]; then \n"
+            - "   yum install -y python3 unzip \n"
+            - "   curl \"https://s3.amazonaws.com/aws-cli/awscli-bundle.zip\" -o \"/tmp/awscli-bundle.zip\" \n"
+            - "   cd /tmp && unzip awscli-bundle.zip \n"
+            - "   python3 /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
+            - "elif [[ ${ID} == \"rhel\" && ${VERSION_ID} == \"7.\"* ]]; then \n"
+            - "   curl \"https://s3.amazonaws.com/aws-cli/awscli-bundle.zip\" -o \"/tmp/awscli-bundle.zip\" \n"
+            - "   cd /tmp && unzip awscli-bundle.zip \n"
+            - "   /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
+            - "fi \n"
+            - "cd /root/install && aws s3 sync s3://"
             - !Ref 'PrivateBucket'
-            - "/scripts/download.sh --output-document=/root/install/download.sh\n"
-            - 'sh /root/install/download.sh -b '
-            - !Ref 'PrivateBucket'
-            - ' -c '
-            - !Ref 'CustomStorageConfig'
-            - "\n"
+            - "/scripts/ . \n"
             - "chmod 755 /root/install/*.sh\n"
             - "chmod 755 /root/install/*.py\n"
             - 'echo '
@@ -2606,15 +2654,31 @@ Resources:
             - "\n"
             - export NO_PROXY=localhost,127.0.0.1,169.254.169.254
             - "\n"
-            - !If [IfUseSLES, "# SLES\n", "yum install -y wget\n", ]
-            - wget https://s3.amazonaws.com/
+            #- !If [IfUseSLES, "# SLES\n", "yum install -y wget\n", ]
+            #- wget https://s3.amazonaws.com/
+            #- !Ref 'PrivateBucket'
+            #- "/scripts/download.sh --output-document=/root/install/download.sh\n"
+            #- 'sh /root/install/download.sh -b '
+            #- !Ref 'PrivateBucket'
+            #- ' -c '
+            #- !Ref 'CustomStorageConfig'
+            #- "\n"
+            - "source /etc/os-release\n"
+            - "if [ ${ID} == \"sles\" ]; then \n"
+            - "   zypper install -y aws-cli \n"
+            - "elif [[ ${ID} == \"rhel\" && ${VERSION_ID} != \"7\"* ]]; then \n"
+            - "   yum install -y python3 unzip \n"
+            - "   curl \"https://s3.amazonaws.com/aws-cli/awscli-bundle.zip\" -o \"/tmp/awscli-bundle.zip\" \n"
+            - "   cd /tmp && unzip awscli-bundle.zip \n"
+            - "   python3 /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
+            - "elif [[ ${ID} == \"rhel\" && ${VERSION_ID} == \"7.\"* ]]; then \n"
+            - "   curl \"https://s3.amazonaws.com/aws-cli/awscli-bundle.zip\" -o \"/tmp/awscli-bundle.zip\" \n"
+            - "   cd /tmp && unzip awscli-bundle.zip \n"
+            - "   /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
+            - "fi \n"
+            - "cd /root/install && aws s3 sync s3://"
             - !Ref 'PrivateBucket'
-            - "/scripts/download.sh --output-document=/root/install/download.sh\n"
-            - 'sh /root/install/download.sh -b '
-            - !Ref 'PrivateBucket'
-            - ' -c '
-            - !Ref 'CustomStorageConfig'
-            - "\n"
+            - "/scripts/ . \n"
             - "chmod 755 /root/install/*.sh\n"
             - "chmod 755 /root/install/*.py\n"
             - 'echo '
@@ -2821,15 +2885,31 @@ Resources:
             - "\n"
             - export NO_PROXY=localhost,127.0.0.1,169.254.169.254
             - "\n"
-            - !If [IfUseSLES, "# SLES\n", "yum install -y wget\n", ]
-            - wget https://s3.amazonaws.com/
+            #- !If [IfUseSLES, "# SLES\n", "yum install -y wget\n", ]
+            #- wget https://s3.amazonaws.com/
+            #- !Ref 'PrivateBucket'
+            #- "/scripts/download.sh --output-document=/root/install/download.sh\n"
+            #- 'sh /root/install/download.sh -b '
+            #- !Ref 'PrivateBucket'
+            #- ' -c '
+            #- !Ref 'CustomStorageConfig'
+            #- "\n"
+            - "source /etc/os-release\n"
+            - "if [ ${ID} == \"sles\" ]; then \n"
+            - "   zypper install -y aws-cli \n"
+            - "elif [[ ${ID} == \"rhel\" && ${VERSION_ID} != \"7\"* ]]; then \n"
+            - "   yum install -y python3 unzip \n"
+            - "   curl \"https://s3.amazonaws.com/aws-cli/awscli-bundle.zip\" -o \"/tmp/awscli-bundle.zip\" \n"
+            - "   cd /tmp && unzip awscli-bundle.zip \n"
+            - "   python3 /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
+            - "elif [[ ${ID} == \"rhel\" && ${VERSION_ID} == \"7.\"* ]]; then \n"
+            - "   curl \"https://s3.amazonaws.com/aws-cli/awscli-bundle.zip\" -o \"/tmp/awscli-bundle.zip\" \n"
+            - "   cd /tmp && unzip awscli-bundle.zip \n"
+            - "   /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
+            - "fi \n"
+            - "cd /root/install && aws s3 sync s3://"
             - !Ref 'PrivateBucket'
-            - "/scripts/download.sh --output-document=/root/install/download.sh\n"
-            - 'sh /root/install/download.sh -b '
-            - !Ref 'PrivateBucket'
-            - ' -c '
-            - !Ref 'CustomStorageConfig'
-            - "\n"
+            - "/scripts/ . \n"
             - "chmod 755 /root/install/*.sh\n"
             - "chmod 755 /root/install/*.py\n"
             - 'echo '
@@ -3036,15 +3116,31 @@ Resources:
             - "\n"
             - export NO_PROXY=localhost,127.0.0.1,169.254.169.254
             - "\n"
-            - !If [IfUseSLES, "# SLES\n", "yum install -y wget\n", ]
-            - wget https://s3.amazonaws.com/
+            #- !If [IfUseSLES, "# SLES\n", "yum install -y wget\n", ]
+            #- wget https://s3.amazonaws.com/
+            #- !Ref 'PrivateBucket'
+            #- "/scripts/download.sh --output-document=/root/install/download.sh\n"
+            #- 'sh /root/install/download.sh -b '
+            #- !Ref 'PrivateBucket'
+            #- ' -c '
+            #- !Ref 'CustomStorageConfig'
+            #- "\n"
+            - "source /etc/os-release\n"
+            - "if [ ${ID} == \"sles\" ]; then \n"
+            - "   zypper install -y aws-cli \n"
+            - "elif [[ ${ID} == \"rhel\" && ${VERSION_ID} != \"7\"* ]]; then \n"
+            - "   yum install -y python3 unzip \n"
+            - "   curl \"https://s3.amazonaws.com/aws-cli/awscli-bundle.zip\" -o \"/tmp/awscli-bundle.zip\" \n"
+            - "   cd /tmp && unzip awscli-bundle.zip \n"
+            - "   python3 /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
+            - "elif [[ ${ID} == \"rhel\" && ${VERSION_ID} == \"7.\"* ]]; then \n"
+            - "   curl \"https://s3.amazonaws.com/aws-cli/awscli-bundle.zip\" -o \"/tmp/awscli-bundle.zip\" \n"
+            - "   cd /tmp && unzip awscli-bundle.zip \n"
+            - "   /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
+            - "fi \n"
+            - "cd /root/install && aws s3 sync s3://"
             - !Ref 'PrivateBucket'
-            - "/scripts/download.sh --output-document=/root/install/download.sh\n"
-            - 'sh /root/install/download.sh -b '
-            - !Ref 'PrivateBucket'
-            - ' -c '
-            - !Ref 'CustomStorageConfig'
-            - "\n"
+            - "/scripts/ . \n"
             - "chmod 755 /root/install/*.sh\n"
             - "chmod 755 /root/install/*.py\n"
             - 'echo '

@@ -17,33 +17,39 @@ log() {
 
 log `date` BEGIN install-aws
 
+AWS_RC=$(aws > /dev/null 2>&1 ; echo $?)
+
 echo -n "Looking for python binary...." | tee -a ${HANA_LOG_FILE} 
 PYTHON_BIN=$(which python3) 
 
 if [ ! -z ${PYTHON_BIN} ]; then
-   echo "export PYTHON_BIN=${PYTHON_BIN}" >> ${SCRIPT_DIR}/config.sh
-   echo "...found python in ${PYTHON_BIN}" | tee -a ${HANA_LOG_FILE}
-   echo -n "Checking python3 minor version...."
-   CHECKPYTHON3=$(${PYTHON_BIN} -c 'import sys; print(sys.version_info.minor)')
-   echo "...found Python 3.${CHECKPYTHON3}"
+    echo "export PYTHON_BIN=${PYTHON_BIN}" >> ${SCRIPT_DIR}/config.sh
+    echo "...found python in ${PYTHON_BIN}" | tee -a ${HANA_LOG_FILE}
+    echo -n "Checking python3 minor version...."
+    CHECKPYTHON3=$(${PYTHON_BIN} -c 'import sys; print(sys.version_info.minor)')
+    echo "...found Python 3.${CHECKPYTHON3}"
 else 
-   PYTHON_BIN=$(which python)
-   echo "export PYTHON_BIN=${PYTHON_BIN}" >> ${SCRIPT_DIR}/config.sh
-   echo "...found python in ${PYTHON_BIN}" | tee -a ${HANA_LOG_FILE}
+    PYTHON_BIN=$(which python)
+    echo "export PYTHON_BIN=${PYTHON_BIN}" >> ${SCRIPT_DIR}/config.sh
+    echo "...found python in ${PYTHON_BIN}" | tee -a ${HANA_LOG_FILE}
 fi
 
-if [[ ! -z ${CHECKPYTHON3} && ${CHECKPYTHON3} -lt 6 ]]; then
-   AWSCLI=awscli-bundle-1.18.223.zip
+if [ ${AWS_RC} -eq 127 ]; then
+    if [[ ! -z ${CHECKPYTHON3} && ${CHECKPYTHON3} -lt 6 ]]; then
+        AWSCLI=awscli-bundle-1.18.223.zip
+    else
+        AWSCLI=awscli-bundle.zip
+    fi
+
+    wget https://s3.amazonaws.com/aws-cli/${AWSCLI} | tee -a ${HANA_LOG_FILE}
+    zypper -n install unzip
+    unzip ${AWSCLI} | tee -a ${HANA_LOG_FILE}
+    ${PYTHON_BIN} /root/install/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws | tee -a ${HANA_LOG_FILE}
+    echo "export AWSCLI_BIN=/usr/local/bin/aws" >> ${SCRIPT_DIR}/config.sh
 else
-   AWSCLI=awscli-bundle.zip
+    AWSCLI_BIN=$(which aws)
+    echo "export AWSCLI_BIN=${AWSCLI_BIN}" >> ${SCRIPT_DIR}/config.sh
 fi
-
-wget https://s3.amazonaws.com/aws-cli/${AWSCLI} | tee -a ${HANA_LOG_FILE}
-zypper -n install unzip
-unzip ${AWSCLI} | tee -a ${HANA_LOG_FILE}
-#sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws | tee -a ${HANA_LOG_FILE}
-${PYTHON_BIN} /root/install/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws | tee -a ${HANA_LOG_FILE}
-
 
 # ------------------------------------------------------------------
 #   Download jq 
@@ -57,9 +63,6 @@ cd -
 # ------------------------------------------------------------------
 #          Get any advanced option JSON input (if any)
 # ------------------------------------------------------------------
-
-
-log `date` END install-aws
 
 if [ -z "${HANA_LOG_FILE}" ] ; then
     HANA_LOG_FILE=${SCRIPT_DIR}/install.log
@@ -78,8 +81,9 @@ log 'Dowloading AdvancedOptions JSON End'
 #          This allows customer to be able to SSH and debug
 # ------------------------------------------------------------------
 
+log `date` END install-aws
 
-if [ "${DEBUG_DEPLOYMENT}" -eq "True" ]; then
+if [ "${DEBUG_DEPLOYMENT}" == "True" ]; then
     sh /root/install/signal-complete.sh
 fi
 

@@ -89,7 +89,7 @@ export AWS_DEFAULT_REGION=${REGION}
 # ------------------------------------------------------------------
 
 GetCreationStatus() {
-    status=$(/usr/local/bin/aws dynamodb describe-table --table-name ${TABLE_NAME} --query Table.TableStatus)
+    status=$(${AWSCLI_BIN} dynamodb describe-table --table-name ${TABLE_NAME} --query Table.TableStatus)
     echo $status
 }
 
@@ -107,7 +107,7 @@ WaitUntilTableActive() {
 
 
 IfTableFound() {
-    status=$(/usr/local/bin/aws dynamodb describe-table --table-name ${TABLE_NAME} 2>&1)
+    status=$(${AWSCLI_BIN} dynamodb describe-table --table-name ${TABLE_NAME} 2>&1)
 	[[ ${status} == *"not found"* ]] && echo 0 && return
 	echo 1	
 }
@@ -155,7 +155,7 @@ WaitUntilTableDead() {
 
 CreateTable() {
 	log "CreateTable ${TABLE_NAME} in cluster-watch-engine.sh "
-    /usr/local/bin/aws dynamodb create-table \
+    ${AWSCLI_BIN} dynamodb create-table \
         --table-name ${TABLE_NAME} \
         --attribute-definitions \
             AttributeName=PrivateIpAddress,AttributeType=S \
@@ -179,7 +179,7 @@ DeleteTable() {
 		echo "Table doesn't exist. No need to delete"
 		return
 	fi
-	status=$(/usr/local/bin/aws dynamodb delete-table --table-name ${TABLE_NAME})
+	status=$(${AWSCLI_BIN} dynamodb delete-table --table-name ${TABLE_NAME})
 	WaitUntilTableDead
 }
 
@@ -232,7 +232,7 @@ InsertMyKeyValueS() {
 
     insertjson=$(echo -n ${insertjson_template} | sed "s/key/${key}/g")    
     insertjson=$(echo -n ${insertjson} | sed "s/value/${value}/g")    
-    cmd=$(echo  "/usr/local/bin/aws dynamodb update-item --table-name ${TABLE_NAME} --key '${keyjson}' --attribute-updates '${insertjson}'")
+    cmd=$(echo  "${AWSCLI_BIN} dynamodb update-item --table-name ${TABLE_NAME} --key '${keyjson}' --attribute-updates '${insertjson}'")
 	log "${cmd}"	
     echo ${cmd} | sh 
 
@@ -251,7 +251,7 @@ InitMyTable() {
         }'
     json_template='{ "PrivateIpAddress": {"S": "myip" }}'
     json=$(echo ${json_template} | sed "s/myip/${myip}/g")
-    /usr/local/bin/aws dynamodb put-item --table-name ${TABLE_NAME}  --item "${json}"
+    ${AWSCLI_BIN} dynamodb put-item --table-name ${TABLE_NAME}  --item "${json}"
     instanceid=$(curl http://169.254.169.254/latest/meta-data/instance-id)
     InsertMyKeyValueS "InstanceId=${instanceid}"
 }
@@ -288,7 +288,7 @@ SetMyStatus() {
         }'
 
     updatejson=$(echo -n ${updatejson_template} | sed "s/mystatus/${status}/g")    
-    cmd=$(echo  "/usr/local/bin/aws dynamodb update-item --table-name ${TABLE_NAME} --key '${keyjson}' --attribute-updates '${updatejson}'")
+    cmd=$(echo  "${AWSCLI_BIN} dynamodb update-item --table-name ${TABLE_NAME} --key '${keyjson}' --attribute-updates '${updatejson}'")
     echo ${cmd} | sh 
 
 }
@@ -311,7 +311,7 @@ QueryStatusCount(){
         echo "StatusCountQuery invalid!"
         return 
     fi
-    count=$(/usr/local/bin/aws dynamodb scan --table-name ${TABLE_NAME} --scan-filter '
+    count=$(${AWSCLI_BIN} dynamodb scan --table-name ${TABLE_NAME} --scan-filter '
             { "Status" : {
                 "AttributeValueList": [
                     {
@@ -365,7 +365,7 @@ WaitForSpecificStatus() {
 # ------------------------------------------------------------------
 
 Print() {
-    /usr/local/bin/aws dynamodb scan --table-name ${TABLE_NAME}
+    ${AWSCLI_BIN} dynamodb scan --table-name ${TABLE_NAME}
 }
 
 

@@ -31,7 +31,7 @@ if [ -z "${HANA_LOG_FILE}" ] ; then
 fi
 
 MyHostname=$(hostname)
-GetSecretCmd="aws secretsmanager get-secret-value --secret-id ${MyStackName} --output json --region ${REGION}"
+GetSecretCmd="${AWSCLI_BIN} secretsmanager get-secret-value --secret-id ${MyStackName} --output json --region ${REGION}"
 HANAMasterPass=$(${GetSecretCmd} | ${JQ_COMMAND} .SecretString | sed -e 's/\"//g')
 
 log `date` "BEGIN installation procedure"
@@ -46,7 +46,7 @@ sh /root/install/fence-cluster.sh -w "PRE_INSTALL_COMPLETE_ACK=${HostCount}"
 sh /root/install/install-master.sh -s ${SID} -i ${SAPInstanceNum} -p ${HANAMasterPass} -n ${HANAMasterHostname} -d ${DomainName} -w ${HANAWorkerHostname}
 sh /root/install/cluster-watch-engine.sh -s "MASTER_NODE_COMPLETE"
 sh /root/install/wait-for-workers.sh ${HostCount}
-sh /root/install/cluster-watch-engine.sh  -r
+sh /root/install/cluster-watch-engine.sh -r
 sh /root/install/validate-install.sh ${WaitForMasterInstallWaitHandle}
 sh /root/install/cleanup.sh &
 log `date` "END installation procedure"

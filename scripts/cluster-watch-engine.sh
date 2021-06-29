@@ -118,9 +118,8 @@ then
     exit 1
 fi
 
-
 GetCreationStatus() {
-    status=$(/usr/local/bin/aws dynamodb describe-table --table-name ${TABLE_NAME} --query Table.TableStatus)
+    status=$(${AWSCLI_BIN} dynamodb describe-table --table-name ${TABLE_NAME} --query Table.TableStatus)
     echo $status
 }
 
@@ -138,9 +137,12 @@ WaitUntilTableActive() {
 
 
 IfTableFound() {
-    status=$(/usr/local/bin/aws dynamodb describe-table --table-name ${TABLE_NAME} 2>&1)
-	[[ ${status} == *"not found"* ]] && echo 0 && return
-	echo 1	
+    status=$(${AWSCLI_BIN} dynamodb describe-table --table-name ${TABLE_NAME} 2>&1)
+    if [[ "${status}" == *"not found"* ]]; then
+       echo 0
+    else
+       echo 1
+    fi
 }
 
 
@@ -186,7 +188,7 @@ WaitUntilTableDead() {
 
 CreateTable() {
 	log "CreateTable ${TABLE_NAME} in cluster-watch-engine.sh "
-    /usr/local/bin/aws dynamodb create-table \
+    ${AWSCLI_BIN} dynamodb create-table \
         --table-name ${TABLE_NAME} \
         --attribute-definitions \
             AttributeName=PrivateIpAddress,AttributeType=S \
@@ -220,7 +222,7 @@ DeleteTable() {
 		echo "Table doesn't exist. No need to delete"
 		return
 	fi
-	status=$(/usr/local/bin/aws dynamodb delete-table --table-name ${TABLE_NAME})
+	status=$(${AWSCLI_BIN} dynamodb delete-table --table-name ${TABLE_NAME})
 	WaitUntilTableDead
 }
 
@@ -232,7 +234,7 @@ GetMyIp() {
         ip=$(ip route get 1.2.3.4 | awk '{print $7}')
     fi  
     # Begin RHEL 7.2  addition
-    if [ $ip = '']; then
+    if [ "$ip" == "" ]; then
         ip=$(ifconfig eth0 | grep 'inet ' | cut -d: -f2 | awk '{ print $2}')
     fi
     # End RHEL 7.2 addition
@@ -278,7 +280,7 @@ InsertMyKeyValueS() {
 
     insertjson=$(echo -n ${insertjson_template} | sed "s/key/${key}/g")    
     insertjson=$(echo -n ${insertjson} | sed "s/value/${value}/g")    
-    cmd=$(echo  "/usr/local/bin/aws dynamodb update-item --table-name ${TABLE_NAME} --key '${keyjson}' --attribute-updates '${insertjson}'")
+    cmd=$(echo  "${AWSCLI_BIN} dynamodb update-item --table-name ${TABLE_NAME} --key '${keyjson}' --attribute-updates '${insertjson}'")
 	log "${cmd}"	
     echo ${cmd} | sh 
 
@@ -297,7 +299,7 @@ InitMyTable() {
         }'
     json_template='{ "PrivateIpAddress": {"S": "myip" }}'
     json=$(echo ${json_template} | sed "s/myip/${myip}/g")
-    /usr/local/bin/aws dynamodb put-item --table-name ${TABLE_NAME}  --item "${json}"
+    ${AWSCLI_BIN} dynamodb put-item --table-name ${TABLE_NAME}  --item "${json}"
     instanceid=$(curl http://169.254.169.254/latest/meta-data/instance-id)
     InsertMyKeyValueS "InstanceId=${instanceid}"
 }
@@ -334,7 +336,7 @@ SetMyStatus() {
         }'
 
     updatejson=$(echo -n ${updatejson_template} | sed "s/mystatus/${status}/g")    
-    cmd=$(echo  "/usr/local/bin/aws dynamodb update-item --table-name ${TABLE_NAME} --key '${keyjson}' --attribute-updates '${updatejson}'")
+    cmd=$(echo  "${AWSCLI_BIN} dynamodb update-item --table-name ${TABLE_NAME} --key '${keyjson}' --attribute-updates '${updatejson}'")
     echo ${cmd} | sh 
 
 }
@@ -357,7 +359,7 @@ QueryStatusCount(){
         echo "StatusCountQuery invalid!"
         return 
     fi
-    /usr/local/bin/aws dynamodb scan --table-name ${TABLE_NAME} --scan-filter '
+   ${AWSCLI_BIN} dynamodb scan --table-name ${TABLE_NAME} --scan-filter '
             { "Status" : {
                 "AttributeValueList": [
                     {
@@ -367,7 +369,7 @@ QueryStatusCount(){
                 "ComparisonOperator":"EQ"
                 }} ' --region ${AWS_DEFAULT_REGION} >> ${HANA_LOG_FILE} 2>&1
 
-    /usr/local/bin/aws dynamodb scan --table-name ${TABLE_NAME} --scan-filter '
+    ${AWSCLI_BIN} dynamodb scan --table-name ${TABLE_NAME} --scan-filter '
             { "Status" : {
                 "AttributeValueList": [
                     {
@@ -378,7 +380,7 @@ QueryStatusCount(){
                 }} ' --region ${AWS_DEFAULT_REGION} | ${JQ_COMMAND}  '.Items[]|.PrivateIpAddress|.S'  >> ${HANA_LOG_FILE} 2>&1
 
 
-    count=$(/usr/local/bin/aws dynamodb scan --table-name ${TABLE_NAME} --scan-filter '
+    count=$(${AWSCLI_BIN} dynamodb scan --table-name ${TABLE_NAME} --scan-filter '
             { "Status" : {
                 "AttributeValueList": [
                     {
@@ -411,11 +413,11 @@ WaitForSpecificStatus() {
 	log "Checking for ${status} = ${expected_count} times"
 
     while true; do
-       log "/usr/local/bin/aws dynamodb scan --table-name ${TABLE_NAME} --region ${AWS_DEFAULT_REGION}"
-       TABLE_VALUES=$(/usr/local/bin/aws dynamodb scan --table-name ${TABLE_NAME} --region ${AWS_DEFAULT_REGION})
+       log "${AWSCLI_BIN} dynamodb scan --table-name ${TABLE_NAME} --region ${AWS_DEFAULT_REGION}"
+       TABLE_VALUES=$(${AWSCLI_BIN} dynamodb scan --table-name ${TABLE_NAME} --region ${AWS_DEFAULT_REGION})
        log "${TABLE_VALUES}"
 
-       /usr/local/bin/aws dynamodb scan --table-name ${TABLE_NAME} --region ${AWS_DEFAULT_REGION}>> ${HANA_LOG_FILE} 2>&1
+       ${AWSCLI_BIN} dynamodb scan --table-name ${TABLE_NAME} --region ${AWS_DEFAULT_REGION}>> ${HANA_LOG_FILE} 2>&1
 
        log "Calling QueryStatusCount ${status}"
         count=$(QueryStatusCount ${status})
@@ -439,7 +441,7 @@ WaitForSpecificStatus() {
 # ------------------------------------------------------------------
 
 Print() {
-    /usr/local/bin/aws dynamodb scan --table-name ${TABLE_NAME}
+    ${AWSCLI_BIN} dynamodb scan --table-name ${TABLE_NAME}
 }
 
 

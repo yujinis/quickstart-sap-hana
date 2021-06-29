@@ -82,7 +82,7 @@ GetMyIp() {
         ip=$(ip route get 1.2.3.4 | awk '{print $7}')
     fi  
     # Begin RHEL 7.2  addition
-    if [ $ip = '']; then
+    if [ "$ip" == "" ]; then
     ip=$(ifconfig eth0 | grep 'inet ' | cut -d: -f2 | awk '{ print $2}')
     fi
     # End RHEL 7.2 addition
@@ -124,7 +124,7 @@ InsertMyKeyValueS() {
 
     insertjson=$(echo -n ${insertjson_template} | sed "s/key/${key}/g")    
     insertjson=$(echo -n ${insertjson} | sed "s/value/${value}/g")    
-    cmd=$(echo  "/usr/local/bin/aws dynamodb update-item --table-name ${TABLE_NAME} --key '${keyjson}' --attribute-updates '${insertjson}'")
+    cmd=$(echo  "${AWSCLI_BIN} dynamodb update-item --table-name ${TABLE_NAME} --key '${keyjson}' --attribute-updates '${insertjson}'")
 	log "${cmd}"	
     echo ${cmd} | sh 
 
@@ -156,7 +156,7 @@ AckMyStatus() {
         }'
 
     updatejson=$(echo -n ${updatejson_template} | sed "s/mystatus/${status}/g")    
-    cmd=$(echo  "/usr/local/bin/aws dynamodb update-item --table-name ${TABLE_NAME} --key '${keyjson}' --attribute-updates '${updatejson}'")
+    cmd=$(echo  "${AWSCLI_BIN} dynamodb update-item --table-name ${TABLE_NAME} --key '${keyjson}' --attribute-updates '${updatejson}'")
     echo ${cmd} | sh 
 
 }
@@ -173,7 +173,7 @@ QueryStatusAckCount(){
         echo "StatusAckCountQuery invalid!"
         return 
     fi
-    count=$(/usr/local/bin/aws dynamodb scan --table-name ${TABLE_NAME} --scan-filter '
+    count=$(${AWSCLI_BIN} dynamodb scan --table-name ${TABLE_NAME} --scan-filter '
             { "StatusAck" : {
                 "AttributeValueList": [
                     {

@@ -6,7 +6,6 @@ import subprocess
 import json
 import six
 
-aws_cmd = '/usr/local/bin/aws'
 extract_cmd = "/usr/bin/unrar x exe_file extract_dir"
 find_cmd = "/usr/bin/find compressed_dir  -name '*.exe' "
 
@@ -20,7 +19,7 @@ def exe_cmd(cmd,cwd=None):
     return output
 
 def read_config():
-    command = ['bash', '-c', 'source /root/install/config.sh && env']
+    command = ['/bin/bash', '-c', 'source /root/install/config.sh && env']
     proc = subprocess.Popen(command, stdout = subprocess.PIPE)
     for line in proc.stdout:
         line = line.decode()
@@ -91,4 +90,6 @@ def main():
     download_s3(s3path,compressed_dir)
 
 if __name__ == "__main__":
+    read_config()
+    aws_cmd = os.environ['AWSCLI_BIN'].rstrip()
     main()

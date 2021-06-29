@@ -45,7 +45,7 @@ def main():
         else:
             assert False, "unhandled option"
 
-    command = ['bash', '-c', 'source /root/install/config.sh && env']
+    command = ['/bin/bash', '-c', 'source /root/install/config.sh && env']
     proc = subprocess.Popen(command, stdout = subprocess.PIPE)
     for line in proc.stdout:
       line = line.decode()

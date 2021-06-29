@@ -37,6 +37,8 @@ tests:
       SID: HDB
       VPCCIDR: 10.0.0.0/16
       QSS3BucketName: $[taskcat_autobucket]
+      PrivateBucket: $[taskcat_autobucket]/quickstart-sap-hana
+      CustomStorageConfig:  $[taskcat_autobucket]/quickstart-sap-hana/scripts
       QSS3BucketRegion: $[taskcat_current_region]
     regions:
     - us-west-2

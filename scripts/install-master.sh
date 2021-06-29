@@ -173,15 +173,15 @@ fi
 # ------------------------------------------------------------------
 
 
-MyInstanceType=$(/usr/local/bin/aws cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
+MyInstanceType=$(${AWSCLI_BIN} cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
 				| /root/install/jq '.Stacks[0].Parameters[] | select(.ParameterKey=="MyInstanceType") | .ParameterValue' \
 				| sed 's/"//g')
 
-MyHanaDataVolumeType=$(/usr/local/bin/aws cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
+MyHanaDataVolumeType=$(${AWSCLI_BIN} cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
 				| /root/install/jq '.Stacks[0].Parameters[] | select(.ParameterKey=="VolumeTypeHanaData") | .ParameterValue' \
 				| sed 's/"//g')
 
-MyHanaLogVolumeType=$(/usr/local/bin/aws cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
+MyHanaLogVolumeType=$(${AWSCLI_BIN} cloudformation describe-stacks --stack-name ${MyStackId}  --region ${REGION}  \
 				| /root/install/jq '.Stacks[0].Parameters[] | select(.ParameterKey=="VolumeTypeHanaLog") | .ParameterValue' \
 				| sed 's/"//g')
 
@@ -262,12 +262,10 @@ fi
 #          Make sure all input parameters are filled
 # ------------------------------------------------------------------
 
-
 [[ -z "$SID" ]]  && echo "input SID missing" && usage;
 [[ -z "$INSTANCE" ]]  && echo "input INSTANCE missing" && usage;
 [[ -z "$HANAPASSWORD" ]]  && echo "input HANAPASSWORD missing" && usage;
 [[ -z "$MASTER_HOSTNAME" ]]  && echo "input MASTER_HOSTNAME missing" && usage;
-
 shift $((OPTIND-1))
 
 [[ $# -gt 0 ]] && usage;
@@ -281,7 +279,6 @@ shift $((OPTIND-1))
 #fi
 
 echo `date` BEGIN install-master  2>&1 | tee -a ${HANA_LOG_FILE}
-
 update_status "CONFIGURING_INSTANCE_FOR_HANA"
 #create_volume;
 set_noop_scheduler;
@@ -367,7 +364,6 @@ set_noop_scheduler;
 
 
 #/backup /hana/shared /hana/log /hana/data
-
 for lv in `ls /dev/mapper | grep vghana`
 do
    log `date` "Formatting logical volume $lv"
