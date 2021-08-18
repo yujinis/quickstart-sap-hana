@@ -163,6 +163,7 @@ Parameters:
       - SuSELinux15
       - SuSELinux15SP1
       - SuSELinux15SP2
+      - SuSELinux15SP3
       - SuSELinux12SP2ForSAP
       - SuSELinux12SP3ForSAP
       - SuSELinux12SP4ForSAP
@@ -170,6 +171,7 @@ Parameters:
       - SuSELinux15ForSAP
       - SuSELinux15SP1ForSAP
       - SuSELinux15SP2ForSAP
+      - SuSELinux15SP3ForSAP
       - SuSELinux12SP1ForSAP-BYOS
       - SuSELinux12SP2ForSAP-BYOS
       - SuSELinux12SP3ForSAP-BYOS
@@ -178,6 +180,7 @@ Parameters:
       - SuSELinux15ForSAP-BYOS
       - SuSELinux15SP1ForSAP-BYOS
       - SuSELinux15SP2ForSAP-BYOS
+      - SuSELinux15SP3ForSAP-BYOS
   SLESBYOSRegCode:
     Type: String
     Default: ''
@@ -339,8 +342,6 @@ Metadata:
     ParameterGroups:
       - Label:
           default: Existing network infrastructure details
-        Description:
-          default: ''
         Parameters:
           - VPCID
           - HANASubnet
@@ -349,8 +350,6 @@ Metadata:
           - DMZCIDR
       - Label:
           default: Server and storage configuration
-        Description:
-          default: ''
         Parameters:
           - MyOS
           - SLESBYOSRegCode
@@ -366,8 +365,6 @@ Metadata:
           - AutomaticReboot
       - Label:
           default: SAP HANA database configuration
-        Description:
-          default: ''
         Parameters:
           - DomainName
           - HANAMasterHostname
@@ -381,8 +378,6 @@ Metadata:
           - SAPHANAFastRestart
       - Label:
           default: Optional configuration
-        Description:
-          default: ''
         Parameters:
           - PlacementGroupName
           - InstallRDPInstance
@@ -394,8 +389,6 @@ Metadata:
           - Proxy
       - Label:
           default: Advanced configuration (Do not modify unless directed by AWS Support)
-        Description:
-          default: ''
         Parameters:
           - PrivateBucket
           - CustomStorageConfig
@@ -478,6 +471,16 @@ Metadata:
         default: Enter CIDR block of your SAP Application Servers
       LatestWS2012AmiId:
         default: WS2012R2 AMI ID SSM Parameter
+  cfn-lint:
+    config:
+      ignore_checks:
+        - E9007
+        - E9010
+        - E9101
+        - W1001
+        - W2001
+        - W3005
+        - W8001
 Conditions:
   TwoOrMoreNodes: !Or
     - !Equals
@@ -638,6 +641,8 @@ Mappings:
       Code: SLES15SP1HVM
     SuSELinux15SP2:
       Code: SLES15SP2HVM
+    SuSELinux15SP3:
+      Code: SLES15SP3HVM
     SuSELinux12SP2ForSAP:
       Code: SLES12SP2SAPHVM
     SuSELinux12SP3ForSAP:
@@ -652,6 +657,8 @@ Mappings:
       Code: SLES15SP1SAPHVM
     SuSELinux15SP2ForSAP:
       Code: SLES15SP2SAPHVM
+    SuSELinux15SP3ForSAP:
+      Code: SLES15SP3SAPHVM
     SuSELinux12SP1ForSAP-BYOS:
       Code: SLES12SP1SAPBYOSHVM
     SuSELinux12SP2ForSAP-BYOS:
@@ -668,6 +675,8 @@ Mappings:
       Code: SLES15SP1SAPBYOSHVM
     SuSELinux15SP2ForSAP-BYOS:
       Code: SLES15SP2SAPBYOSHVM
+    SuSELinux15SP3ForSAP-BYOS:
+      Code: SLES15SP3SAPBYOSHVM
   AWSAMIRegionMap:
     AMI:
       RHEL75SAPHVM: SAP-7.5_HVM_GA-20180911-x86_64-0-Hourly2-GP2-b676039c-a4f8-4be7-9866-c804b1ade684-ami-01e5a531ae8d3d976.4
@@ -686,7 +695,8 @@ Mappings:
       SLES12SP5HVM: suse-sles-12-sp5-v20200527-hvm-ssd-x86_64
       SLES15HVM: suse-sles-15-v20180806-hvm-ssd-x86_64
       SLES15SP1HVM: suse-sles-15-sp1-v20200226-hvm-ssd-x86_64
-      SLES15SP2HVM: suse-sles-15-sp2-v20200721-hvm-ssd-x86_64 
+      SLES15SP2HVM: suse-sles-15-sp2-v20200721-hvm-ssd-x86_64
+      SLES15SP3HVM: suse-sles-15-sp3-v20210622-hvm-ssd-x86_64
       SLES12SP2SAPHVM: suse-sles-sap-12-sp2-v20180706-hvm-ssd-x86_64-e3458d64-5c36-4577-bd98-0ee19e3eaeec-ami-3ac5ea45.4
       SLES12SP3SAPHVM: suse-sles-sap-12-sp3-v20180814-hvm-ssd-x86_64-da7aa9c3-97db-4573-89a6-7fe7348d90b0-ami-0df5b06332b816a8e.4
       SLES12SP4SAPHVM: suse-sles-sap-12-sp4-v20181212-hvm-ssd-x86_64-8f7bb679-fb90-4446-aa80-9b6cfd834710-ami-015bf44384c484ccb.4
@@ -694,6 +704,7 @@ Mappings:
       SLES15SAPHVM: suse-sles-sap-15-v20180806-hvm-ssd-x86_64-6a4bc5af-a084-4f96-8402-5cd249e9091d-ami-06aee2e6db735d4f4.4
       SLES15SP1SAPHVM: suse-sles-sap-15-sp1-v20200527-hvm-ssd-x86_64-36451a0a-c7b9-4ee2-bb36-1192921c6337-ami-02db89093d1dc48ca.4
       SLES15SP2SAPHVM: suse-sles-sap-15-sp2-v20200721-hvm-ssd-x86_64-e9701ac9-43ee-4dda-b944-17c6c231c8db-ami-0815c103582dd3bae.4
+      SLES15SP3SAPHVM: suse-sles-sap-15-sp3-v20210623-hvm-ssd-x86_64-830d483c-5618-40d8-b3b5-7aad295a278c-ami-0e3b4dbf9c2cd8b16.4
       SLES12SP1SAPBYOSHVM: suse-sles-sap-12-sp1-byos-v20170123-hvm-ssd-x86_64
       SLES12SP2SAPBYOSHVM: suse-sles-sap-12-sp2-byos-v20180816-hvm-ssd-x86_64
       SLES12SP3SAPBYOSHVM: suse-sles-sap-12-sp3-byos-v20180814-hvm-ssd-x86_64
@@ -702,6 +713,7 @@ Mappings:
       SLES15SAPBYOSHVM: suse-sles-sap-15-byos-v20180816-hvm-ssd-x86_64
       SLES15SP1SAPBYOSHVM: suse-sles-sap-15-sp1-byos-v20200506-hvm-ssd-x86_64
       SLES15SP2SAPBYOSHVM: suse-sles-sap-15-sp2-byos-v20200721-hvm-ssd-x86_64
+      SLES15SP3SAPBYOSHVM: suse-sles-sap-15-sp3-byos-v20210623-hvm-ssd-x86_64
     ap-northeast-1:
       RHEL75SAPHVM: ami-0ce47f39a0a21f61e
       RHEL74SAPHAUSHVM: ami-0033f0d7d626f014f
@@ -735,6 +747,9 @@ Mappings:
       SLES15SP2HVM: ami-0119d7d47f3b13adb
       SLES15SP2SAPHVM: ami-0745236d3079b152b
       SLES15SP2SAPBYOSHVM: ami-0da403cbfd6386067
+      SLES15SP3HVM: ami-07adb9597130f7b27
+      SLES15SP3SAPHVM: ami-000641e3014f4be79
+      SLES15SP3SAPBYOSHVM: ami-0d1ca9565726f1931
     ap-northeast-2:
       RHEL75SAPHVM: ami-06db50be1842d6b9a
       RHEL74SAPHAUSHVM: ami-0450ac5a5b079fa41
@@ -768,6 +783,9 @@ Mappings:
       SLES15SP2HVM: ami-00f6cd8265e8368cd
       SLES15SP2SAPHVM: ami-0145e667278ee4855
       SLES15SP2SAPBYOSHVM: ami-0b4249e5d5fa3c901
+      SLES15SP3HVM: ami-044ecf95631bed563
+      SLES15SP3SAPHVM: ami-00f4173a8c806321a
+      SLES15SP3SAPBYOSHVM: ami-047a3249b2a1f6836
     ap-south-1:
       RHEL75SAPHVM: ami-0afdd099cb4cacadf
       RHEL74SAPHAUSHVM: ami-0167ffd4ebf2c034a
@@ -801,6 +819,9 @@ Mappings:
       SLES15SP2HVM: ami-0d0522ed4db1debd6
       SLES15SP2SAPHVM: ami-02aec6ae8c51b76f8
       SLES15SP2SAPBYOSHVM: ami-05b36976822da904d
+      SLES15SP3HVM: ami-0b5bb4464fa1bbac7
+      SLES15SP3SAPHVM: ami-089c477f988e7486b
+      SLES15SP3SAPBYOSHVM: ami-04cf78d71755e7b49
     ap-southeast-1:
       RHEL75SAPHVM: ami-08fc0673d9d83037a
       RHEL74SAPHAUSHVM: ami-037dc0ec600ed1888
@@ -834,6 +855,9 @@ Mappings:
       SLES15SP2HVM: ami-0d42c4e660c5c4135
       SLES15SP2SAPHVM: ami-0fe0150c8c547b441
       SLES15SP2SAPBYOSHVM: ami-029f6271399154e18
+      SLES15SP3HVM: ami-00c5e4824e3f16564
+      SLES15SP3SAPHVM: ami-01e7d9ecc1e382e8e
+      SLES15SP3SAPBYOSHVM: ami-036b78cfa3627f029
     ap-southeast-2:
       RHEL75SAPHVM: ami-0a8af8e94f35319ba
       RHEL74SAPHAUSHVM: ami-0c5b5357081c68218
@@ -867,6 +891,9 @@ Mappings:
       SLES15SP2HVM: ami-0948fed2b1645e486
       SLES15SP2SAPHVM: ami-0f620f93e3ba85cbb
       SLES15SP2SAPBYOSHVM: ami-0e3d98e82ffc6ba81
+      SLES15SP3HVM: ami-0ab54bf17ea55362a
+      SLES15SP3SAPHVM: ami-05401c688b551cf01
+      SLES15SP3SAPBYOSHVM: ami-01342c2f2719fa356
     ca-central-1:
       RHEL75SAPHVM: ami-010ef109ec0f43d6d
       RHEL74SAPHAUSHVM: ami-06e94c1c4cd754fe5
@@ -899,6 +926,9 @@ Mappings:
       SLES15SP2HVM: ami-082b3eca746b12a89
       SLES15SP2SAPHVM: ami-03499dccef054a1dc
       SLES15SP2SAPBYOSHVM: ami-05b91d7d13240be05
+      SLES15SP3HVM: ami-072cc113d8cb47344
+      SLES15SP3SAPHVM: ami-0b5ae099dd3f69f8b
+      SLES15SP3SAPBYOSHVM: ami-031122ade84827de2
     eu-central-1:
       RHEL75SAPHVM: ami-0841ec948df565271
       RHEL74SAPHAUSHVM: ami-0a38565bcb3243da0
@@ -932,6 +962,9 @@ Mappings:
       SLES15SP2HVM: ami-0ed0be684d3f014bf
       SLES15SP2SAPHVM: ami-0e3086eb56a7aaf20
       SLES15SP2SAPBYOSHVM: ami-05e0d6324cbacfb0c
+      SLES15SP3HVM: ami-0f41f631f29c789c5
+      SLES15SP3SAPHVM: ami-09f79cba482b5aaa9
+      SLES15SP3SAPBYOSHVM: ami-0a0f13d2f1a4e5215
     eu-west-1:
       RHEL75SAPHVM: ami-04a014a7d626b3fd8
       RHEL74SAPHAUSHVM: ami-0af3e97778546f34b
@@ -965,6 +998,9 @@ Mappings:
       SLES15SP2HVM: ami-051cbea0e7660063d
       SLES15SP2SAPHVM: ami-0fe36be1be2a3646c
       SLES15SP2SAPBYOSHVM: ami-0e849c2f8190302a2
+      SLES15SP3HVM: ami-07002a251775537ae
+      SLES15SP3SAPHVM: ami-01f37012fe989aeda
+      SLES15SP3SAPBYOSHVM: ami-07dd91577aaae0cf1
     eu-west-2:
       RHEL75SAPHVM: ami-070b8ef548695f653
       RHEL74SAPHAUSHVM: ami-005b4b0f0decc3229
@@ -997,6 +1033,9 @@ Mappings:
       SLES15SP2HVM: ami-0b1feeb6a46bffd83
       SLES15SP2SAPHVM: ami-0ee45f3b2a760e62c
       SLES15SP2SAPBYOSHVM: ami-051e16bbbce19d15c
+      SLES15SP3HVM: ami-0625e138c60259089
+      SLES15SP3SAPHVM: ami-067165d348fe49049
+      SLES15SP3SAPBYOSHVM: ami-0ab6f082cff730397
     eu-west-3:
       RHEL75SAPHVM: ami-0b9d6c1ae0e94e8a9
       RHEL74SAPHAUSHVM: ami-01f114d111cc45831
@@ -1028,6 +1067,9 @@ Mappings:
       SLES15SP2HVM: ami-0801518334fb27b99
       SLES15SP2SAPHVM: ami-0770b81da7ef04555
       SLES15SP2SAPBYOSHVM: ami-01b5258ea6299fbc2
+      SLES15SP3HVM: ami-0930d3e276f9f55dc
+      SLES15SP3SAPHVM: ami-07aa7cbf2212c655e
+      SLES15SP3SAPBYOSHVM: ami-0fb9825cce677c1e2
     sa-east-1:
       RHEL75SAPHVM: ami-0a9ee704defec0845
       RHEL74SAPHAUSHVM: ami-04450cf66c6bf5f42
@@ -1061,6 +1103,9 @@ Mappings:
       SLES15SP2HVM: ami-077e4fba84052c862
       SLES15SP2SAPHVM: ami-0f73b6642241ea2e2
       SLES15SP2SAPBYOSHVM: ami-044437a7d786094c3
+      SLES15SP3HVM: ami-075578324c475370a
+      SLES15SP3SAPHVM: ami-00000ca78c8bd9e23
+      SLES15SP3SAPBYOSHVM: ami-022b657f7617d5143
     us-east-1:
       RHEL75SAPHVM: ami-05cd8f1730c8df7dc
       RHEL74SAPHAUSHVM: ami-0f458a41a777ef497
@@ -1094,6 +1139,9 @@ Mappings:
       SLES15SP2HVM: ami-0a782e324655d1cc0
       SLES15SP2SAPHVM: ami-05945a229301948bc
       SLES15SP2SAPBYOSHVM: ami-04a3953051021dd17
+      SLES15SP3HVM: ami-06472bdef515145b9
+      SLES15SP3SAPHVM: ami-0ea925a9c280993aa
+      SLES15SP3SAPBYOSHVM: ami-0dcca7e66278164ed
     us-east-2:
       RHEL75SAPHVM: ami-0b1439383ea0d0c87
       RHEL74SAPHAUSHVM: ami-0cfab53d572d62388
@@ -1126,7 +1174,10 @@ Mappings:
       SLES15SP1SAPBYOSHVM: ami-017f2c9934036a1c1
       SLES15SP2HVM: ami-03f4c416f489586a3
       SLES15SP2SAPHVM: ami-0ee100ff9112496d5
-      SLES15SP2SAPBYOSHVM: ami-0f2971a8d0189d65d
+      SLES15SP2SAPBYOSHVM: ami-
+      SLES15SP3HVM: ami-055742ec92937ec3e
+      SLES15SP3SAPHVM: ami-04c00493af1f923d5
+      SLES15SP3SAPBYOSHVM: ami-0043026d49177fd5d
     us-west-1:
       RHEL75SAPHVM: ami-015c680b92b8f8e04
       RHEL74SAPHAUSHVM: ami-0bce690da8c3f9573
@@ -1160,6 +1211,9 @@ Mappings:
       SLES15SP2HVM: ami-0ac3dbf3917611d92
       SLES15SP2SAPHVM: ami-04d5e5533369cefce
       SLES15SP2SAPBYOSHVM: ami-0bbbc4bb8cfe16e58
+      SLES15SP3HVM: ami-03267cc539472b721
+      SLES15SP3SAPHVM: ami-064bd64813afd20b7
+      SLES15SP3SAPBYOSHVM: ami-0dd8c14b70c709ed1
     us-west-2:
       RHEL75SAPHVM: ami-07894ab0a4a5e8612
       RHEL74SAPHAUSHVM: ami-050890ecc1851620c
@@ -1193,6 +1247,9 @@ Mappings:
       SLES15SP2HVM: ami-063c2d222d223d0e9
       SLES15SP2SAPHVM: ami-0d1c9c993b409763e
       SLES15SP2SAPBYOSHVM: ami-0c71da127ffc25496
+      SLES15SP3HVM: ami-0631da5c6a54d5123
+      SLES15SP3SAPHVM: ami-0c788f4b321f82d69
+      SLES15SP3SAPBYOSHVM: ami-01589645ded2e0969
 Outputs:
   HANAMasterInstanceIP:
     Description: HANA Master Node IP Address
@@ -1213,10 +1270,10 @@ Resources:
     Type: AWS::CloudTrail::Trail
     Condition: IfLogging
     Properties:
-      IncludeGlobalServiceEvents: 'true'
+      IncludeGlobalServiceEvents: true
       S3BucketName: !Ref 'CloudTrailS3Bucket'
       SnsTopicName: !Ref 'AWS::NoValue'
-      IsLogging: 'true'
+      IsLogging: true
   BucketPolicy:
     Type: AWS::S3::BucketPolicy
     Condition: IfLogging
@@ -1335,7 +1392,7 @@ Resources:
       SubnetId: !Ref 'HANASubnet'
       GroupSet:
         - !Ref 'HANASecurityGroup'
-      SourceDestCheck: 'true'
+      SourceDestCheck: true
       Tags:
         - Key: Network
           Value: Private
@@ -1347,7 +1404,7 @@ Resources:
       Description: Interface for HANA Worker 1
       GroupSet:
         - !Ref 'HANASlaveSG'
-      SourceDestCheck: 'true'
+      SourceDestCheck: true
       Tags:
         - Key: Network
           Value: Private
@@ -1359,7 +1416,7 @@ Resources:
       Description: Interface for HANA Worker 2
       GroupSet:
         - !Ref 'HANASlaveSG'
-      SourceDestCheck: 'true'
+      SourceDestCheck: true
       Tags:
         - Key: Network
           Value: Private
@@ -1371,7 +1428,7 @@ Resources:
       Description: Interface for HANA Worker 3
       GroupSet:
         - !Ref 'HANASlaveSG'
-      SourceDestCheck: 'true'
+      SourceDestCheck: true
       Tags:
         - Key: Network
           Value: Private
@@ -1383,7 +1440,7 @@ Resources:
       Description: Interface for HANA Worker 4
       GroupSet:
         - !Ref 'HANASlaveSG'
-      SourceDestCheck: 'true'
+      SourceDestCheck: true
       Tags:
         - Key: Network
           Value: Private
@@ -1395,7 +1452,7 @@ Resources:
       Description: Interface for HANA Worker 5
       GroupSet:
         - !Ref 'HANASlaveSG'
-      SourceDestCheck: 'true'
+      SourceDestCheck: true
       Tags:
         - Key: Network
           Value: Private
@@ -1408,28 +1465,28 @@ Resources:
       SecurityGroupIngress:
         - IpProtocol: tcp
           CidrIp: !Ref 'PrivSubCIDR'
-          FromPort: '1'
-          ToPort: '65535'
+          FromPort: 1
+          ToPort: 65535
         - IpProtocol: udp
           CidrIp: !Ref 'PrivSubCIDR'
-          FromPort: '111'
-          ToPort: '111'
+          FromPort: 111
+          ToPort: 111
         - IpProtocol: udp
           CidrIp: !Ref 'PrivSubCIDR'
-          FromPort: '2049'
-          ToPort: '2049'
+          FromPort: 2049
+          ToPort: 2049
         - IpProtocol: tcp
           CidrIp: !Ref 'PrivSubCIDR'
-          FromPort: '2049'
-          ToPort: '2049'
+          FromPort: 2049
+          ToPort: 2049
         - IpProtocol: udp
           CidrIp: !Ref 'PrivSubCIDR'
-          FromPort: '4000'
-          ToPort: '4002'
+          FromPort: 4000
+          ToPort: 4002
         - IpProtocol: icmp
           CidrIp: !Ref 'PrivSubCIDR'
-          FromPort: '-1'
-          ToPort: '-1'
+          FromPort: -1
+          ToPort: -1
         - IpProtocol: tcp
           CidrIp: !Ref 'DMZCIDR'
           FromPort: !Join
@@ -1528,29 +1585,29 @@ Resources:
               - ''
         - IpProtocol: tcp
           CidrIp: !Ref 'DMZCIDR'
-          FromPort: '8080'
-          ToPort: '8080'
+          FromPort: 8080
+          ToPort: 8080
         - IpProtocol: tcp
           CidrIp: !Ref 'DMZCIDR'
-          FromPort: '8443'
-          ToPort: '8443'
+          FromPort: 8443
+          ToPort: 8443
         - IpProtocol: tcp
           CidrIp: !Ref 'DMZCIDR'
-          FromPort: '1128'
-          ToPort: '1128'
+          FromPort: 1128
+          ToPort: 1128
         - IpProtocol: tcp
           CidrIp: !Ref 'DMZCIDR'
-          FromPort: '1129'
-          ToPort: '1129'
+          FromPort: 1129
+          ToPort: 1129
         - IpProtocol: tcp
           CidrIp: !Ref 'DMZCIDR'
-          FromPort: '22'
-          ToPort: '22'
+          FromPort: 22
+          ToPort: 22
       SecurityGroupEgress:
         - IpProtocol: '-1'
           CidrIp: '0.0.0.0/0'
-          FromPort: '1'
-          ToPort: '65535'
+          FromPort: 1
+          ToPort: 65535
   HANASecurityGroupUpdate:
     Type: AWS::EC2::SecurityGroupIngress
     Condition: IfAppSubnet
@@ -1577,8 +1634,8 @@ Resources:
       VpcId: !Ref 'VPCID'
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: '1'
-          ToPort: '65535'
+          FromPort: 1
+          ToPort: 65535
           CidrIp: !Ref 'PrivSubCIDR'
         - IpProtocol: tcp
           FromPort: !Join
@@ -1617,25 +1674,25 @@ Resources:
               - '17'
           CidrIp: !Ref 'DMZCIDR'
         - IpProtocol: tcp
-          FromPort: '1128'
-          ToPort: '1129'
+          FromPort: 1128
+          ToPort: 1129
           CidrIp: !Ref 'DMZCIDR'
         - IpProtocol: tcp
-          FromPort: '8080'
-          ToPort: '8080'
+          FromPort: 8080
+          ToPort: 8080
           CidrIp: !Ref 'DMZCIDR'
         - IpProtocol: tcp
-          FromPort: '8443'
-          ToPort: '8443'
+          FromPort: 8443
+          ToPort: 8443
           CidrIp: !Ref 'DMZCIDR'
         - IpProtocol: tcp
-          FromPort: '22'
-          ToPort: '22'
+          FromPort: 22
+          ToPort: 22
           CidrIp: !Ref 'DMZCIDR'
       SecurityGroupEgress:
         - IpProtocol: '-1'
-          FromPort: '1'
-          ToPort: '65535'
+          FromPort: 1
+          ToPort: 65535
           CidrIp: '0.0.0.0/0'
   HANAIAMRole:
     Type: AWS::IAM::Role
@@ -1801,13 +1858,13 @@ Resources:
       VpcId: !Ref 'VPCID'
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: '3389'
-          ToPort: '3389'
+          FromPort: 3389
+          ToPort: 3389
           CidrIp: !Ref 'RemoteAccessCIDR'
       SecurityGroupEgress:
         - IpProtocol: tcp
-          FromPort: '1'
-          ToPort: '65535'
+          FromPort: 1
+          ToPort: 65535
           CidrIp: '0.0.0.0/0'
   RDPEIP:
     Condition: NeedWindowsInstance
@@ -1822,7 +1879,7 @@ Resources:
       Description: Interface for RDP Instance
       GroupSet:
         - !Ref 'RDPSecurityGroup'
-      SourceDestCheck: 'true'
+      SourceDestCheck: true
       Tags:
         - Key: Network
           Value: Public
@@ -1879,7 +1936,7 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: '50'
+            VolumeSize: 50
             VolumeType: gp2
       ImageId: !FindInMap
         - AWSAMIRegionMap
@@ -2119,7 +2176,7 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: '50'
+            VolumeSize: 50
             VolumeType: gp2
       ImageId: !FindInMap
         - AWSAMIRegionMap
@@ -2350,7 +2407,7 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: '50'
+            VolumeSize: 50
             VolumeType: gp2
       ImageId: !FindInMap
         - AWSAMIRegionMap
@@ -2581,7 +2638,7 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: '50'
+            VolumeSize: 50
             VolumeType: gp2
       ImageId: !FindInMap
         - AWSAMIRegionMap
@@ -2812,7 +2869,7 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: '50'
+            VolumeSize: 50
             VolumeType: gp2
       ImageId: !FindInMap
         - AWSAMIRegionMap
@@ -3043,7 +3100,7 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: '50'
+            VolumeSize: 50
             VolumeType: gp2
       ImageId: !FindInMap
         - AWSAMIRegionMap
@@ -3260,10 +3317,10 @@ Resources:
       Namespace: AWS/EC2
       MetricName: StatusCheckFailed_System
       Statistic: Minimum
-      Period: '60'
-      EvaluationPeriods: '5'
+      Period: 60
+      EvaluationPeriods: 5
       ComparisonOperator: GreaterThanThreshold
-      Threshold: '0'
+      Threshold: 0
       AlarmActions:
         - !Join
           - ''
@@ -3282,10 +3339,10 @@ Resources:
       Namespace: AWS/EC2
       MetricName: StatusCheckFailed_System
       Statistic: Minimum
-      Period: '60'
-      EvaluationPeriods: '5'
+      Period: 60
+      EvaluationPeriods: 5
       ComparisonOperator: GreaterThanThreshold
-      Threshold: '0'
+      Threshold: 0
       AlarmActions:
         - !Join
           - ''
@@ -3304,10 +3361,10 @@ Resources:
       Namespace: AWS/EC2
       MetricName: StatusCheckFailed_System
       Statistic: Minimum
-      Period: '60'
-      EvaluationPeriods: '5'
+      Period: 60
+      EvaluationPeriods: 5
       ComparisonOperator: GreaterThanThreshold
-      Threshold: '0'
+      Threshold: 0
       AlarmActions:
         - !Join
           - ''
@@ -3326,10 +3383,10 @@ Resources:
       Namespace: AWS/EC2
       MetricName: StatusCheckFailed_System
       Statistic: Minimum
-      Period: '60'
-      EvaluationPeriods: '5'
+      Period: 60
+      EvaluationPeriods: 5
       ComparisonOperator: GreaterThanThreshold
-      Threshold: '0'
+      Threshold: 0
       AlarmActions:
         - !Join
           - ''
@@ -3348,10 +3405,10 @@ Resources:
       Namespace: AWS/EC2
       MetricName: StatusCheckFailed_System
       Statistic: Minimum
-      Period: '60'
-      EvaluationPeriods: '5'
+      Period: 60
+      EvaluationPeriods: 5
       ComparisonOperator: GreaterThanThreshold
-      Threshold: '0'
+      Threshold: 0
       AlarmActions:
         - !Join
           - ''
@@ -3370,10 +3427,10 @@ Resources:
       Namespace: AWS/EC2
       MetricName: StatusCheckFailed_System
       Statistic: Minimum
-      Period: '60'
-      EvaluationPeriods: '5'
+      Period: 60
+      EvaluationPeriods: 5
       ComparisonOperator: GreaterThanThreshold
-      Threshold: '0'
+      Threshold: 0
       AlarmActions:
         - !Join
           - ''
