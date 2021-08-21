@@ -395,7 +395,10 @@ install_prereq_sles12sp4() {
     zypper -n install sysstat | tee -a ${HANA_LOG_FILE}
     zypper -n install uuidd | tee -a ${HANA_LOG_FILE}
     zypper -n install sapconf | tee -a ${HANA_LOG_FILE}
-
+    zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+    zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}
+    
     # As of SLES12 SP4, /sbin/insserv has to be installed for HANA install
     zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
     
@@ -458,7 +461,10 @@ install_prereq_sles12sp5() {
     zypper -n install sysstat | tee -a ${HANA_LOG_FILE}
     zypper -n install uuidd | tee -a ${HANA_LOG_FILE}
     zypper -n install sapconf | tee -a ${HANA_LOG_FILE}
-
+    zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+    zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}
+    
     # As of SLES12 SP4, /sbin/insserv has to be installed for HANA install program or it'll fai
     zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
     
@@ -516,7 +522,10 @@ install_prereq_sles15() {
     zypper -n install sysstat | tee -a ${HANA_LOG_FILE}
     zypper -n install uuidd | tee -a ${HANA_LOG_FILE}
     zypper -n install sapconf | tee -a ${HANA_LOG_FILE}
-
+    zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+    zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}
+    
     # See OSS note 2788495
     zypper -n install libopenssl1_0_0 | tee -a ${HANA_LOG_FILE}
 #    zypper -n install libssh2-1
@@ -594,7 +603,10 @@ install_prereq_sles15sp1() {
     zypper -n install sysstat | tee -a ${HANA_LOG_FILE}
     zypper -n install uuidd | tee -a ${HANA_LOG_FILE}
     zypper -n install sapconf | tee -a ${HANA_LOG_FILE}
-
+    zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+    zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}
+    
     # See OSS note 2788495
     zypper -n install libopenssl1_0_0 | tee -a ${HANA_LOG_FILE}
 #    zypper -n install libssh2-1
@@ -672,7 +684,10 @@ install_prereq_sles15sp2() {
     zypper -n install sysstat | tee -a ${HANA_LOG_FILE}
     zypper -n install uuidd | tee -a ${HANA_LOG_FILE}
     zypper -n install sapconf | tee -a ${HANA_LOG_FILE}
-
+    zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+    zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}
+    
     # See OSS note 2788495
     zypper -n install libopenssl1_0_0 | tee -a ${HANA_LOG_FILE}
 #    zypper -n install libssh2-1
@@ -750,7 +765,10 @@ install_prereq_sles15sp3() {
     zypper -n install sysstat | tee -a ${HANA_LOG_FILE}
     zypper -n install uuidd | tee -a ${HANA_LOG_FILE}
     zypper -n install sapconf | tee -a ${HANA_LOG_FILE}
-
+    zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+    zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+    zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}
+  
     # See OSS note 2788495
     zypper -n install libopenssl1_0_0 | tee -a ${HANA_LOG_FILE}
 #    zypper -n install libssh2-1
@@ -918,7 +936,10 @@ install_prereq_sles12sp4sap() {
   zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
   zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
   zypper -n install cloud-netconfig-ec2 | tee -a ${HANA_LOG_FILE}
-
+  zypper -n install supportutils-plugin-ha-sap | tee -a ${HANA_LOG_FILE}
+  zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+  zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}
   
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
@@ -955,7 +976,10 @@ install_prereq_sles12sp5sap() {
   zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
   zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
   zypper -n install cloud-netconfig-ec2 | tee -a ${HANA_LOG_FILE}
-
+  zypper -n install supportutils-plugin-ha-sap | tee -a ${HANA_LOG_FILE}
+  zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+  zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}
   
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
@@ -984,7 +1008,10 @@ install_prereq_sles15sap() {
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
   zypper -n install cloud-netconfig-ec2 | tee -a ${HANA_LOG_FILE}
-
+  zypper -n install supportutils-plugin-ha-sap | tee -a ${HANA_LOG_FILE}
+  zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+  zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}
   
   # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
@@ -1038,7 +1065,10 @@ install_prereq_sles15sp1sap() {
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
   zypper -n install cloud-netconfig-ec2 | tee -a ${HANA_LOG_FILE}
-
+  zypper -n install supportutils-plugin-ha-sap | tee -a ${HANA_LOG_FILE}
+  zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+  zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}
   
   # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
@@ -1089,7 +1119,10 @@ install_prereq_sles15sp2sap() {
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
   zypper -n install cloud-netconfig-ec2 | tee -a ${HANA_LOG_FILE}
-
+  zypper -n install supportutils-plugin-ha-sap | tee -a ${HANA_LOG_FILE}
+  zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+  zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}
   
   # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
@@ -1140,7 +1173,10 @@ install_prereq_sles15sp3sap() {
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
   zypper -n install cloud-netconfig-ec2 | tee -a ${HANA_LOG_FILE}
-
+  zypper -n install supportutils-plugin-ha-sap | tee -a ${HANA_LOG_FILE}
+  zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+  zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}
   
   # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
@@ -1283,6 +1319,10 @@ install_prereq_sles12sp4sapbyos() {
   zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
   zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
   zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
+  zypper -n install supportutils-plugin-ha-sap | tee -a ${HANA_LOG_FILE}
+  zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+  zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}
   
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
@@ -1316,6 +1356,10 @@ install_prereq_sles12sp5sapbyos() {
   zypper -n install libopenssl0_9_8 | tee -a ${HANA_LOG_FILE}
   zypper -n install libgcc_s1 | tee -a ${HANA_LOG_FILE}
   zypper -n install libstdc++6  | tee -a ${HANA_LOG_FILE}
+  zypper -n install supportutils-plugin-ha-sap | tee -a ${HANA_LOG_FILE}
+  zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+  zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}
   
   #Install unrar for media extraction
   zypper -n install unrar  | tee -a ${HANA_LOG_FILE}
@@ -1342,6 +1386,10 @@ install_prereq_sles15sapbyos() {
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+  zypper -n install supportutils-plugin-ha-sap | tee -a ${HANA_LOG_FILE}
+  zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+  zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}
   
   # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
@@ -1393,6 +1441,11 @@ install_prereq_sles15sp1sapbyos() {
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+  zypper -n install supportutils-plugin-ha-sap | tee -a ${HANA_LOG_FILE}
+  zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+  zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}  
+  
   
   # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
@@ -1440,6 +1493,10 @@ install_prereq_sles15sp2sapbyos() {
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+  zypper -n install supportutils-plugin-ha-sap | tee -a ${HANA_LOG_FILE}
+  zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+  zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}
   
   # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}
@@ -1487,6 +1544,10 @@ install_prereq_sles15sp3sapbyos() {
   zypper -n install saptune  | tee -a ${HANA_LOG_FILE}
   zypper -n install cpupower  | tee -a ${HANA_LOG_FILE}
   zypper -n install nvme-cli | tee -a ${HANA_LOG_FILE}
+  zypper -n install supportutils-plugin-ha-sap | tee -a ${HANA_LOG_FILE}
+  zypper -n install insserv-compat | tee -a ${HANA_LOG_FILE}
+  zypper -n install libltdl7 | tee -a ${HANA_LOG_FILE}
+  zypper -n install libssh2-1 | tee -a ${HANA_LOG_FILE}
   
   # Install GCC and GC++ compilers. GCC includes package libatomic1 that is required for all GCC 7 compiled apps, see OSS note 2593824.
   zypper -n install gcc | tee -a ${HANA_LOG_FILE}

@@ -125,20 +125,22 @@ Parameters:
       - 'No'
   VolumeTypeHanaData:
     Type: String
-    Description: 'EBS volume type for SAP HANA Data: General Purpose SSD (gp2) or
-      Provisioned IOPS SSD (io1).'
+    Description: 'EBS volume type for SAP HANA Data: General Purpose SSD (gp2 or gp3) or
+      Provisioned IOPS SSD (io1 or io2).'
     Default: gp2
     AllowedValues:
       - gp2
+      - gp3
       - io1
       - io2
   VolumeTypeHanaLog:
     Type: String
-    Description: 'EBS volume type for SAP HANA Log: General Purpose SSD (gp2) or Provisioned
-      IOPS SSD (io1).'
+    Description: 'EBS volume type for SAP HANA Log: General Purpose SSD (gp2 or gp3) or Provisioned
+      IOPS SSD (io1 or io2).'
     Default: gp2
     AllowedValues:
       - gp2
+      - gp3
       - io1
       - io2
   MyOS:
@@ -583,6 +585,9 @@ Conditions:
   UseSAPHANAFR: !Equals
     - 'Yes'
     - !Ref 'SAPHANAFastRestart'
+  UseMiscGp3: !Equals
+    - 'gp3'
+    - !Ref 'VolumeTypeHanaData'
   UseEncryption: !Equals
     - !Ref 'Encryption'
     - 'Yes'
@@ -1937,7 +1942,10 @@ Resources:
         - DeviceName: /dev/sda1
           Ebs:
             VolumeSize: 50
-            VolumeType: gp2
+            VolumeType: !If
+              - UseMiscGp3
+              - 'gp3'
+              - 'gp2'
       ImageId: !FindInMap
         - AWSAMIRegionMap
         - !Ref 'AWS::Region'
@@ -1997,8 +2005,23 @@ Resources:
             #- !Ref 'CustomStorageConfig'
             #- "\n"
             - "source /etc/os-release\n"
-            - "if [ ${ID} == \"sles\" ]; then \n"
-            - "   zypper install -y aws-cli \n"
+            - "if [[ ${ID} == \"sles\" && ${VERSION_ID} == \"15\"* ]]; then \n"
+            - "   zypper install -y python3 python3-pip \n"
+            - "   zypper rm -y aws-cli python3-botocore python3-boto3 python3-s3transfer \n"
+            - "   curl \"https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip\" -o \"/tmp/awscliv2.zip\" \n"
+            - "   cd /tmp && unzip awscliv2.zip \n"
+            - "   /tmp/aws/install -i /usr/local/aws -b /usr/local/bin \n"
+            #- "   curl \"https://s3.amazonaws.com/aws-cli/awscli-bundle.zip\" -o \"/tmp/awscli-bundle.zip\" \n"
+            #- "   cd /tmp && unzip awscli-bundle.zip \n"
+            #- "   python3 /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
+            - "elif [[ ${ID} == \"sles\" && ${VERSION_ID} == \"12\"* ]]; then \n"
+            - "   zypper rm -y aws-cli python-botocore python-boto3 python-s3transfer \n"
+            - "   curl \"https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip\" -o \"/tmp/awscliv2.zip\" \n"
+            - "   cd /tmp && unzip awscliv2.zip \n"
+            - "   /tmp/aws/install -i /usr/local/aws -b /usr/local/bin \n"
+            #- "   curl \"https://s3.amazonaws.com/aws-cli/awscli-bundle.zip\" -o \"/tmp/awscli-bundle.zip\" \n"
+            #- "   cd /tmp && unzip awscli-bundle.zip \n"
+            #- "   /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
             - "elif [[ ${ID} == \"rhel\" && ${VERSION_ID} != \"7\"* ]]; then \n"
             - "   yum install -y python3 unzip \n"
             - "   curl \"https://s3.amazonaws.com/aws-cli/awscli-bundle.zip\" -o \"/tmp/awscli-bundle.zip\" \n"
@@ -2009,6 +2032,7 @@ Resources:
             - "   cd /tmp && unzip awscli-bundle.zip \n"
             - "   /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
             - "fi \n"
+            - "sleep 40 \n"
             - "cd /root/install && aws s3 sync s3://"
             - !Ref 'PrivateBucket'
             - "/scripts/ . \n"
@@ -2096,7 +2120,6 @@ Resources:
             - sh /root/install/writeconfig.sh FastRestartEnabled=
             - !Ref 'SAPHANAFastRestart'
             - "\n"
-            
             - sh /root/install/writeconfig.sh DomainName=
             - !Ref 'DomainName'
             - "\n"
@@ -2112,18 +2135,29 @@ Resources:
             - sh /root/install/writeconfig.sh HANAWorkerHostname=
             - !Ref 'HANAWorkerHostname'
             - "\n"
-
             - sh /root/install/writeconfig.sh IsMasterNode=1
             - "\n"
             - sh /root/install/writeconfig.sh IsWorkerNode=0
             - "\n"
             - sh /root/install/writeconfig.sh BACKUP_VOL=st1
             - "\n"
-            - sh /root/install/writeconfig.sh SHARED_VOL=gp2
+            - sh /root/install/writeconfig.sh SHARED_VOL=
+            - !If
+               - UseMiscGp3
+               - 'gp3'
+               - 'gp2'
             - "\n"
-            - sh /root/install/writeconfig.sh USR_SAP_VOL=gp2
+            - sh /root/install/writeconfig.sh USR_SAP_VOL=
+            - !If
+               - UseMiscGp3
+               - 'gp3'
+               - 'gp2'
             - "\n"
-            - sh /root/install/writeconfig.sh HANA_MEDIA_VOL=gp2
+            - sh /root/install/writeconfig.sh HANA_MEDIA_VOL=
+            - !If
+               - UseMiscGp3
+               - 'gp3'
+               - 'gp2'
             - "\n"
             - 'echo '
             - !Join
@@ -2177,7 +2211,10 @@ Resources:
         - DeviceName: /dev/sda1
           Ebs:
             VolumeSize: 50
-            VolumeType: gp2
+            VolumeType: !If
+              - UseMiscGp3
+              - 'gp3'
+              - 'gp2'
       ImageId: !FindInMap
         - AWSAMIRegionMap
         - !Ref 'AWS::Region'
@@ -2271,6 +2308,7 @@ Resources:
             - "   cd /tmp && unzip awscli-bundle.zip \n"
             - "   /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
             - "fi \n"
+            - "sleep 40 \n"
             - "cd /root/install && aws s3 sync s3://"
             - !Ref 'PrivateBucket'
             - "/scripts/ . \n"
@@ -2368,7 +2406,11 @@ Resources:
             - "\n"
             - sh /root/install/writeconfig.sh IsWorkerNode=1
             - "\n"
-            - sh /root/install/writeconfig.sh USR_SAP_VOL=gp2
+            - sh /root/install/writeconfig.sh USR_SAP_VOL=
+            - !If
+               - UseMiscGp3
+               - 'gp3'
+               - 'gp2'
             - "\n"
             - sh /root/install/writeconfig.sh REGION=
             - !Ref 'AWS::Region'
@@ -2408,7 +2450,10 @@ Resources:
         - DeviceName: /dev/sda1
           Ebs:
             VolumeSize: 50
-            VolumeType: gp2
+            VolumeType: !If
+              - UseMiscGp3
+              - 'gp3'
+              - 'gp2'
       ImageId: !FindInMap
         - AWSAMIRegionMap
         - !Ref 'AWS::Region'
@@ -2502,6 +2547,7 @@ Resources:
             - "   cd /tmp && unzip awscli-bundle.zip \n"
             - "   /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
             - "fi \n"
+            - "sleep 40 \n"
             - "cd /root/install && aws s3 sync s3://"
             - !Ref 'PrivateBucket'
             - "/scripts/ . \n"
@@ -2599,7 +2645,11 @@ Resources:
             - "\n"
             - sh /root/install/writeconfig.sh IsWorkerNode=1
             - "\n"
-            - sh /root/install/writeconfig.sh USR_SAP_VOL=gp2
+            - sh /root/install/writeconfig.sh USR_SAP_VOL=
+            - !If
+               - UseMiscGp3
+               - 'gp3'
+               - 'gp2'
             - "\n"
             - sh /root/install/writeconfig.sh REGION=
             - !Ref 'AWS::Region'
@@ -2639,7 +2689,10 @@ Resources:
         - DeviceName: /dev/sda1
           Ebs:
             VolumeSize: 50
-            VolumeType: gp2
+            VolumeType: !If
+              - UseMiscGp3
+              - 'gp3'
+              - 'gp2'
       ImageId: !FindInMap
         - AWSAMIRegionMap
         - !Ref 'AWS::Region'
@@ -2733,6 +2786,7 @@ Resources:
             - "   cd /tmp && unzip awscli-bundle.zip \n"
             - "   /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
             - "fi \n"
+            - "sleep 40 \n"
             - "cd /root/install && aws s3 sync s3://"
             - !Ref 'PrivateBucket'
             - "/scripts/ . \n"
@@ -2830,7 +2884,11 @@ Resources:
             - "\n"
             - sh /root/install/writeconfig.sh IsWorkerNode=1
             - "\n"
-            - sh /root/install/writeconfig.sh USR_SAP_VOL=gp2
+            - sh /root/install/writeconfig.sh USR_SAP_VOL=
+            - !If
+               - UseMiscGp3
+               - 'gp3'
+               - 'gp2'
             - "\n"
             - sh /root/install/writeconfig.sh REGION=
             - !Ref 'AWS::Region'
@@ -2870,7 +2928,10 @@ Resources:
         - DeviceName: /dev/sda1
           Ebs:
             VolumeSize: 50
-            VolumeType: gp2
+            VolumeType: !If
+              - UseMiscGp3
+              - 'gp3'
+              - 'gp2'
       ImageId: !FindInMap
         - AWSAMIRegionMap
         - !Ref 'AWS::Region'
@@ -2964,6 +3025,7 @@ Resources:
             - "   cd /tmp && unzip awscli-bundle.zip \n"
             - "   /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
             - "fi \n"
+            - "sleep 40 \n"
             - "cd /root/install && aws s3 sync s3://"
             - !Ref 'PrivateBucket'
             - "/scripts/ . \n"
@@ -3061,7 +3123,11 @@ Resources:
             - "\n"
             - sh /root/install/writeconfig.sh IsWorkerNode=1
             - "\n"
-            - sh /root/install/writeconfig.sh USR_SAP_VOL=gp2
+            - sh /root/install/writeconfig.sh USR_SAP_VOL=
+            - !If
+               - UseMiscGp3
+               - 'gp3'
+               - 'gp2'
             - "\n"
             - sh /root/install/writeconfig.sh REGION=
             - !Ref 'AWS::Region'
@@ -3101,7 +3167,10 @@ Resources:
         - DeviceName: /dev/sda1
           Ebs:
             VolumeSize: 50
-            VolumeType: gp2
+            VolumeType: !If
+              - UseMiscGp3
+              - 'gp3'
+              - 'gp2'
       ImageId: !FindInMap
         - AWSAMIRegionMap
         - !Ref 'AWS::Region'
@@ -3195,6 +3264,7 @@ Resources:
             - "   cd /tmp && unzip awscli-bundle.zip \n"
             - "   /tmp/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \n"
             - "fi \n"
+            - "sleep 40 \n"
             - "cd /root/install && aws s3 sync s3://"
             - !Ref 'PrivateBucket'
             - "/scripts/ . \n"
@@ -3292,7 +3362,11 @@ Resources:
             - "\n"
             - sh /root/install/writeconfig.sh IsWorkerNode=1
             - "\n"
-            - sh /root/install/writeconfig.sh USR_SAP_VOL=gp2
+            - sh /root/install/writeconfig.sh USR_SAP_VOL=
+            - !If
+               - UseMiscGp3
+               - 'gp3'
+               - 'gp2'
             - "\n"
             - sh /root/install/writeconfig.sh REGION=
             - !Ref 'AWS::Region'

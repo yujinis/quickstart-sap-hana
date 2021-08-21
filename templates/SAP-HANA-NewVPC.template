@@ -263,20 +263,22 @@ Parameters:
       lowercase, and numeric values.
   VolumeTypeHanaData:
     Type: String
-    Description: 'EBS volume type for SAP HANA Data: General Purpose SSD (gp2) or
-      Provisioned IOPS SSD (io1).'
+    Description: 'EBS volume type for SAP HANA Data: General Purpose SSD (gp2 or gp3) or
+      Provisioned IOPS SSD (io1 or io2).'
     Default: gp2
     AllowedValues:
       - gp2
+      - gp3
       - io1
       - io2
   VolumeTypeHanaLog:
     Type: String
-    Description: 'EBS volume type for SAP HANA Log: General Purpose SSD (gp2) or Provisioned
-      IOPS SSD (io1).'
+    Description: 'EBS volume type for SAP HANA Log: General Purpose SSD (gp2 or gp3) or Provisioned
+      IOPS SSD (io1 or io2).'
     Default: gp2
     AllowedValues:
       - gp2
+      - gp3
       - io1
       - io2
   SAPTZ:
