@@ -194,6 +194,13 @@ if [[ "${VOL_TYPE}" == "io1" || "${VOL_TYPE}" == "io2" ]] ; then
 	DEVICE_START=${ARGS_LIST_ARRAY[3]}
 	VOL_NAME=${ARGS_LIST_ARRAY[4]}
 	[ -z ${VOL_PIOPS} ] && usage;
+elif [[ "${VOL_TYPE}" == "gp3" ]]; then
+    VOL_PIOPS=${ARGS_LIST_ARRAY[2]}
+    VOL_THROUGHPUT=${ARGS_LIST_ARRAY[3]}
+    DEVICE_START=${ARGS_LIST_ARRAY[4]}
+    VOL_NAME=${ARGS_LIST_ARRAY[5]}
+    [ -z ${VOL_PIOPS} ] && usage;
+    [ -z ${VOL_THROUGHPUT} ] && usage;
 else
 	DEVICE_START=${ARGS_LIST_ARRAY[2]}
 	VOL_NAME=${ARGS_LIST_ARRAY[3]}
@@ -220,7 +227,16 @@ then
 					--volume-type ${VOL_TYPE} --iops ${VOL_PIOPS} \
 					--tag-specification ResourceType=volume,Tags=[\{Key=SAPHANAQuickStart,Value=${MyStackId}\}] \
 					| ${JQ_COMMAND} '.VolumeId' )
-					
+    elif [[ "${VOL_TYPE}" == "gp3" ]]; then
+               volumeid=$(${AWS} ec2 create-volume \
+                    --region ${AWS_DEFAULT_REGION} \
+                    --availability-zone ${AWS_DEFAULT_AVAILABILITY_ZONE} \
+                    --size ${VOL_SIZE} \
+                    --iops ${VOL_PIOPS} \
+                    --throughput ${VOL_THROUGHPUT} \
+                    --volume-type ${VOL_TYPE} \
+                    --tag-specification ResourceType=volume,Tags=[\{Key=SAPHANAQuickStart,Value=${MyStackId}\}] \
+                    | ${JQ_COMMAND} '.VolumeId')
 	else
 		volumeid=$(${AWS} ec2 create-volume \
 					--region ${AWS_DEFAULT_REGION} \
@@ -239,6 +255,16 @@ else
 					--volume-type ${VOL_TYPE} --iops ${VOL_PIOPS} \
 					--tag-specification ResourceType=volume,Tags=[\{Key=SAPHANAQuickStart,Value=${MyStackId}\}] \
 					| ${JQ_COMMAND} '.VolumeId')
+    elif [[ "${VOL_TYPE}" == "gp3" ]]; then
+               volumeid=$(${AWS} ec2 create-volume \
+                    --region ${AWS_DEFAULT_REGION} \
+                    --availability-zone ${AWS_DEFAULT_AVAILABILITY_ZONE} --encrypted \
+                    --size ${VOL_SIZE} \
+                    --iops ${VOL_PIOPS} \
+                    --throughput ${VOL_THROUGHPUT} \
+                    --volume-type ${VOL_TYPE} \
+                    --tag-specification ResourceType=volume,Tags=[\{Key=SAPHANAQuickStart,Value=${MyStackId}\}] \
+                    | ${JQ_COMMAND} '.VolumeId')
 	else
 		volumeid=$(${AWS} ec2 create-volume \
 					--region ${AWS_DEFAULT_REGION} \
@@ -271,6 +297,6 @@ fi
 	set_device_delete_ontermination ${device}
 	log "setting device name  ${device}:$VOL_NAME"
 	${AWS} ec2 create-tags --resources ${volumeid}  --tags Key=Name,Value=${VOL_NAME}
-  find_nvme_device_id ${volumeid}
+    find_nvme_device_id ${volumeid}
 
   log `date` END Creating Volumes and Attaching ${ARGS_LIST}

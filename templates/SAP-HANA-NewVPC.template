@@ -140,6 +140,7 @@ Parameters:
       - SuSELinux15
       - SuSELinux15SP1
       - SuSELinux15SP2
+      - SuSELinux15SP3
       - SuSELinux12SP2ForSAP
       - SuSELinux12SP3ForSAP
       - SuSELinux12SP4ForSAP
@@ -147,6 +148,7 @@ Parameters:
       - SuSELinux15ForSAP
       - SuSELinux15SP1ForSAP
       - SuSELinux15SP2ForSAP
+      - SuSELinux15SP3ForSAP
       - SuSELinux12SP1ForSAP-BYOS
       - SuSELinux12SP2ForSAP-BYOS
       - SuSELinux12SP3ForSAP-BYOS
@@ -155,6 +157,7 @@ Parameters:
       - SuSELinux15ForSAP-BYOS
       - SuSELinux15SP1ForSAP-BYOS
       - SuSELinux15SP2ForSAP-BYOS
+      - SuSELinux15SP3ForSAP-BYOS
   MyInstanceType:
     Type: String
     Description: Instance type for SAP HANA host.
@@ -260,20 +263,22 @@ Parameters:
       lowercase, and numeric values.
   VolumeTypeHanaData:
     Type: String
-    Description: 'EBS volume type for SAP HANA Data: General Purpose SSD (gp2) or
-      Provisioned IOPS SSD (io1).'
+    Description: 'EBS volume type for SAP HANA Data: General Purpose SSD (gp2 or gp3) or
+      Provisioned IOPS SSD (io1 or io2).'
     Default: gp2
     AllowedValues:
       - gp2
+      - gp3
       - io1
       - io2
   VolumeTypeHanaLog:
     Type: String
-    Description: 'EBS volume type for SAP HANA Log: General Purpose SSD (gp2) or Provisioned
-      IOPS SSD (io1).'
+    Description: 'EBS volume type for SAP HANA Log: General Purpose SSD (gp2 or gp3) or Provisioned
+      IOPS SSD (io1 or io2).'
     Default: gp2
     AllowedValues:
       - gp2
+      - gp3
       - io1
       - io2
   SAPTZ:
@@ -336,8 +341,6 @@ Metadata:
     ParameterGroups:
       - Label:
           default: Network infrastructure configuration
-        Description:
-          default: ''
         Parameters:
           - VPCCIDR
           - PrivSubCIDR
@@ -347,8 +350,6 @@ Metadata:
           - AvailabilityZone
       - Label:
           default: Server and storage configuration
-        Description:
-          default: ''
         Parameters:
           - MyOS
           - SLESBYOSRegCode
@@ -362,8 +363,6 @@ Metadata:
           - Encryption
       - Label:
           default: SAP HANA database configuration
-        Description:
-          default: ''
         Parameters:
           - DomainName
           - HANAMasterHostname
@@ -376,8 +375,6 @@ Metadata:
           - InstallHANA
       - Label:
           default: Optional configuration
-        Description:
-          default: ''
         Parameters:
           - DedicatedHostId
           - PlacementGroupName
@@ -390,8 +387,6 @@ Metadata:
           - Proxy
       - Label:
           default: Advanced configuration (Do not modify unless directed by AWS Support)
-        Description:
-          default: ''
         Parameters:
           - PrivateBucket
           - CustomStorageConfig
@@ -479,6 +474,11 @@ Metadata:
         default: Quick Start S3 bucket region
       QSS3KeyPrefix:
         default: Quick Start S3 Key Prefix
+  cfn-lint:
+    config:
+      ignore_checks: 
+        - W7001
+        - E9101
 Mappings:
   AWSAMIRegionMap:
     AMI:
@@ -519,8 +519,8 @@ Resources:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: !Ref 'VPCCIDR'
-      EnableDnsHostnames: 'true'
-      EnableDnsSupport: 'true'
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
       Tags:
         - Key: Application
           Value: SAP HANA

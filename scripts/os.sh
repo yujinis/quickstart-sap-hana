@@ -117,6 +117,14 @@ isSLES15SP2() {
     fi
 }
 
+isSLES15SP3() {
+    if [ "$MyOS" == "SLES15S32HVM" ]; then
+      echo 1
+    else
+      echo 0
+    fi
+}
+
 isSLES12SP1SAP() {
     if [ "$MyOS" == "SLES12SP1SAPHVM" ]; then
       echo 1
@@ -181,6 +189,14 @@ isSLES15SP2SAP() {
     fi
 }
 
+isSLES15SP3SAP() {
+    if [ "$MyOS" == "SLES15SP3SAPHVM" ]; then
+      echo 1
+    else
+      echo 0
+    fi
+}
+
 isSLES12SP1SAPBYOS() {
     if [ "$MyOS" == "SLES12SP1SAPBYOSHVM" ]; then
       echo 1
@@ -239,6 +255,14 @@ isSLES15SP1SAPBYOS() {
 
 isSLES15SP2SAPBYOS() {
     if [ "$MyOS" == "SLES15SP2SAPBYOSHVM" ]; then
+      echo 1
+    else
+      echo 0
+    fi
+}
+
+isSLES15SP3SAPBYOS() {
+    if [ "$MyOS" == "SLES15SP3SAPBYOSHVM" ]; then
       echo 1
     else
       echo 0
