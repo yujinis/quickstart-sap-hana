@@ -23,7 +23,7 @@ tests:
       - us-west-2
     template_file: SAP-HANA-NewVPC.template
   sap-hana-rhel75-single:
-    parameter_input: SAP-HANA-NewVPC-Default-RHEL75-Single-Node.json
+    parameter_input: SAP-HANA-NewVPC-Default-RHEL82-Single-Node.json
     regions:
       - us-east-2
     template_file: SAP-HANA-NewVPC.template
