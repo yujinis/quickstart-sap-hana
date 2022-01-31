@@ -7,7 +7,7 @@ project:
   - us-west-2
   s3_bucket: ''
 tests:
-  sap-hana-sles12sp4-single:
+  sap-hana-rhel82-single:
     parameters:
       AutoRecovery: "Yes"
       AvailabilityZone: $[alfred_genaz_1]
@@ -24,7 +24,7 @@ tests:
       InstallRDPInstance: "No"
       KeyName: cikey
       MyInstanceType: r4.2xlarge
-      MyOS: RedHatLinux75ForSAP
+      MyOS: RedHatLinux82ForSAP-With-HA-US
       PlacementGroupName: ""
       PrivSubCIDR: 10.0.1.0/24
       RDPInstanceType: c4.large

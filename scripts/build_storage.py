@@ -114,31 +114,51 @@ def stripe_backup_vol(drives):
 #log "Creating hana log logical volume"
 #lvcreate -n lvhanalog  -i 3 -I 256 -L ${mylogSize} vghana
 
-def stripe_hanadata_vol(stripe,count):
+def stripe_hanadata_vol(stripe, count, is_gp3, is_hm):
     print('Creating HANA data logical volumes ')
     size = 0
-    for d in stripe:
-        # d['size'] = 488G etc
-        size = int(d['size'].replace('G',''))
-        sizeG = str(size) + 'G'
-        cmd = 'lvcreate -n  ' + d['logical_volume']
-        cmd = cmd + ' -i ' + str(count)
-        cmd = cmd + ' -I 256 ' + ' -L ' + sizeG + ' vghanadata'
-        exe_cmd(cmd)
-        print(cmd)
+    if is_gp3 is True and is_hm is False:
+        for d in stripe:
+            # d['size'] = 488G etc
+            size = int(d['size'].replace('G',''))
+            sizeG = str(size) + 'G'
+            cmd = 'lvcreate -n  ' + d['logical_volume']
+            cmd = cmd + ' -L ' + sizeG + ' vghanadata'
+            exe_cmd(cmd)
+            print(cmd)
+    elif is_gp3 is False or is_hm is True:
+        for d in stripe:
+            # d['size'] = 488G etc
+            size = int(d['size'].replace('G',''))
+            sizeG = str(size) + 'G'
+            cmd = 'lvcreate -n  ' + d['logical_volume']
+            cmd = cmd + ' -i ' + str(count)
+            cmd = cmd + ' -I 256 ' + ' -L ' + sizeG + ' vghanadata'
+            exe_cmd(cmd)
+            print(cmd)
 
-def stripe_hanalog_vol(stripe,count):
+def stripe_hanalog_vol(stripe, count, is_gp3, is_hm):
     print('Creating HANA log logical volumes ')
     size = 0
-    for d in stripe:
-        # d['size'] = 488G etc
-        size = int(d['size'].replace('G',''))
-        sizeG = str(size) + 'G'
-        cmd = 'lvcreate -n  ' + d['logical_volume']
-        cmd = cmd + ' -i ' + str(count)
-        cmd = cmd + ' -I 256 ' + ' -L ' + sizeG + ' vghanalog'
-        exe_cmd(cmd)
-        print(cmd)
+    if is_gp3 is True and is_hm is False:
+        for d in stripe:
+            # d['size'] = 488G etc
+            size = int(d['size'].replace('G',''))
+            sizeG = str(size) + 'G'
+            cmd = 'lvcreate -n  ' + d['logical_volume']
+            cmd = cmd + ' -L ' + sizeG + ' vghanalog'
+            exe_cmd(cmd)
+            print(cmd)
+    elif is_gp3 is False or is_hm is True:
+        for d in stripe:
+            # d['size'] = 488G etc
+            size = int(d['size'].replace('G',''))
+            sizeG = str(size) + 'G'
+            cmd = 'lvcreate -n  ' + d['logical_volume']
+            cmd = cmd + ' -i ' + str(count)
+            cmd = cmd + ' -I 256 ' + ' -L ' + sizeG + ' vghanalog'
+            exe_cmd(cmd)
+            print(cmd)
 
 def short2long_drive(d):
 	return d.replace('/dev/s','/dev/xv')
@@ -198,8 +218,8 @@ def init_drive(device):
     print(cmd)
 
 
-def create_attach_ebs(device,io_type,size,tag,piops = None):
-    if piops == None:
+def create_attach_ebs(device, io_type, size, tag, piops=None, throughput=None):
+    if piops == None:   # gp2
         cmd = ebs_attach_cmd
         cmd = cmd + ':'.join([size,io_type,device,tag])
         exe_cmd(cmd)
@@ -207,7 +227,7 @@ def create_attach_ebs(device,io_type,size,tag,piops = None):
         if os.path.isfile(nvme_device_id):
             device = open(nvme_device_id, 'r').read().rstrip()
         init_drive(device)
-    else:
+    elif piops != None and throughput == None: # io1 / io2
         cmd = ebs_attach_cmd
         cmd = cmd + ':'.join([size,io_type,str(piops),device,tag])
         exe_cmd(cmd)
@@ -215,19 +235,31 @@ def create_attach_ebs(device,io_type,size,tag,piops = None):
         if os.path.isfile(nvme_device_id):
             device = open(nvme_device_id, 'r').read().rstrip()
         init_drive(device)
+    else:   # gp3
+        cmd = ebs_attach_cmd
+        cmd = cmd + ':'.join([size,io_type,str(piops),str(throughput),device,tag])
+        exe_cmd(cmd)
+        print(cmd)
+        if os.path.isfile(nvme_device_id):
+            device = open(nvme_device_id, 'r').read().rstrip()
+        init_drive(device)
 
-def create_attach_single_ebs(device,io_type,size,tag,piops = None):
-    if piops == None:
+def create_attach_single_ebs(device, io_type, size, tag, piops=None, throughput=None):
+    if piops == None: # gp2
         cmd = ebs_attach_cmd
         cmd = cmd + ':'.join([size,io_type,device,tag])
         exe_cmd(cmd)
         print(cmd)
-    else:
+    elif piops != None and throughput == None: # io1 / io2
         cmd = ebs_attach_cmd
         cmd = cmd + ':'.join([size,io_type,str(piops),device,tag])
         exe_cmd(cmd)
         print(cmd)
-
+    else:   # gp3
+        cmd = ebs_attach_cmd
+        cmd = cmd + ':'.join([size,io_type,str(piops),str(throughput),device,tag])
+        exe_cmd(cmd)
+        print(cmd)
 
 def get_backup_drives(config_json,hostcount,instance_type,storage_type):
     result = {}
@@ -261,7 +293,12 @@ def main():
     which = args.which
     instance_type = args.instance_type
     storage_type = args.storage_type
-
+    high_memory = [ 'u-6tb1.metal', 'u-6tb1.56xlarge', 'u-6tb1.112xlarge'
+                    'u-9tb1.metal', 'u-9tb1.112xlarge'
+                    'u-12tb1.metal', 'u-12tb1.112xlarge',
+                    'u-18tb1.metal', 'u-24tb1.metal',
+                    'x1e.32xlarge', 'x1.32xlarge' ]
+    is_hm = False
 
     if not os.path.isfile(config):
         print('Storage config file ' + config + ' Invalid!')
@@ -282,6 +319,9 @@ def main():
         print('WARNING: Did not build shared storage on worker')
         return
 
+    if instance_type in high_memory:
+        is_hm=True
+        
     with open(config) as f:
         config_json = json.loads(f.read())
 
@@ -307,17 +347,21 @@ def main():
             device = d['device']
             io_type = storage_type
             piops = None
+            throughput = None
             if 'piops' in d:
                 piops = d['piops']
+            if 'throughput' in d:
+                throughput = d['throughput']
+                is_gp3 = True
             size = d['size'].replace("G","")
             tag = 'HANA-Data'
-            create_attach_ebs(device,io_type,size,tag,piops)
+            create_attach_ebs(device, io_type, size, tag, piops, throughput)
             if os.path.isfile(nvme_device_id):
                 nvme_device = open(nvme_device_id, 'r').read().rstrip()
                 d['device'] = '"'+nvme_device+'"'
         create_hanadata_volgrp(drives)
         count = len(drives)
-        stripe_hanadata_vol(stripe,count)
+        stripe_hanadata_vol(stripe, count, is_gp3, is_hm)
         return
 
     if which == 'hana_log':
@@ -327,19 +371,22 @@ def main():
             device = d['device']
             io_type = storage_type
             piops = None
+            throughput = None
             if 'piops' in d:
                 piops = d['piops']
+            if 'throughput' in d:
+                throughput = d['throughput']
+                is_gp3 = True
             size = d['size'].replace("G","")
             tag = 'HANA-Log'
-            create_attach_ebs(device,io_type,size,tag,piops)
+            create_attach_ebs(device, io_type, size, tag, piops, throughput)
             if os.path.isfile(nvme_device_id):
                 nvme_device = open(nvme_device_id, 'r').read().rstrip()
                 d['device'] = '"'+nvme_device+'"'
         create_hanalog_volgrp(drives)
         count = len(drives)
-        stripe_hanalog_vol(stripe,count)
-        return
-
+        stripe_hanalog_vol(stripe, count, is_gp3, is_hm)
+        
     if which == 'shared':
         drives = config_json['shared']['master'][instance_type][storage_type]['drives']
         if len(drives) == 1:
@@ -349,9 +396,12 @@ def main():
                 size = d['size'].replace("G","")
                 tag = 'SAP-HANA-Shared'
                 piops = None
+                throughput = None
                 if 'piops' in d:
                     piops = d['piops']
-                create_attach_single_ebs(device,io_type,size,tag,piops)
+                if 'throughput' in d:
+                    throughput = d['throughput']
+                create_attach_single_ebs(device, io_type, size, tag, piops, throughput)
                 if os.path.isfile(nvme_device_id):
                     device = open(nvme_device_id, 'r').read().rstrip()
                 else:
@@ -366,9 +416,12 @@ def main():
                 size = d['size'].replace("G","")
                 tag = 'SAP-HANA-Shared'
                 piops = None
+                throughput = None
                 if 'piops' in d:
                     piops = d['piops']
-                create_attach_ebs(device,io_type,size,tag,piops)
+                if 'throughput' in d:
+                    throughput = d['throughput']
+                create_attach_ebs(device, io_type, size, tag, piops, throughput)
                 if os.path.isfile(nvme_device_id):
                     nvme_device = open(nvme_device_id, 'r').read().rstrip()
                     d['device'] = '"'+nvme_device+'"'
@@ -387,9 +440,12 @@ def main():
             size = d['size'].replace("G","")
             tag = 'SAP-HANA-USR-SAP'
             piops = None
+            throughput = None
             if 'piops' in d:
                 piops = d['piops']
-            create_attach_single_ebs(device,io_type,size,tag,piops)
+            if 'throughput' in d:
+                throughput = d['throughput']
+            create_attach_single_ebs(device, io_type, size, tag, piops, throughput)
             if os.path.isfile(nvme_device_id):
                 device = open(nvme_device_id, 'r').read().rstrip()
             else:
@@ -408,9 +464,12 @@ def main():
             size = d['size'].replace("G","")
             tag = 'SAP-HANA-MEDIA'
             piops = None
+            throughput = None
             if 'piops' in d:
                 piops = d['piops']
-            create_attach_single_ebs(device,io_type,size,tag,piops)
+            if 'throughput' in d:
+                throughput = d['throughput']
+            create_attach_single_ebs(device, io_type, size, tag, piops, throughput)
             if os.path.isfile(nvme_device_id):
                 device = open(nvme_device_id, 'r').read().rstrip()
             else:
