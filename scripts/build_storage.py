@@ -348,6 +348,7 @@ def main():
             io_type = storage_type
             piops = None
             throughput = None
+            is_gp3 = False
             if 'piops' in d:
                 piops = d['piops']
             if 'throughput' in d:
@@ -372,6 +373,7 @@ def main():
             io_type = storage_type
             piops = None
             throughput = None
+            is_gp3 = False
             if 'piops' in d:
                 piops = d['piops']
             if 'throughput' in d:
