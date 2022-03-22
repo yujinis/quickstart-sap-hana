@@ -178,7 +178,8 @@ while [  $COUNTER -lt ${VOL_COUNT} ]; do
 					--size ${VOL_SIZE} \
 					--volume-type ${VOL_TYPE} --iops ${VOL_PIOPS} \
 					--tag-specification ResourceType=volume,Tags=[\{Key=SAPHANAQuickStart,Value=${MyStackId}\}] \
-					| ${JQ_COMMAND} '.VolumeId')
+					--cli-connect-timeout 15 \
+					| ${JQ_COMMAND} -r '.VolumeId')
 	else
 		volumeid=$(aws ec2 create-volume \
 					--region ${AWS_DEFAULT_REGION} \
@@ -186,9 +187,10 @@ while [  $COUNTER -lt ${VOL_COUNT} ]; do
 					--size ${VOL_SIZE} \
 					--volume-type ${VOL_TYPE} \
 					--tag-specification ResourceType=volume,Tags=[\{Key=SAPHANAQuickStart,Value=${MyStackId}\}] \
-					| ${JQ_COMMAND} '.VolumeId')
+					--cli-connect-timeout 15 \
+					| ${JQ_COMMAND} -r '.VolumeId')
 	fi
-	volumeid=$(echo ${volumeid} | sed 's/^"\(.*\)"$/\1/')
+	[ -z "${volumeid}" ] && log "The volume ID is empty. Check the reachability to EC2 endpoint and options ${AWS_DEFAULT_REGION}, ${AWS_DEFAULT_AVAILABILITY_ZONE}, ${VOL_SIZE}, ${VOL_TYPE} and ${MyStackId}."
 	log "Creating new volume ${volumeid}. Waiting for create"
 	wait_for_volume_create ${volumeid}
 
